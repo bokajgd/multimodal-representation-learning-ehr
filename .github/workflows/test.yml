@@ -1,0 +1,41 @@
+# Workflow which does the following
+# 1) run pytest
+# 2) updates the version according to semantic versioning
+# 3) creates a release
+# 4) uploads the package to pypi
+# name: test
+
+# on:
+#   pull_request:
+#   push:
+#     branches:
+#       - main
+
+# env:
+#   cache-version: 0.0.6
+#   poetry-version: 1.1.15
+#   python-version: 3.9 # Change this number if you want to manually invalidate all caches
+
+# jobs:
+#   test:
+#     runs-on: ${{ matrix.os }}
+
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest]
+
+#     # This allows a subsequently queued workflow run to interrupt previous runs
+#     concurrency:
+#       group: "${{ github.workflow }} - ${{ matrix.os }} @ ${{ github.ref }}"
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
+
+#       - name: Run tests
+#         uses: ./.github/actions/test
+#         with:
+#           python-version: ${{ env.python-version }}
+#           poetry-version: ${{ env.poetry-version }}
+#           cache-version: ${{ env.cache-version }}
