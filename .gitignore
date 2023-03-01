@@ -134,4 +134,5 @@ dmypy.json
 *.xlsx
 *.parquet
 *.pkl
-*.DS_Store
+
+.DS_Store
