@@ -2,8 +2,8 @@
 from typing import Optional
 
 import pandas as pd
-
-from utils import data_loaders, load_dataset_from_file, DATA_PATH
+from timeseriesflattener.utils import data_loaders
+from .utils import (load_dataset_from_file, DATA_PATH,)
 
 
 @data_loaders.register("admissions")
@@ -47,10 +47,14 @@ def load_admissions(
         keep="first",
     )
 
+    # Convert to datetime
+    admissions["ADMITTIME"] = pd.to_datetime(admissions["ADMITTIME"])
+    admissions["DISCHTIME"] = pd.to_datetime(admissions["DISCHTIME"])
+
     # Add value column for feature generation
     if return_value_as_admission_length_days:
         admissions["value"] = (
-            admissions["DISCHTIME"] - pd.to_datetime(admissions["ADMITTIME"])
+            admissions["DISCHTIME"] - admissions["ADMITTIME"]
         ).dt.total_seconds() / 86400
     else:
         admissions["value"] = 1
@@ -70,11 +74,9 @@ def load_admissions(
     return admissions.reset_index(drop=True)
 
 
-
-
 @data_loaders.register("emergency_admissions")
 def load_emergency_admissions(
-    nrows: Optional[int] = None,
+    nrows: Optional[int] = 100,
     return_value_as_admission_length_days: bool = True,
     timestamps_only: bool = False,
 ) -> pd.DataFrame:
@@ -100,8 +102,8 @@ def load_emergency_admissions(
         return emergency_admissions.drop(columns="value").reset_index(drop=True)
     else:
         return emergency_admissions.reset_index(drop=True)
-    
+
 
 
 if __name__ == "__main__":
-    admissions = load_admissions(nrows=100)
+    admissions = load_emergency_admissions(nrows=100)

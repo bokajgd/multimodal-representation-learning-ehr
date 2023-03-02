@@ -6,8 +6,6 @@ from typing import Any, Optional
 import catalogue
 import pandas as pd
 
-data_loaders = catalogue.create("timeseriesflattener", "data_loaders")
-
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[4]
 DATA_PATH = RELATIVE_PROJECT_ROOT / "data"
 
