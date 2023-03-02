@@ -46,8 +46,8 @@ class FeatureSpecifier:
         """Generate predictor spec list."""
         log.info("–––––––– Generating temporal predictor specs ––––––––")
 
-        resolve_multiple = ["max", "min", "mean", "latest"]
-        interval_days = [30, 90, 180, 365, 730]
+        resolve_multiple = ["max", "min", "mean"]
+        interval_days = [30, 180, 730]
         allowed_nan_value_prop = [0]
 
         admissions = self._get_admissions_specs(
