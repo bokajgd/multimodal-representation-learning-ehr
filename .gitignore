@@ -135,6 +135,7 @@ dmypy.json
 *.parquet
 *.pkl
 *.csv.gz
+*.txt
 
 .DS_Store
 poetry.lock
