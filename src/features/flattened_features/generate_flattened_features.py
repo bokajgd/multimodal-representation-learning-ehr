@@ -35,7 +35,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
             flattened_df.to_parquet(project_info.feature_set_path / "flattened_features.parquet")
         elif project_info.dataset_format == "csv":
             flattened_df.to_csv(project_info.feature_set_path / "flattened_features.csv")
-        
+
     return flattened_df
 
 if __name__ == "__main__":
