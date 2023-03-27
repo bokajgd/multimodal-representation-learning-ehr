@@ -23,8 +23,11 @@ class SpecSet(BaseModel):
 
 
 class FeatureSpecifier:
+
+    
     def __init__(self, project_info: ProjectInfo,):
         self.project_info = project_info
+
 
     def _get_admissions_specs(
         self, resolve_multiple, interval_days, allowed_nan_value_prop
@@ -41,6 +44,24 @@ class FeatureSpecifier:
         ).create_combinations()
 
         return admissions
+    
+
+    def _get_inputevents_specs(
+        self, resolve_multiple=["max", "min", "mean"], interval_days=[30], allowed_nan_value_prop=[0]
+    ):
+        """Get inputevents specs."""
+        log.info("–––––––– Generating inputevents specs ––––––––")
+
+        inputevents = PredictorGroupSpec(
+            values_loader=("nacl_0_9_ml",),
+            lookbehind_days=interval_days,
+            resolve_multiple_fn=resolve_multiple,
+            fallback=[0],
+            allowed_nan_value_prop=allowed_nan_value_prop,
+        ).create_combinations()
+    
+        return inputevents
+
 
     def _get_temporal_predictor_specs(self) -> list[PredictorSpec]:
         """Generate predictor spec list."""
@@ -56,7 +77,9 @@ class FeatureSpecifier:
             allowed_nan_value_prop,
         )
 
-        return admissions
+        inputevents = self._get_inputevents_specs()
+
+        return admissions + inputevents
 
 
     def get_feature_specs(self) -> list[_AnySpec]:

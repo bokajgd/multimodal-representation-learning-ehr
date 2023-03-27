@@ -3,8 +3,8 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import load_dataset_from_file, DATA_PATH
-from load_admissions import load_admission_discharge_timestamps
+from .utils import load_dataset_from_file, DATA_PATH
+from .load_admissions import load_admission_discharge_timestamps
 
 def _generate_icd9_range(icd9_code_interval: tuple[int,int]) -> tuple[str,str]:
     """Generate ICD9 strings for a range of ICD9 codes. 

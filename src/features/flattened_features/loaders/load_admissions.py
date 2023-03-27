@@ -3,7 +3,10 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import load_dataset_from_file, DATA_PATH
+from .utils import (
+    load_dataset_from_file, 
+    DATA_PATH
+)
 
 
 @data_loaders.register("admissions")
@@ -109,7 +112,7 @@ def load_admission_timestamps(
 
 @data_loaders.register("emergency_admissions")
 def load_emergency_admissions(
-    nrows: Optional[int] = 100,
+    nrows: Optional[int] = None,
     return_value_as_admission_length_days: bool = True,
     timestamps_only: bool = False,
 ) -> pd.DataFrame:
@@ -138,6 +141,6 @@ def load_emergency_admissions(
 
 
 if __name__ == "__main__":
-    emergency_admissions = load_emergency_admissions(nrows=100)
-    admission_discharge_times = load_admission_discharge_timestamps(nrows=100)
+    emergency_admissions = load_emergency_admissions()
+    admission_discharge_times = load_admission_discharge_timestamps()
   
