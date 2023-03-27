@@ -3,7 +3,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from .utils import (load_dataset_from_file, DATA_PATH,)
+from utils import load_dataset_from_file, DATA_PATH
 
 
 @data_loaders.register("admissions")
@@ -22,13 +22,14 @@ def load_admissions(
     Returns:
         pd.DataFrame: Admissions table.
     """
-    admissions_file_path = DATA_PATH / "raw" / "ADMISSIONS.csv"
+    admissions_file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "ADMISSIONS.csv.gz"
 
     admissions = load_dataset_from_file(
         file_path=admissions_file_path,
         nrows=nrows,
         cols_to_load=[
             "SUBJECT_ID",
+            "HADM_ID",
             "ADMITTIME",
             "DISCHTIME",
             "ADMISSION_TYPE",
@@ -58,20 +59,52 @@ def load_admissions(
         ).dt.total_seconds() / 86400
     else:
         admissions["value"] = 1
-    
-    # Drop admission time
-    admissions = admissions.drop(columns="ADMITTIME")
 
     # Renaming columns
     admissions = admissions.rename(
         columns={
             "SUBJECT_ID": "patient_id",
+            "HADM_ID": "admission_id",
+            "ADMITTIME": "admission_timestamp",
             "DISCHTIME": "timestamp",
             "ADMISSION_TYPE": "admission_type",
         }
     )
 
-    return admissions.reset_index(drop=True)
+    return admissions
+
+@data_loaders.register("admission_discharge_timestamps")
+def load_admission_discharge_timestamps(
+    nrows: Optional[int] = None,
+) -> pd.DataFrame:
+    """Load admissions discharge times with admission_id column for merging.
+    
+    Args:
+        nrows (int): Number of rows to load.
+        
+    Returns:
+        pd.DataFrame: Admissions discharge times with admission_id column.
+    """
+    admissions = load_admissions(nrows=nrows,)
+
+    return admissions[["admission_id", "timestamp"]]
+
+
+@data_loaders.register("admission_timestamps")
+def load_admission_timestamps(
+    nrows: Optional[int] = None,
+) -> pd.DataFrame:
+    """Load admissions times with admission_id column for merging.
+    
+    Args:
+        nrows (int): Number of rows to load.
+        
+    Returns:
+        pd.DataFrame: Admissions discharge times with admission_id column.
+    """
+    admissions = load_admissions(nrows=nrows,)
+
+    return admissions[["admission_id", "admission_timestamp"]]
 
 
 @data_loaders.register("emergency_admissions")
@@ -95,7 +128,7 @@ def load_emergency_admissions(
     admissions = load_admissions(nrows=nrows, return_value_as_admission_length_days = return_value_as_admission_length_days)
 
     emergency_admissions = admissions[admissions["admission_type"] == "EMERGENCY"].drop(
-        columns=["admission_type"]
+        columns=["admission_type", "admission_id", "admission_timestamp"]
     )
 
     if timestamps_only:
@@ -104,6 +137,7 @@ def load_emergency_admissions(
         return emergency_admissions.reset_index(drop=True)
 
 
-
 if __name__ == "__main__":
-    admissions = load_emergency_admissions(nrows=100)
+    emergency_admissions = load_emergency_admissions(nrows=100)
+    admission_discharge_times = load_admission_discharge_timestamps(nrows=100)
+  
