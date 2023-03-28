@@ -39,7 +39,7 @@ def load_icu_stays(
 
     # Rename columns
     icu_stays = icu_stays.rename(
-        columns={"SUBJECT_ID": "patient_id", "OUTTIME": "timestamp", "LOS": "value"}
+        columns={"SUBJECT_ID": "patient_id", "OUTTIME": "timestamp", "LOS": "value"},
     )
 
     return icu_stays.reset_index(drop=True)
