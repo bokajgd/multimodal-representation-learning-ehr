@@ -12,15 +12,15 @@ from .utils import (
 @data_loaders.register("admissions")
 def load_admissions(
     nrows: Optional[int] = None,
-    return_value_as_admission_length_days: bool = False,
+    return_value_as_los: bool = False,
 ) -> pd.DataFrame:
     """Load admissions table. Drops admissions without chartevents data and duplicate rows. 
     Returns a df with columns for patient_id, timestamp, admission_type, and value.
 
     Args:
         nrows (int): Number of rows to load.
-        return_value_as_admission_length_days (bool): If True, returns the length of the
-            admission in days instead. If not it returns 1 for all admissions. Defaults to False.
+        return_value_as_los (bool): If True, returns the length of the
+            stay in days. If False, it returns 1 for all admissions. Defaults to False.
 
     Returns:
         pd.DataFrame: Admissions table.
@@ -56,7 +56,7 @@ def load_admissions(
     admissions["DISCHTIME"] = pd.to_datetime(admissions["DISCHTIME"])
 
     # Add value column for feature generation
-    if return_value_as_admission_length_days:
+    if return_value_as_los:
         admissions["value"] = (
             admissions["DISCHTIME"] - admissions["ADMITTIME"]
         ).dt.total_seconds() / 86400
@@ -128,7 +128,7 @@ def load_emergency_admissions(
     Returns:
         pd.DataFrame: Emergency admissions table.
     """
-    admissions = load_admissions(nrows=nrows, return_value_as_admission_length_days = return_value_as_admission_length_days)
+    admissions = load_admissions(nrows=nrows, return_value_as_los = return_value_as_admission_length_days)
 
     emergency_admissions = admissions[admissions["admission_type"] == "EMERGENCY"].drop(
         columns=["admission_type", "admission_id", "admission_timestamp"]
