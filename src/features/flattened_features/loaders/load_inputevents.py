@@ -79,6 +79,21 @@ def load_inputevents(
         return inputevents.reset_index(drop=True)
 
 
+@data_loaders.register("weight")
+def load_weight(
+    nrows: Optional[int] = None,
+    ) -> pd.DataFrame:
+    
+    inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
+    
+    # Keep only columns with patient_id, weight and timestamp and drop duplicates
+    df = inputevents[["patient_id", "timestamp", "PATIENTWEIGHT"]].drop_duplicates()
+
+    df = df.rename(columns={"PATIENTWEIGHT": "value"})
+
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
+
+
 @data_loaders.register("fentanyl_mg")
 def load_fentanyl(
     nrows: Optional[int] = None,
@@ -195,4 +210,4 @@ def _calc_amount_to_bodyweight_ratio(df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = load_nacl_0_9()
+    df = load_weight()

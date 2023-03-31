@@ -24,7 +24,6 @@ class SpecSet(BaseModel):
 
 class FeatureSpecifier:
 
-    
     def __init__(self, project_info: ProjectInfo,):
         self.project_info = project_info
 
@@ -47,7 +46,7 @@ class FeatureSpecifier:
     
 
     def _get_inputevents_specs(
-        self, resolve_multiple=["max", "min", "mean"], interval_days=[30], allowed_nan_value_prop=[0]
+        self, resolve_multiple=["max", "min", "mean", "count"], interval_days=[2, 30], allowed_nan_value_prop=[0]
     ):
         """Get inputevents specs."""
         log.info("–––––––– Generating inputevents specs ––––––––")
@@ -67,8 +66,8 @@ class FeatureSpecifier:
         """Generate predictor spec list."""
         log.info("–––––––– Generating temporal predictor specs ––––––––")
 
-        resolve_multiple = ["max", "min", "mean"]
-        interval_days = [30, 180, 730]
+        resolve_multiple = ["mean"]
+        interval_days = [180, 730]
         allowed_nan_value_prop = [0]
 
         admissions = self._get_admissions_specs(
