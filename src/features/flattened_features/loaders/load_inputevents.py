@@ -120,7 +120,9 @@ def load_fentanyl(
 
     # Drop rows with amountuom value that only appears in less than 10% of the rows
     df = _drop_rows_with_too_small_value_frequency(
-        df=df, value_col_name="AMOUNTUOM", threshold=0.1
+        df=df,
+        value_col_name="AMOUNTUOM",
+        threshold=0.1,
     )
 
     # Convert mcg to mg
@@ -213,7 +215,9 @@ def load_nacl_0_9(
     df = inputevents[inputevents["ITEMID"].isin([225158])]
 
     df = _drop_rows_with_too_small_value_frequency(
-        df=df, value_col_name="AMOUNTUOM", threshold=0.1
+        df=df,
+        value_col_name="AMOUNTUOM",
+        threshold=0.1,
     )
 
     df["value"] = _calc_amount_to_bodyweight_ratio(df)

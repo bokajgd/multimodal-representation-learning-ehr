@@ -17,7 +17,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
 
     # Convert to datetime
     predictions_times_df["timestamp"] = pd.to_datetime(
-        predictions_times_df["timestamp"]
+        predictions_times_df["timestamp"],
     )
 
     project_info = get_project_info()
@@ -36,11 +36,11 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
     if save_to_disk:
         if project_info.dataset_format == "parquet":
             flattened_df.to_parquet(
-                project_info.feature_set_path / "flattened_features.parquet"
+                project_info.feature_set_path / "flattened_features.parquet",
             )
         elif project_info.dataset_format == "csv":
             flattened_df.to_csv(
-                project_info.feature_set_path / "flattened_features.csv"
+                project_info.feature_set_path / "flattened_features.csv",
             )
 
     return flattened_df

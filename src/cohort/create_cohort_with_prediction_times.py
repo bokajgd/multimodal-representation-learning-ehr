@@ -67,7 +67,8 @@ def generate_prediction_times_df(
 
     # Calculate age for each patient
     cohort["AGE"] = cohort.apply(
-        lambda d: round((d["OUTTIME_date"] - d["DOB"]).days / 365.25, 2), axis=1
+        lambda d: round((d["OUTTIME_date"] - d["DOB"]).days / 365.25, 2),
+        axis=1,
     )
 
     # Drop patients below the age of 18, drop rows with a null value, drop duplicates and drop rows with a LOS under 2

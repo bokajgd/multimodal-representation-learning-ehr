@@ -38,7 +38,10 @@ def load_dataset_from_file(
     elif file_suffix == ".gz":
         if cols_to_load:
             return pd.read_csv(
-                file_path, compression="gzip", nrows=nrows, usecols=cols_to_load
+                file_path,
+                compression="gzip",
+                nrows=nrows,
+                usecols=cols_to_load,
             )
         else:
             return pd.read_csv(file_path, compression="gzip", nrows=nrows)
