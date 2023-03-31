@@ -1,19 +1,22 @@
 """Feature specification module."""
 import logging
 import sys
+
 sys.path.append(".")
 
 from psycop_feature_generation.application_modules.project_setup import ProjectInfo
-
-from timeseriesflattener.feature_spec_objects import (BaseModel,
-                                                      OutcomeGroupSpec,
-                                                      OutcomeSpec,
-                                                      PredictorGroupSpec,
-                                                      PredictorSpec,
-                                                      StaticSpec, _AnySpec)
-
+from timeseriesflattener.feature_spec_objects import (
+    BaseModel,
+    OutcomeGroupSpec,
+    OutcomeSpec,
+    PredictorGroupSpec,
+    PredictorSpec,
+    StaticSpec,
+    _AnySpec,
+)
 
 log = logging.getLogger(__name__)
+
 
 class SpecSet(BaseModel):
     """A set of unresolved specs, ready for resolving."""
@@ -23,13 +26,14 @@ class SpecSet(BaseModel):
 
 
 class FeatureSpecifier:
-
-    def __init__(self, project_info: ProjectInfo,):
+    def __init__(self, project_info: ProjectInfo):
         self.project_info = project_info
 
-
     def _get_admissions_specs(
-        self, resolve_multiple, interval_days, allowed_nan_value_prop
+        self,
+        resolve_multiple,
+        interval_days,
+        allowed_nan_value_prop,
     ):
         """Get admissions specs."""
         log.info("–––––––– Generating admissions specs ––––––––")
@@ -43,12 +47,24 @@ class FeatureSpecifier:
         ).create_combinations()
 
         return admissions
-    
 
     def _get_inputevents_specs(
-        self, resolve_multiple=["max", "min", "mean", "count"], interval_days=[2, 30], allowed_nan_value_prop=[0]
+        self,
+        resolve_multiple=None,
+        interval_days=None,
+        allowed_nan_value_prop=None,
     ):
         """Get inputevents specs."""
+
+        if resolve_multiple is None:
+            resolve_multiple = ["max", "min", "mean", "count"]
+
+        if interval_days is None:
+            interval_days = [2, 30]
+
+        if allowed_nan_value_prop is None:
+            allowed_nan_value_prop = [0]
+
         log.info("–––––––– Generating inputevents specs ––––––––")
 
         inputevents = PredictorGroupSpec(
@@ -58,9 +74,8 @@ class FeatureSpecifier:
             fallback=[0],
             allowed_nan_value_prop=allowed_nan_value_prop,
         ).create_combinations()
-    
-        return inputevents
 
+        return inputevents
 
     def _get_temporal_predictor_specs(self) -> list[PredictorSpec]:
         """Generate predictor spec list."""
@@ -80,10 +95,7 @@ class FeatureSpecifier:
 
         return admissions + inputevents
 
-
     def get_feature_specs(self) -> list[_AnySpec]:
         """Get a spec set."""
 
-        return (
-            self._get_temporal_predictor_specs()
-        )
+        return self._get_temporal_predictor_specs()

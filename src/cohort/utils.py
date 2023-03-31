@@ -1,4 +1,7 @@
-"""A set of misc. utility functions for data loaders. """
+"""A set of misc.
+
+utility functions for data loaders.
+"""
 
 from pathlib import Path
 from typing import Any, Optional
@@ -34,9 +37,11 @@ def load_dataset_from_file(
             return pd.read_csv(file_path, nrows=nrows)
     elif file_suffix == ".gz":
         if cols_to_load:
-            return pd.read_csv(file_path, compression='gzip', nrows=nrows, usecols=cols_to_load)
+            return pd.read_csv(
+                file_path, compression="gzip", nrows=nrows, usecols=cols_to_load
+            )
         else:
-            return pd.read_csv(file_path, compression='gzip', nrows=nrows)
+            return pd.read_csv(file_path, compression="gzip", nrows=nrows)
     else:
         raise ValueError(f"Invalid file suffix {file_suffix}")
 
