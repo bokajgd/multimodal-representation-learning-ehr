@@ -46,7 +46,10 @@ def load_dataset_from_file(
     elif file_suffix == ".gz":
         if cols_to_load:
             return pd.read_csv(
-                file_path, compression="gzip", nrows=nrows, usecols=cols_to_load
+                file_path,
+                compression="gzip",
+                nrows=nrows,
+                usecols=cols_to_load,
             )
         else:
             return pd.read_csv(file_path, compression="gzip", nrows=nrows)
@@ -96,7 +99,7 @@ def _drop_rows_with_too_small_value_frequency(
 
     df = df.loc[
         df[f"{value_col_name}"].isin(
-            value_frequency[value_frequency >= threshold].index
+            value_frequency[value_frequency >= threshold].index,
         )
     ]
 

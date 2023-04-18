@@ -20,7 +20,7 @@ def main():
 
     if project_info.dataset_format == "parquet":
         expanded_df.to_parquet(
-            project_info.feature_set_path / "expanded_features.parquet"
+            project_info.feature_set_path / "expanded_features.parquet",
         )
     elif project_info.dataset_format == "csv":
         expanded_df.to_csv(project_info.feature_set_path / "expanded_features.csv")

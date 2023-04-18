@@ -21,7 +21,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
 
     # select only columns with numeric data types and drop patient_id column
     numeric_cols = feature_df.select_dtypes(include=np.number).drop(
-        columns=["patient_id"]
+        columns=["patient_id"],
     )
 
     # remove columns with only two unique values to avoid binarizing columns that are already binary
@@ -45,7 +45,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
 
         # create a new df with the expanded columns for the current column
         new_data = pd.DataFrame(
-            {f"{col}_p15": col_p15, f"{col}_p_mid": col_p_mid, f"{col}_p85": col_p85}
+            {f"{col}_p15": col_p15, f"{col}_p_mid": col_p_mid, f"{col}_p85": col_p85},
         )
 
         # append the new DataFrame to the list of expanded DataFrames
