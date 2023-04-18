@@ -1,9 +1,7 @@
 """Main feature generation."""
 import pandas as pd
 from feautre_specification.specify_features import FeatureSpecifier
-
-from loaders.load_demographics import (load_dob,)
-
+from loaders.load_demographics import load_dob
 from loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info

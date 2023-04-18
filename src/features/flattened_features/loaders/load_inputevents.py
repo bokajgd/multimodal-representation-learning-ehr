@@ -4,18 +4,18 @@ Inputevents covers all fluids that are administered to patients via IV
 or other routes. Inputevents loaders data register naming convention:
 '<ITEMID>_<AMOUNTUOM>'
 """
-from typing import Optional
 import time
+from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
 from .utils import (
-    load_sql_query,
     DATA_PATH,
     _drop_rows_with_too_small_patient_or_admission_frequency,
     _drop_rows_with_too_small_value_frequency,
     load_dataset_from_file,
+    load_sql_query,
 )
 
 

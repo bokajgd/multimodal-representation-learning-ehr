@@ -3,11 +3,13 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from .utils import load_dataset_from_file, DATA_PATH
-from .load_admissions import load_admission_discharge_timestamps
 
-def _generate_icd9_range(icd9_code_interval: tuple[int,int]) -> tuple[str,str]:
-    """Generate ICD9 strings for a range of ICD9 codes. 
+from .load_admissions import load_admission_discharge_timestamps
+from .utils import DATA_PATH, load_dataset_from_file
+
+
+def _generate_icd9_range(icd9_code_interval: tuple[int, int]) -> tuple[str, str]:
+    """Generate ICD9 strings for a range of ICD9 codes.
 
     Args:
         icd9_code_interval (tuple[int,int]): Tuple of start and end ICD9 codes.
@@ -29,8 +31,9 @@ def _generate_icd9_range(icd9_code_interval: tuple[int,int]) -> tuple[str,str]:
 def load_diagnoses(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    """Load diagnoses dataframe with all diagnoses for each admission. Merge admission_disharge_timestamps
-      with diagnoses to get the timestamp for each diagnosis using admission_ids.
+    """Load diagnoses dataframe with all diagnoses for each admission. Merge
+    admission_disharge_timestamps with diagnoses to get the timestamp for each
+    diagnosis using admission_ids.
 
     Args:
         nrows (int): Number of rows to load.
@@ -38,7 +41,9 @@ def load_diagnoses(
     Returns:
         pd.DataFrame: Diagnoses table.
     """
-    diagnoses_file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "DIAGNOSES_ICD.csv.gz"
+    diagnoses_file_path = (
+        DATA_PATH / "mimic-iii-clinical-database-1.4" / "DIAGNOSES_ICD.csv.gz"
+    )
 
     diagnoses = load_dataset_from_file(
         file_path=diagnoses_file_path,
@@ -55,7 +60,7 @@ def load_diagnoses(
         columns={
             "SUBJECT_ID": "patient_id",
             "HADM_ID": "admission_id",
-        }
+        },
     )
 
     admission_discharge_timestamps = load_admission_discharge_timestamps(nrows=nrows)
@@ -73,7 +78,7 @@ def load_a_diagnoses(
     """Load all A-diagnoses for each admission."""
 
     diagnoses = load_diagnoses(nrows=nrows)
-    
+
     return diagnoses[diagnoses["SEQ_NUM"] == 1]
 
 
@@ -87,7 +92,9 @@ def load_tuberculosis_a_diagnosis(
 
     tuberculosis_codes = _generate_icd9_range((100, 180))
 
-    tuberculosis = a_diagnoses.loc[a_diagnoses["ICD9_CODE"].str.startswith(tuberculosis_codes)]
+    tuberculosis = a_diagnoses.loc[
+        a_diagnoses["ICD9_CODE"].str.startswith(tuberculosis_codes)
+    ]
 
     # Add value col for feature generation
     tuberculosis["value"] = 1
@@ -98,4 +105,4 @@ def load_tuberculosis_a_diagnosis(
 if __name__ == "__main__":
     diagnoses = load_diagnoses()
     tuberculosis = load_tuberculosis_a_diagnosis()
-    print('imported')
+    print("imported")
