@@ -38,7 +38,7 @@ def load_diagnoses(
     Returns:
         pd.DataFrame: Diagnoses table.
     """
-    diagnoses_file_path = DATA_PATH / "raw" / "DIAGNOSES_ICD.csv"
+    diagnoses_file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "DIAGNOSES_ICD.csv.gz"
 
     diagnoses = load_dataset_from_file(
         file_path=diagnoses_file_path,

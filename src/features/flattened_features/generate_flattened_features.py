@@ -1,8 +1,9 @@
 """Main feature generation."""
 import pandas as pd
 from feautre_specification.specify_features import FeatureSpecifier
-from loaders.load_admissions import load_emergency_admissions
-from loaders.load_inputevents import load_nacl_0_9
+
+from loaders.load_demographics import (load_dob,)
+
 from loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
@@ -14,6 +15,9 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
 
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
     predictions_times_df = pd.read_csv(predictions_times_df_path)
+
+    # Keep only the last 1000 rows
+    predictions_times_df = predictions_times_df.iloc[28000:].reset_index(drop=True)
 
     # Convert to datetime
     predictions_times_df["timestamp"] = pd.to_datetime(

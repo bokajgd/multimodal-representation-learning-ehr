@@ -57,7 +57,7 @@ class FeatureSpecifier:
         """Get inputevents specs."""
 
         if resolve_multiple is None:
-            resolve_multiple = ["max", "min", "mean", "count"]
+            resolve_multiple = ["max", "min", "mean"]
 
         if interval_days is None:
             interval_days = [2, 30]
@@ -68,7 +68,7 @@ class FeatureSpecifier:
         log.info("–––––––– Generating inputevents specs ––––––––")
 
         inputevents = PredictorGroupSpec(
-            values_loader=("nacl_0_9_ml",),
+            values_loader=("nacl_0_9_ml", "weight", "fentanyl_mg"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
             fallback=[0],

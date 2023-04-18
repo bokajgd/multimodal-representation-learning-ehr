@@ -1,5 +1,6 @@
 """A set of misc. utility functions for data loaders. """
 
+from google.cloud import bigquery
 from pathlib import Path
 from typing import Any, Optional
 
@@ -8,6 +9,13 @@ import pandas as pd
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[4]
 DATA_PATH = RELATIVE_PROJECT_ROOT / "data"
+
+
+def load_sql_query(query: str) -> str:
+
+    client = bigquery.Client()
+
+    return client.query(query).to_dataframe()
 
 
 def load_dataset_from_file(

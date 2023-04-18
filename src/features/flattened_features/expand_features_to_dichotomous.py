@@ -19,6 +19,9 @@ def expand_numeric_cols_to_binary_percentile_cols(feature_df: pd.DataFrame) -> p
     # select only columns with numeric data types and drop patient_id column
     numeric_cols = feature_df.select_dtypes(include=np.number).drop(columns=['patient_id'])
     
+    # remove columns with only two unique values to avoid binarizing columns that are already binary
+    numeric_cols = numeric_cols.loc[:, numeric_cols.nunique() > 2]
+
     # initialize an empty list to store the new DataFrames for each column
     expanded_data = []
 
@@ -28,27 +31,21 @@ def expand_numeric_cols_to_binary_percentile_cols(feature_df: pd.DataFrame) -> p
         col_data = numeric_cols[col].values
         
         # calc the percentiles for the column data
-        p1, p5, p25, p75, p95, p99 = np.percentile(col_data, [1, 5, 25, 75, 95, 99])
+        p15, p85 = np.percentile(col_data, [15, 85])
         
         # calc new binary columns for each percentile range
-        col_p1 = np.where(col_data <= p1, 1, 0)
-        col_p5 = np.where((col_data > p1) & (col_data <= p5), 1, 0)
-        col_p25 = np.where((col_data > p5) & (col_data <= p25), 1, 0)
-        col_p50 = np.where((col_data > p25) & (col_data <= p75), 1, 0)
-        col_p75 = np.where((col_data > p75) & (col_data <= p95), 1, 0)
-        col_p95 = np.where((col_data > p95) & (col_data <= p99), 1, 0)
-        col_p99 = np.where(col_data > p99, 1, 0)
+        col_p15 = np.where(col_data <= p15, 1, 0)
+        col_p_mid = np.where((col_data > p15) & (col_data <= p85), 1, 0)
+        col_p85 = np.where(col_data > p85, 1, 0)
         
         # create a new df with the expanded columns for the current column
-        new_data = pd.DataFrame({f'{col}_p1': col_p1, f'{col}_p5': col_p5, f'{col}_p25': col_p25, 
-                                 f'{col}_p50': col_p50, f'{col}_p75': col_p75, f'{col}_p95': col_p95, 
-                                 f'{col}_p99': col_p99})
+        new_data = pd.DataFrame({f'{col}_p15': col_p15, f'{col}_p_mid': col_p_mid, f'{col}_p85': col_p85})
         
         # append the new DataFrame to the list of expanded DataFrames
         expanded_data.append(new_data)
     
-    # concatenated all the expanded DataFrames along the columns axis
-    output_data = pd.concat([feature_df] + expanded_data, axis=1)
-    
-    # Return the output DataFrame
+    # concatenate all the expanded columns with the patient_id, timestamp and prediction_time_uuid columns
+    output_data = pd.concat([feature_df[['patient_id', 'timestamp', 'prediction_time_uuid']], *expanded_data], axis=1)
+
+    # return the binarised feature df
     return output_data

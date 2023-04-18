@@ -39,7 +39,7 @@ def demographic_loader(
         # Keep only one entry per patient
         patients = patients.drop_duplicates(subset=["SUBJECT_ID"], keep="first")
 
-    # Rename columns
+    # Rename column
     patients = patients.rename(
         columns={"SUBJECT_ID": "patient_id"},
     )
@@ -48,7 +48,7 @@ def demographic_loader(
 
 
 @data_loaders.register("date_of_birth")
-def load_age(nrows: Optional[int] = None) -> pd.DataFrame:
+def load_dob(nrows: Optional[int] = None) -> pd.DataFrame:
     """Load birthdays for calcalting age. Drops admissions without chartevents
     data and duplicate rows. Returns a df with columns for patient_id and
     value.
@@ -62,59 +62,14 @@ def load_age(nrows: Optional[int] = None) -> pd.DataFrame:
 
     dob = demographic_loader("PATIENTS.csv.gz", "DOB", nrows)
 
-    # Convert to datetime
-    dob["value"] = pd.to_datetime(dob["value"], format="%Y-%m-%d")
-
-    df = df.rename(columns={"DOB": "date_of_birth"})
-
-    return dob.reset_index(drop=True)
-
-
-@data_loaders.register("date_of_birth")
-def load_age(nrows: Optional[int] = None) -> pd.DataFrame:
-    """Load birthdays for calcalting age. Drops admissions without chartevents
-    data and duplicate rows. Returns a df with columns for patient_id and
-    value.
-
-    Args:
-        nrows (int): Number of rows to load.
-
-    Returns:
-        pd.DataFrame: Birthdays.
-    """
-
-    dob = demographic_loader("PATIENTS.csv.gz", "DOB", nrows)
+    # Rename column
+    dob = dob.rename(columns={"DOB": "date_of_birth"})
 
     # Convert to datetime
-    dob["value"] = pd.to_datetime(dob["value"], format="%Y-%m-%d")
-
-    df = df.rename(columns={"DOB": "date_of_birth"})
-
-    return dob.reset_index(drop=True)
-
-
-@data_loaders.register("date_of_birth")
-def load_age(nrows: Optional[int] = None) -> pd.DataFrame:
-    """Load birthdays for calcalting age. Drops admissions without chartevents
-    data and duplicate rows. Returns a df with columns for patient_id and
-    value.
-
-    Args:
-        nrows (int): Number of rows to load.
-
-    Returns:
-        pd.DataFrame: Birthdays.
-    """
-
-    dob = demographic_loader("PATIENTS.csv.gz", "DOB", nrows)
-
-    # Convert to datetime
-    dob["value"] = pd.to_datetime(dob["value"], format="%Y-%m-%d")
-
-    df = df.rename(columns={"DOB": "date_of_birth"})
+    dob["date_of_birth"] = pd.to_datetime(dob["date_of_birth"], format="%Y-%m-%d")
 
     return dob.reset_index(drop=True)
 
 
 if __name__ == "__main__":
-    load_age(nrows=10000)
+    load_dob(nrows=10000)

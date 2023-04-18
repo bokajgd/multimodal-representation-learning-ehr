@@ -5,11 +5,13 @@ or other routes. Inputevents loaders data register naming convention:
 '<ITEMID>_<AMOUNTUOM>'
 """
 from typing import Optional
+import time
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
 from .utils import (
+    load_sql_query,
     DATA_PATH,
     _drop_rows_with_too_small_patient_or_admission_frequency,
     _drop_rows_with_too_small_value_frequency,
@@ -226,4 +228,6 @@ def load_nacl_0_9(
 
 
 if __name__ == "__main__":
-    df = load_weight()
+    start_time = time.time()
+    df = load_inputevents()
+    print(f"Time to load inputevents: {time.time() - start_time:.2f} seconds")

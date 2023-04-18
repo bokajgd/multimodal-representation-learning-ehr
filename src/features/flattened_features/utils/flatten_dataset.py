@@ -53,6 +53,7 @@ def create_flattened_dataset(
     project_info: ProjectInfo,
     quarantine_df: Optional[pd.DataFrame] = None,
     quarantine_days: Optional[int] = None,
+    birthdays: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Create flattened dataset.
 
@@ -65,6 +66,7 @@ def create_flattened_dataset(
             See timeseriesflattener tutorial for more info.
         quarantine_df (pd.DataFrame, optional): Quarantine dataframe with "timestamp" and "project_info.col_names.id" columns.
         quarantine_days (int, optional): Number of days to quarantine. Any prediction time within quarantine_days after the timestamps in quarantine_df will be dropped.
+        birthdays (pd.DataFrame, optional): Birthdays dataframe to add age.
 
     Returns:
         FlattenedDataset: Flattened dataset.
