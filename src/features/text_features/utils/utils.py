@@ -3,6 +3,7 @@
 import pickle as pkl
 from pathlib import Path
 from typing import Any, Union
+import joblib
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
@@ -27,6 +28,18 @@ def save_text_model_to_dir(
     with Path(filepath).open("wb") as f:
         pkl.dump(model, f)
 
+
+def save_model_vocab_to_dir(
+    model: Any,
+    model_filename: str,
+    save_path: str = TEXT_MODEL_PATH,
+):
+
+    # Saving text model vocabulary
+    vocab_path = Path(save_path) / "vocabs" / f"{model_filename}_vocab.pkl"
+    with open(vocab_path, 'wb') as fw:
+        joblib.dump(model.vocabulary_, fw)
+        
 
 def load_text_model(
     filename: str,
