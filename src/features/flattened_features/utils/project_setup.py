@@ -1,4 +1,7 @@
-"""Setup for the project."""
+"""Setup for the project.
+
+Code adapted from GitHub repository 'psycop-feature-generation'
+"""
 import logging
 import time
 from pathlib import Path

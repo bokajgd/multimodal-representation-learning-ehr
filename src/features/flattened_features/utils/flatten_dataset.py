@@ -1,4 +1,7 @@
-"""Flatten the dataset."""
+"""Flatten the dataset.
+
+Code adapted from GitHub repository 'psycop-feature-generation'
+"""
 import logging
 from typing import Optional
 

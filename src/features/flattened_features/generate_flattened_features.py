@@ -1,10 +1,11 @@
 """Main feature generation."""
 import pandas as pd
 from feautre_specification.specify_features import FeatureSpecifier
-from loaders.load_demographics import load_dob
+
 from loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
+from utils.add_age import add_age
 
 
 def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
@@ -15,7 +16,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
     predictions_times_df = pd.read_csv(predictions_times_df_path)
 
     # Keep only the last 1000 rows
-    predictions_times_df = predictions_times_df.iloc[28000:].reset_index(drop=True)
+    predictions_times_df = predictions_times_df.iloc[28500:].reset_index(drop=True)
 
     # Convert to datetime
     predictions_times_df["timestamp"] = pd.to_datetime(
@@ -34,6 +35,9 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
         drop_pred_times_with_insufficient_look_distance=False,
         project_info=project_info,
     )
+
+    # Add age 
+    flattened_df = add_age(flattened_df)
 
     if save_to_disk:
         if project_info.dataset_format == "parquet":

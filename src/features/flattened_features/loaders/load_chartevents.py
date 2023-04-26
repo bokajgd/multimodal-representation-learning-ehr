@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import load_sql_query
+from utils import load_sql_query
 
 BASE_QUERY = """
         SELECT ce.SUBJECT_ID, ce.HADM_ID, ce.ITEMID, ce.VALUE, ce.VALUENUM, ce.VALUEUOM, ce.CHARTTIME,
@@ -17,7 +17,7 @@ BASE_QUERY = """
         WHERE ce.HADM_ID IN (SELECT DISTINCT HADM_ID FROM physionet-data.mimiciii_clinical.inputevents_mv)
         """
 
-
+@data_loaders.register("noteevents")
 def load_chartevents(
     base_query: str = BASE_QUERY,
     nrows: Optional[int] = None,
@@ -38,10 +38,10 @@ def load_chartevents(
 
     return df
 
-
+@data_loaders.register("gcs")
 def load_gcs(
     base_query: str = BASE_QUERY,
-    nrows: Optional[int] = None,
+    nrows: Optional[int] = 10000,
 ) -> pd.DataFrame:
     """Load data for the Glasgow coma scale."""
 

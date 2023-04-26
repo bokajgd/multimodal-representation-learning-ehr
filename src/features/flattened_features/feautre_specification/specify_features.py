@@ -31,11 +31,17 @@ class FeatureSpecifier:
 
     def _get_admissions_specs(
         self,
-        resolve_multiple,
-        interval_days,
-        allowed_nan_value_prop,
+        resolve_multiple=None,
+        interval_days=None,
     ):
         """Get admissions specs."""
+
+        if resolve_multiple is None:
+            resolve_multiple = ["count", "mean"]
+
+        if interval_days is None:
+            interval_days = [182, 365]
+
         log.info("–––––––– Generating admissions specs ––––––––")
 
         admissions = PredictorGroupSpec(
@@ -43,7 +49,7 @@ class FeatureSpecifier:
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
             fallback=[0],
-            allowed_nan_value_prop=allowed_nan_value_prop,
+            allowed_nan_value_prop=[0],
         ).create_combinations()
 
         return admissions
@@ -52,7 +58,6 @@ class FeatureSpecifier:
         self,
         resolve_multiple=None,
         interval_days=None,
-        allowed_nan_value_prop=None,
     ):
         """Get inputevents specs."""
 
@@ -60,10 +65,7 @@ class FeatureSpecifier:
             resolve_multiple = ["max", "min", "mean"]
 
         if interval_days is None:
-            interval_days = [2, 30]
-
-        if allowed_nan_value_prop is None:
-            allowed_nan_value_prop = [0]
+            interval_days = [0.146, 2, 30]
 
         log.info("–––––––– Generating inputevents specs ––––––––")
 
@@ -72,28 +74,51 @@ class FeatureSpecifier:
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
             fallback=[0],
-            allowed_nan_value_prop=allowed_nan_value_prop,
+            allowed_nan_value_prop=[0],
         ).create_combinations()
 
         return inputevents
+    
+
+    def _get_chartevents_specs(
+        self,
+        resolve_multiple=None,
+        interval_days=None,
+    ):
+        """Get chartevents specs."""
+
+        if resolve_multiple is None:
+            resolve_multiple = ["latest", "mean", "change_per_day"]
+
+        if interval_days is None:
+            interval_days = [1, 2]
+            
+        log.info("–––––––– Generating chartevents specs ––––––––")
+
+        admissions = PredictorGroupSpec(
+            values_loader=("gcs",),
+            lookbehind_days=interval_days,
+            resolve_multiple_fn=resolve_multiple,
+            fallback=[0],
+            allowed_nan_value_prop=[0],
+        ).create_combinations()
+
+        return admissions
+    
 
     def _get_temporal_predictor_specs(self) -> list[PredictorSpec]:
         """Generate predictor spec list."""
         log.info("–––––––– Generating temporal predictor specs ––––––––")
 
-        resolve_multiple = ["mean"]
-        interval_days = [180, 730]
-        allowed_nan_value_prop = [0]
 
-        admissions = self._get_admissions_specs(
-            resolve_multiple,
-            interval_days,
-            allowed_nan_value_prop,
-        )
+        admissions = self._get_admissions_specs()
 
         inputevents = self._get_inputevents_specs()
 
-        return admissions + inputevents
+        chartevents = self._get_chartevents_specs()
+
+        return admissions + inputevents + chartevents
+
 
     def get_feature_specs(self) -> list[_AnySpec]:
         """Get a spec set."""
