@@ -1,11 +1,10 @@
 """Main feature generation."""
 import pandas as pd
 from feautre_specification.specify_features import FeatureSpecifier
-
 from loaders.utils import DATA_PATH
+from utils.add_age import add_age
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
-from utils.add_age import add_age
 
 
 def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
@@ -36,7 +35,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
         project_info=project_info,
     )
 
-    # Add age 
+    # Add age
     flattened_df = add_age(flattened_df)
 
     if save_to_disk:

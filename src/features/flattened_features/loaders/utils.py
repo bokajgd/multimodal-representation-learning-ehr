@@ -1,4 +1,6 @@
-"""A set of misc. utility functions for data loaders.
+"""A set of misc.
+
+utility functions for data loaders.
 """
 
 from pathlib import Path

@@ -1,14 +1,15 @@
-""" Utils for handling, processing and model fitting free-text notes  """
+"""Utils for handling, processing and model fitting free-text notes."""
 
 import pickle as pkl
 from pathlib import Path
 from typing import Any, Union
-import joblib
 
+import joblib
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[4]
 TEXT_MODEL_PATH = RELATIVE_PROJECT_ROOT / "text_models"
+
 
 def save_text_model_to_dir(
     model: Any,
@@ -37,9 +38,9 @@ def save_model_vocab_to_dir(
 
     # Saving text model vocabulary
     vocab_path = Path(save_path) / "vocabs" / f"{model_filename}_vocab.pkl"
-    with open(vocab_path, 'wb') as fw:
+    with open(vocab_path, "wb") as fw:
         joblib.dump(model.vocabulary_, fw)
-        
+
 
 def load_text_model(
     filename: str,

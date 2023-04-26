@@ -1,4 +1,4 @@
-"""Function for fitting text model
+"""Function for fitting text model.
 
 Code adapted from GitHub repository 'psycop-feature-generation'
 """

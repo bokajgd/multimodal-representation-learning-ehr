@@ -7,9 +7,7 @@ import time
 from pathlib import Path
 from typing import Literal
 
-from timeseriesflattener.feature_spec_objects import (
-    BaseModel,
-)
+from timeseriesflattener.feature_spec_objects import BaseModel
 
 log = logging.getLogger(__name__)
 
@@ -71,8 +69,7 @@ def create_feature_set_path(
     return save_dir
 
 
-def get_project_info(
-) -> ProjectInfo:
+def get_project_info() -> ProjectInfo:
     """Setup for main.
 
     Args:
@@ -83,8 +80,9 @@ def get_project_info(
     log.info("Setting up project")
     proj_path = Path(__file__).resolve().parents[4]
 
-
-    feature_set_id = f"multimodal_rep_learning_ehr_features_{time.strftime('%Y_%m_%d_%H_%M')}"
+    feature_set_id = (
+        f"multimodal_rep_learning_ehr_features_{time.strftime('%Y_%m_%d_%H_%M')}"
+    )
 
     feature_set_path = create_feature_set_path(
         feature_set_id=feature_set_id,

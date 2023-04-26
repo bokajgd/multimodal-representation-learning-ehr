@@ -1,13 +1,11 @@
-"""Loaders for the free-text notes.
-"""
+"""Loaders for the free-text notes."""
 import time
 from typing import Any, Optional
 
 import pandas as pd
-
 from timeseriesflattener.utils import data_loaders
-from .utils import load_sql_query, text_preprocessing, DATA_PATH
 
+from .utils import DATA_PATH, load_sql_query, text_preprocessing
 
 BASE_QUERY = """
         SELECT ne.SUBJECT_ID AS patient_id, ne.CHARTTIME AS timestamp, ne.TEXT AS value, ne.ISERROR AS error
@@ -37,12 +35,13 @@ def load_notes(
     df = load_sql_query(base_query)
 
     # Remove rows where error is not null
-    df = df[df['error'].isna()].drop(columns=["error"])
+    df = df[df["error"].isna()].drop(columns=["error"])
 
     # Preprocess text
     df = text_preprocessing(df)
 
     return df
+
 
 if __name__ == "__main__":
     start_time = time.time()

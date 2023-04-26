@@ -1,5 +1,5 @@
-from text_model_pipeline import text_model_pipeline
 from loaders.load_notes import load_notes
+from text_model_pipeline import text_model_pipeline
 
 df = load_notes(nrows=300)
 

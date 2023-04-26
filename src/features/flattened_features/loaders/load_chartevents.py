@@ -8,7 +8,6 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-
 from utils import load_sql_query
 
 BASE_QUERY = """
@@ -16,6 +15,7 @@ BASE_QUERY = """
         FROM physionet-data.mimiciii_clinical.chartevents ce
         WHERE ce.HADM_ID IN (SELECT DISTINCT HADM_ID FROM physionet-data.mimiciii_clinical.inputevents_mv)
         """
+
 
 @data_loaders.register("noteevents")
 def load_chartevents(
@@ -37,6 +37,7 @@ def load_chartevents(
     df = load_sql_query(base_query)
 
     return df
+
 
 @data_loaders.register("gcs")
 def load_gcs(

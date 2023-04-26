@@ -1,4 +1,4 @@
-"""Pipeline for fitting text models
+"""Pipeline for fitting text models.
 
 Code adapted from GitHub repository 'psycop-feature-generation'
 """
@@ -6,11 +6,11 @@ Code adapted from GitHub repository 'psycop-feature-generation'
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-import pandas as pd
 from typing import Any, Literal, Optional
-from utils.fit_text_model import fit_text_model
 
-from utils.utils import save_text_model_to_dir, save_model_vocab_to_dir, TEXT_MODEL_PATH
+import pandas as pd
+from utils.fit_text_model import fit_text_model
+from utils.utils import TEXT_MODEL_PATH, save_model_vocab_to_dir, save_text_model_to_dir
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -24,7 +24,9 @@ def create_model_filename(
     min_df: int,
     max_features: Optional[int],
 ):
-    """Create model filename including all relevant informaiton about the model.
+    """Create model filename including all relevant informaiton about the
+    model.
+
     Args:
         model (Literal[str]): Which model to use. Takes either "bow" or "tfidf".
         df (pd.DataFrame): Dataframe with text column to fit model on.
@@ -73,7 +75,6 @@ def text_model_pipeline(
         max_features=max_features,
     )
 
-
     # fit model
     vec = fit_text_model(
         model=model,
@@ -87,6 +88,6 @@ def text_model_pipeline(
 
     # save model and vocab to dir
     save_text_model_to_dir(model=vec, filename=filename, save_path=save_path)
-    save_model_vocab_to_dir(model=vec, model_filename=filename, save_path=save_path, )
+    save_model_vocab_to_dir(model=vec, model_filename=filename, save_path=save_path)
 
     return None

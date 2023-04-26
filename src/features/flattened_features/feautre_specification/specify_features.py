@@ -78,7 +78,6 @@ class FeatureSpecifier:
         ).create_combinations()
 
         return inputevents
-    
 
     def _get_chartevents_specs(
         self,
@@ -92,7 +91,7 @@ class FeatureSpecifier:
 
         if interval_days is None:
             interval_days = [1, 2]
-            
+
         log.info("–––––––– Generating chartevents specs ––––––––")
 
         admissions = PredictorGroupSpec(
@@ -104,12 +103,10 @@ class FeatureSpecifier:
         ).create_combinations()
 
         return admissions
-    
 
     def _get_temporal_predictor_specs(self) -> list[PredictorSpec]:
         """Generate predictor spec list."""
         log.info("–––––––– Generating temporal predictor specs ––––––––")
-
 
         admissions = self._get_admissions_specs()
 
@@ -118,7 +115,6 @@ class FeatureSpecifier:
         chartevents = self._get_chartevents_specs()
 
         return admissions + inputevents + chartevents
-
 
     def get_feature_specs(self) -> list[_AnySpec]:
         """Get a spec set."""
