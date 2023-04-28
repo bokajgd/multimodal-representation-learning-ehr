@@ -3,7 +3,18 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import DATA_PATH, load_dataset_from_file
+from utils import DATA_PATH, load_dataset_from_file, load_sql_query
+
+ICU_STAYS_QUERY = """
+        SELECT icu.SUBJECT_ID, icu.OUTTIME, icu.LOS,
+        FROM physionet-data.mimiciii_clinical.icustays icu
+        WHERE icu.HADM_ID IN (SELECT DISTINCT HADM_ID FROM physionet-data.mimiciii_clinical.inputevents_mv)
+        """
+
+PATIENTS_QUERY = """
+        SELECT pat.SUBJECT_ID, pat.DOB,
+        FROM physionet-data.mimiciii_clinical.patients pat
+        """
 
 
 @data_loaders.register("prediction_times")
@@ -24,34 +35,10 @@ def generate_prediction_times_df(
     Returns:
         pd.DataFrame: Prediction times df
     """
-    icu_stays_file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "ICUSTAYS.csv.gz"
-    )
-
-    patients_file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "PATIENTS.csv.gz"
-    )
-
     cohort_output_file_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
 
-    cohort = load_dataset_from_file(
-        file_path=icu_stays_file_path,
-        nrows=nrows,
-        cols_to_load=[
-            "SUBJECT_ID",
-            "OUTTIME",
-            "LOS",
-        ],
-    )
-
-    patients = load_dataset_from_file(
-        file_path=patients_file_path,
-        nrows=nrows,
-        cols_to_load=[
-            "SUBJECT_ID",
-            "DOB",
-        ],
-    )
+    cohort = load_sql_query(ICU_STAYS_QUERY)
+    patients = load_sql_query(PATIENTS_QUERY)
 
     # Convert to datetime
     cohort["OUTTIME_date"] = pd.to_datetime(cohort["OUTTIME"].copy()).dt.date
@@ -95,4 +82,4 @@ def generate_prediction_times_df(
 
 
 if __name__ == "__main__":
-    generate_prediction_times_df()
+    generate_prediction_times_df(save_to_disk=True)

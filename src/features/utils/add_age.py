@@ -1,7 +1,7 @@
 """Utility function for adding age to a feature dataframe."""
 
 import pandas as pd
-from loaders.load_demographics import load_dob
+from static_and_flattened_features.loaders.load_demographics import load_dob
 
 
 def add_age(df: pd.DataFrame) -> pd.DataFrame:

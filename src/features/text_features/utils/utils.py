@@ -40,20 +40,3 @@ def save_model_vocab_to_dir(
     vocab_path = Path(save_path) / "vocabs" / f"{model_filename}_vocab.pkl"
     with open(vocab_path, "wb") as fw:
         joblib.dump(model.vocabulary_, fw)
-
-
-def load_text_model(
-    filename: str,
-    path_str: str = TEXT_MODEL_PATH,
-) -> Union[CountVectorizer, TfidfVectorizer]:
-    """
-    Loads a text model from a pickle file
-    Args:
-        filename: filename name of the model
-        path_str: path of model location
-    """
-
-    filepath = Path(path_str) / filename
-
-    with Path(filepath).open("rb") as f:
-        return pkl.load(f)

@@ -12,3 +12,4 @@ if __name__ == "__main__":
         min_df=10,
         ngram_range=(1, 3),
     )
+    print('Done!')

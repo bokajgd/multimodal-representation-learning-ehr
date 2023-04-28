@@ -5,10 +5,10 @@ from typing import Any, Optional
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import DATA_PATH, load_sql_query, text_preprocessing
+from .utils import load_sql_query, text_preprocessing
 
 BASE_QUERY = """
-        SELECT ne.SUBJECT_ID AS patient_id, ne.CHARTTIME AS timestamp, ne.TEXT AS value, ne.ISERROR AS error
+        SELECT ne.SUBJECT_ID AS patient_id, ne.CHARTTIME AS timestamp, ne.TEXT AS text, ne.ISERROR AS error
         FROM physionet-data.mimiciii_notes.noteevents ne
         WHERE ne.HADM_ID IN (SELECT DISTINCT HADM_ID FROM physionet-data.mimiciii_clinical.inputevents_mv)
         AND ne.CHARTTIME IS NOT NULL
@@ -18,7 +18,7 @@ BASE_QUERY = """
 @data_loaders.register("noteevents")
 def load_notes(
     base_query: str = BASE_QUERY,
-    nrows: Optional[int] = None,
+    nrows: Optional[int] = 20000,
 ) -> pd.DataFrame:
     """Load all notes.
 
@@ -26,7 +26,7 @@ def load_notes(
         nrows (int): Number of rows to load.
 
     Returns:
-        pd.DataFrame: Chartevents table.
+        pd.DataFrame: Table with preprocessed notes.
     """
 
     if nrows:
@@ -45,5 +45,6 @@ def load_notes(
 
 if __name__ == "__main__":
     start_time = time.time()
-    notes = load_notes(nrows=300)
+    notes = load_notes(nrows=1000)
     print(f"Time to load notes: {time.time() - start_time:.2f} seconds")
+    print('hi')

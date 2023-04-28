@@ -20,7 +20,7 @@ def load_sql_query(query: str) -> str:
 
 def text_preprocessing(
     df: pd.DataFrame,
-    text_column_name: str = "value",
+    text_column_name: str = "text",
 ) -> pd.DataFrame:
     """Preprocess texts by lower casing, removing stopwords and symbols.
 

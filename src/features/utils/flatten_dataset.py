@@ -13,7 +13,7 @@ from psycop_feature_generation.application_modules.filter_prediction_times impor
 from psycop_feature_generation.application_modules.project_setup import ProjectInfo
 from timeseriesflattener.feature_cache.cache_to_disk import DiskCache
 from timeseriesflattener.feature_spec_objects import _AnySpec
-from timeseriesflattener.flattened_dataset import TimeseriesFlattener
+from .tsf_module.tsf_module import TimeseriesFlattener
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +55,6 @@ def create_flattened_dataset(
     project_info: ProjectInfo,
     quarantine_df: Optional[pd.DataFrame] = None,
     quarantine_days: Optional[int] = None,
-    birthdays: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Create flattened dataset.
 
@@ -68,7 +67,6 @@ def create_flattened_dataset(
             See timeseriesflattener tutorial for more info.
         quarantine_df (pd.DataFrame, optional): Quarantine dataframe with "timestamp" and "project_info.col_names.id" columns.
         quarantine_days (int, optional): Number of days to quarantine. Any prediction time within quarantine_days after the timestamps in quarantine_df will be dropped.
-        birthdays (pd.DataFrame, optional): Birthdays dataframe to add age.
 
     Returns:
         FlattenedDataset: Flattened dataset.
@@ -87,16 +85,13 @@ def create_flattened_dataset(
             len(feature_specs),
             psutil.cpu_count(logical=True),
         ),
-        cache=DiskCache(
-            feature_cache_dir=project_info.project_path / "feature_cache",
-        ),
+        cache=None,
         drop_pred_times_with_insufficient_look_distance=drop_pred_times_with_insufficient_look_distance,
         predictor_col_name_prefix=project_info.prefix.predictor,
         outcome_col_name_prefix=project_info.prefix.outcome,
         timestamp_col_name=project_info.col_names.timestamp,
         entity_id_col_name=project_info.col_names.id,
     )
-
     flattened_dataset.add_spec(spec=feature_specs)
 
     return flattened_dataset.get_df()

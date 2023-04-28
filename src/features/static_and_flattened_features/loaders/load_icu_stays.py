@@ -1,10 +1,14 @@
 """Loaders for the icu stays table."""
+import sys
+
+sys.path.append(".")
+
 from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import DATA_PATH, load_dataset_from_file
+from utils import DATA_PATH, load_dataset_from_file
 
 
 @data_loaders.register("icu_stays")

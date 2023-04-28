@@ -8,7 +8,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import load_sql_query
+from .utils import load_sql_query
 
 BASE_QUERY = """
         SELECT ce.SUBJECT_ID, ce.HADM_ID, ce.ITEMID, ce.VALUE, ce.VALUENUM, ce.VALUEUOM, ce.CHARTTIME,
@@ -17,7 +17,7 @@ BASE_QUERY = """
         """
 
 
-@data_loaders.register("noteevents")
+@data_loaders.register("chartevents")
 def load_chartevents(
     base_query: str = BASE_QUERY,
     nrows: Optional[int] = None,

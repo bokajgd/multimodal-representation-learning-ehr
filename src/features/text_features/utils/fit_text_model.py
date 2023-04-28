@@ -12,7 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 def fit_text_model(
     model: Literal["bow", "tfidf"],
     df: pd.DataFrame,
-    text_column_name: str = "value",
+    text_column_name: str = "text",
     ngram_range: tuple = (1, 1),
     max_df: float = 1.0,
     min_df: int = 1,

@@ -10,7 +10,7 @@ from .utils import (
 
 
 @data_loaders.register("admissions")
-def load_admissions(
+def load_admissions_base_df(
     nrows: Optional[int] = None,
     return_value_as_los: bool = False,
 ) -> pd.DataFrame:
@@ -88,7 +88,7 @@ def load_admission_discharge_timestamps(
     Returns:
         pd.DataFrame: Admissions discharge times with admission_id column.
     """
-    admissions = load_admissions(nrows=nrows,)
+    admissions = load_admissions_base_df(nrows=nrows,)
 
     return admissions[["admission_id", "timestamp"]]
 
@@ -105,15 +105,15 @@ def load_admission_timestamps(
     Returns:
         pd.DataFrame: Admissions discharge times with admission_id column.
     """
-    admissions = load_admissions(nrows=nrows,)
+    admissions = load_admissions_base_df(nrows=nrows,)
 
     return admissions[["admission_id", "admission_timestamp"]]
 
 
-@data_loaders.register("emergency_admissions")
-def load_emergency_admissions(
+@data_loaders.register("all_admissions")
+def load_all_admissions(
     nrows: Optional[int] = None,
-    return_value_as_admission_length_days: bool = True,
+    return_value_as_los: bool = True,
     timestamps_only: bool = False,
 ) -> pd.DataFrame:
     """Load emergency admissions table.
@@ -128,7 +128,41 @@ def load_emergency_admissions(
     Returns:
         pd.DataFrame: Emergency admissions table.
     """
-    admissions = load_admissions(nrows=nrows, return_value_as_los = return_value_as_admission_length_days)
+    
+    all_admissions = load_admissions_base_df(nrows=nrows, return_value_as_los=return_value_as_los).drop(
+        columns=["admission_type", "admission_id", "admission_timestamp"]
+    )
+
+    if timestamps_only:
+        return all_admissions.drop(columns="value").reset_index(drop=True)
+    else:
+        return all_admissions.reset_index(drop=True)
+
+
+if __name__ == "__main__":
+    emergency_admissions = load_emergency_admissions()
+    admission_discharge_times = load_admission_discharge_timestamps()
+  
+
+@data_loaders.register("emergency_admissions")
+def load_emergency_admissions(
+    nrows: Optional[int] = None,
+    return_value_as_los: bool = True,
+    timestamps_only: bool = False,
+) -> pd.DataFrame:
+    """Load emergency admissions table.
+
+    Args:
+        nrows (int): Number of rows to load.
+        return_value_as_admission_length_days (bool): If True, returns the length of the
+            admission in days instead. If not it returns 1 for all admissions. Defaults to True.
+        timestamps_only (bool): If True, returns only the timestamps and patient_id. 
+            If not it also returns the value column Defaults to False.
+
+    Returns:
+        pd.DataFrame: Emergency admissions table.
+    """
+    admissions = load_admissions_base_df(nrows=nrows, return_value_as_los=return_value_as_los)
 
     emergency_admissions = admissions[admissions["admission_type"] == "EMERGENCY"].drop(
         columns=["admission_type", "admission_id", "admission_timestamp"]
