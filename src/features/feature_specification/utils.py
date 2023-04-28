@@ -1,4 +1,4 @@
-"""Utils for specifying feature specs"""
+"""Utils for specifying feature specs."""
 
 import pickle as pkl
 from pathlib import Path
@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TEXT_MODEL_PATH = RELATIVE_PROJECT_ROOT / "text_models"
+
 
 def load_text_model(
     filename: str,

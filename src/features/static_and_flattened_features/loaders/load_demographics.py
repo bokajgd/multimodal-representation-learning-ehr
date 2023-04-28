@@ -84,13 +84,14 @@ def load_sex(nrows: Optional[int] = None) -> pd.DataFrame:
     """
 
     gender = demographic_loader("PATIENTS.csv.gz", "GENDER", nrows)
-    
-    gender['GENDER'] = gender['GENDER'].map({'M': 0, 'F': 1})
-    
+
+    gender["GENDER"] = gender["GENDER"].map({"M": 0, "F": 1})
+
     # Rename column
     gender = gender.rename(columns={"GENDER": "sex_is_female"})
 
     return gender.reset_index(drop=True)
+
 
 if __name__ == "__main__":
     load_sex(nrows=1000)

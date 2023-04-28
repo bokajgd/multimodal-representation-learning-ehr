@@ -4,13 +4,12 @@ import logging
 import pandas as pd
 from feature_specification.specify_features import FeatureSpecifier
 from static_and_flattened_features.loaders.utils import DATA_PATH
-
-from utils.utils import add_age, remove_outliers
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
-
+from utils.utils import add_age, remove_outliers
 
 log = logging.getLogger(__name__)
+
 
 def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
     """Main function for loading, generating and evaluating a flattened
@@ -31,9 +30,8 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
 
     feature_specs = FeatureSpecifier(
         project_info=project_info,
-        min_set_for_debug=True
+        min_set_for_debug=True,
     ).get_feature_specs()
-
 
     flattened_df = create_flattened_dataset(
         feature_specs=feature_specs,

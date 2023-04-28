@@ -5,23 +5,21 @@ import sys
 sys.path.append(".")
 
 from typing import Union
-import numpy as np
 
-from .utils import load_text_model
+import numpy as np
 from psycop_feature_generation.application_modules.project_setup import ProjectInfo
+from text_features.loaders.load_notes import load_notes
 from timeseriesflattener.feature_spec_objects import (
     BaseModel,
-    TextPredictorSpec,
     PredictorGroupSpec,
     PredictorSpec,
     StaticSpec,
+    TextPredictorSpec,
     _AnySpec,
 )
-from timeseriesflattener.text_embedding_functions import (
-    sklearn_embedding,
-)
+from timeseriesflattener.text_embedding_functions import sklearn_embedding
 
-from text_features.loaders.load_notes import load_notes
+from .utils import load_text_model
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +32,7 @@ class SpecSet(BaseModel):
 
 
 class FeatureSpecifier:
-    def __init__(self, project_info: ProjectInfo,min_set_for_debug: bool = False):
+    def __init__(self, project_info: ProjectInfo, min_set_for_debug: bool = False):
         self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
 
@@ -47,7 +45,7 @@ class FeatureSpecifier:
                 prefix=self.project_info.prefix.predictor,
             ),
         ]
-    
+
     def _get_admissions_specs(
         self,
         resolve_multiple=None,
@@ -104,18 +102,18 @@ class FeatureSpecifier:
         ).create_combinations()
 
         return admissions
-    
 
     def _get_tfidf_all_notes_specs(
-            self,
-            resolve_multiple=None,
-            interval_days=None,):
-        """Get specs for tfidf features from all notes"""
+        self,
+        resolve_multiple=None,
+        interval_days=None,
+    ):
+        """Get specs for tfidf features from all notes."""
 
         log.info("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
-            filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_250.pkl"
+            filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_250.pkl",
         )
 
         tfidf = TextPredictorSpec(
@@ -145,12 +143,12 @@ class FeatureSpecifier:
                     fallback=0,
                     allowed_nan_value_prop=0,
                     prefix=self.project_info.prefix.predictor,
-                )
+                ),
             ]
 
         admissions = self._get_admissions_specs(
-             resolve_multiple=["count", "mean"],
-             interval_days=[182, 365],
+            resolve_multiple=["count", "mean"],
+            interval_days=[182, 365],
         )
 
         inputevents = self._get_inputevents_specs(
@@ -164,8 +162,7 @@ class FeatureSpecifier:
         )
 
         return admissions + inputevents + chartevents
-    
-    
+
     def _get_text_predictor_specs(self) -> list[TextPredictorSpec]:
         """Generate text predictor spec list."""
 
@@ -178,15 +175,14 @@ class FeatureSpecifier:
 
         return [noteevents]
 
-
     def get_feature_specs(self) -> list[Union[TextPredictorSpec, PredictorSpec]]:
         """Get a spec set."""
-        
+
         if self.min_set_for_debug:
             return self._get_temporal_predictor_specs()
-        
+
         return (
             self._get_temporal_predictor_specs()
-            + self._get_text_predictor_specs() 
+            + self._get_text_predictor_specs()
             + self._get_static_predictor_specs()
         )

@@ -1,2 +1,2 @@
-from .features import *
 from .cohort import *
+from .features import *

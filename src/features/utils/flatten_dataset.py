@@ -17,6 +17,7 @@ from timeseriesflattener.flattened_dataset import TimeseriesFlattener
 
 log = logging.getLogger(__name__)
 
+
 def filter_prediction_times(
     prediction_times_df: pd.DataFrame,
     project_info: ProjectInfo,

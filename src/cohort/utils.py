@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Optional
 
 import pandas as pd
-
 from google.cloud import bigquery
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[2]

@@ -8,6 +8,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
+
 from .utils import load_sql_query
 
 BASE_QUERY = """

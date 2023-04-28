@@ -49,4 +49,3 @@ if __name__ == "__main__":
     notes = load_notes(nrows=20000)
     print(f"Time to load notes: {time.time() - start_time:.2f} seconds")
     print(notes.head())
-
