@@ -132,7 +132,8 @@ def load_all_admissions(
     """
 
     all_admissions = load_admissions_base_df(
-        nrows=nrows, return_value_as_los=return_value_as_los
+        nrows=nrows,
+        return_value_as_los=return_value_as_los,
     ).drop(
         columns=["admission_type", "admission_id", "admission_timestamp"],
     )
@@ -162,7 +163,8 @@ def load_emergency_admissions(
         pd.DataFrame: Emergency admissions table.
     """
     admissions = load_admissions_base_df(
-        nrows=nrows, return_value_as_los=return_value_as_los
+        nrows=nrows,
+        return_value_as_los=return_value_as_los,
     )
 
     emergency_admissions = admissions[admissions["admission_type"] == "EMERGENCY"].drop(
