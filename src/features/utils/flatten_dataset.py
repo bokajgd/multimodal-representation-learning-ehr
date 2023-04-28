@@ -13,10 +13,9 @@ from psycop_feature_generation.application_modules.filter_prediction_times impor
 from psycop_feature_generation.application_modules.project_setup import ProjectInfo
 from timeseriesflattener.feature_cache.cache_to_disk import DiskCache
 from timeseriesflattener.feature_spec_objects import _AnySpec
-from .tsf_module.tsf_module import TimeseriesFlattener
+from timeseriesflattener.flattened_dataset import TimeseriesFlattener
 
 log = logging.getLogger(__name__)
-
 
 def filter_prediction_times(
     prediction_times_df: pd.DataFrame,

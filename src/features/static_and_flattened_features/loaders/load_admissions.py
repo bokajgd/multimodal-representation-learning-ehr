@@ -116,7 +116,7 @@ def load_all_admissions(
     return_value_as_los: bool = True,
     timestamps_only: bool = False,
 ) -> pd.DataFrame:
-    """Load emergency admissions table.
+    """Load all admissions for feature generation.
 
     Args:
         nrows (int): Number of rows to load.
@@ -138,11 +138,6 @@ def load_all_admissions(
     else:
         return all_admissions.reset_index(drop=True)
 
-
-if __name__ == "__main__":
-    emergency_admissions = load_emergency_admissions()
-    admission_discharge_times = load_admission_discharge_timestamps()
-  
 
 @data_loaders.register("emergency_admissions")
 def load_emergency_admissions(

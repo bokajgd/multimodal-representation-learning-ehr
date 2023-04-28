@@ -1,4 +1,5 @@
 """Loaders for the free-text notes."""
+
 import time
 from typing import Any, Optional
 
@@ -45,6 +46,7 @@ def load_notes(
 
 if __name__ == "__main__":
     start_time = time.time()
-    notes = load_notes(nrows=1000)
+    notes = load_notes(nrows=20000)
     print(f"Time to load notes: {time.time() - start_time:.2f} seconds")
-    print('hi')
+    print(notes.head())
+

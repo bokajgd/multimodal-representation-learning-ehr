@@ -24,7 +24,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
         columns=["patient_id"],
     )
 
-    # remove columns with only two unique values to avoid binarizing columns that are already binary
+    # disregard columns with only two unique values to avoid binarizing columns that are already binary
     numeric_cols = numeric_cols.loc[:, numeric_cols.nunique() > 2]
 
     # initialize an empty list to store the new DataFrames for each column

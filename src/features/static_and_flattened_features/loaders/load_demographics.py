@@ -1,4 +1,5 @@
 """Load static demographics table."""
+
 from typing import Optional
 
 import pandas as pd
@@ -71,5 +72,25 @@ def load_dob(nrows: Optional[int] = None) -> pd.DataFrame:
     return dob.reset_index(drop=True)
 
 
+@data_loaders.register("sex_is_female")
+def load_sex(nrows: Optional[int] = None) -> pd.DataFrame:
+    """Load gender of each patient. Female patients are assigned a value of 1.
+
+    Args:
+        nrows (int): Number of rows to load.
+
+    Returns:
+        pd.DataFrame: Dataframe with a column containing a gender for each patient.
+    """
+
+    gender = demographic_loader("PATIENTS.csv.gz", "GENDER", nrows)
+    
+    gender['GENDER'] = gender['GENDER'].map({'M': 0, 'F': 1})
+    
+    # Rename column
+    gender = gender.rename(columns={"GENDER": "sex_is_female"})
+
+    return gender.reset_index(drop=True)
+
 if __name__ == "__main__":
-    load_dob(nrows=10000)
+    load_sex(nrows=1000)

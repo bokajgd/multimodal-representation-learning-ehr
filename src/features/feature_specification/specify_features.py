@@ -30,25 +30,30 @@ class SpecSet(BaseModel):
     """A set of unresolved specs, ready for resolving."""
 
     temporal_predictors: list[PredictorSpec]
-    metadata: list[_AnySpec]
+    static_predictors: list[StaticSpec]
 
 
 class FeatureSpecifier:
-    def __init__(self, project_info: ProjectInfo):
+    def __init__(self, project_info: ProjectInfo,min_set_for_debug: bool = False):
+        self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
 
+    def _get_static_predictor_specs(self):
+        """Get static predictor specs."""
+        return [
+            StaticSpec(
+                values_loader="sex_is_female",
+                input_col_name_override="sex_is_female",
+                prefix=self.project_info.prefix.predictor,
+            ),
+        ]
+    
     def _get_admissions_specs(
         self,
         resolve_multiple=None,
         interval_days=None,
     ):
         """Get admissions specs."""
-
-        if resolve_multiple is None:
-            resolve_multiple = ["count", "mean"]
-
-        if interval_days is None:
-            interval_days = [182, 365]
 
         log.info("–––––––– Generating admissions specs ––––––––")
 
@@ -69,12 +74,6 @@ class FeatureSpecifier:
     ):
         """Get inputevents specs."""
 
-        if resolve_multiple is None:
-            resolve_multiple = ["max", "min", "mean"]
-
-        if interval_days is None:
-            interval_days = [0.146, 2, 30]
-
         log.info("–––––––– Generating inputevents specs ––––––––")
 
         inputevents = PredictorGroupSpec(
@@ -94,12 +93,6 @@ class FeatureSpecifier:
     ):
         """Get chartevents specs."""
 
-        if resolve_multiple is None:
-            resolve_multiple = ["latest", "mean", "change_per_day"]
-
-        if interval_days is None:
-            interval_days = [1, 2]
-
         log.info("–––––––– Generating chartevents specs ––––––––")
 
         admissions = PredictorGroupSpec(
@@ -118,23 +111,17 @@ class FeatureSpecifier:
             resolve_multiple=None,
             interval_days=None,):
         """Get specs for tfidf features from all notes"""
-        
-        if resolve_multiple is None:
-            resolve_multiple = "concatenate"
-
-        if interval_days is None:
-            interval_days = 2
 
         log.info("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
-            filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_200.pkl"
+            filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_250.pkl"
         )
 
         tfidf = TextPredictorSpec(
             values_loader=load_notes,
             lookbehind_days=interval_days,
-            fallback=np.nan,
+            fallback=0,
             resolve_multiple_fn=resolve_multiple,
             feature_name="text_tfidf",
             interval_days=interval_days,
@@ -149,28 +136,57 @@ class FeatureSpecifier:
         """Generate predictor spec list."""
         log.info("–––––––– Generating temporal predictor specs ––––––––")
 
-        admissions = self._get_admissions_specs()
+        if self.min_set_for_debug:
+            return [
+                PredictorSpec(
+                    values_loader="weight",
+                    lookbehind_days=2,
+                    resolve_multiple_fn="latest",
+                    fallback=0,
+                    allowed_nan_value_prop=0,
+                    prefix=self.project_info.prefix.predictor,
+                )
+            ]
 
-        #inputevents = self._get_inputevents_specs()
+        admissions = self._get_admissions_specs(
+             resolve_multiple=["count", "mean"],
+             interval_days=[182, 365],
+        )
 
-        #chartevents = self._get_chartevents_specs()
+        inputevents = self._get_inputevents_specs(
+            resolve_multiple=["max", "min", "mean"],
+            interval_days=[0.146, 2, 30],
+        )
 
-        return admissions #+ inputevents + chartevents
+        chartevents = self._get_chartevents_specs(
+            resolve_multiple=["latest", "mean", "change_per_day"],
+            interval_days=[2],
+        )
+
+        return admissions + inputevents + chartevents
     
     
     def _get_text_predictor_specs(self) -> list[TextPredictorSpec]:
         """Generate text predictor spec list."""
+
         log.info("–––––––– Generating text predictor specs ––––––––")
 
-        noteevents = self._get_tfidf_all_notes_specs()
+        noteevents = self._get_tfidf_all_notes_specs(
+            resolve_multiple="concatenate",
+            interval_days=2,
+        )
 
         return [noteevents]
 
 
     def get_feature_specs(self) -> list[Union[TextPredictorSpec, PredictorSpec]]:
         """Get a spec set."""
-
+        
+        if self.min_set_for_debug:
+            return self._get_temporal_predictor_specs()
+        
         return (
-            #self._get_temporal_predictor_specs()
-            self._get_text_predictor_specs() 
+            self._get_temporal_predictor_specs()
+            + self._get_text_predictor_specs() 
+            + self._get_static_predictor_specs()
         )
