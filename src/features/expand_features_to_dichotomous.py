@@ -36,7 +36,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
         col_data = numeric_cols[col].values
 
         # calc the percentiles for the column data
-        p15, p85 = np.percentile(col_data, [15, 85])
+        p15, p85 = np.nanpercentile(col_data, [15, 85])
 
         # calc new binary columns for each percentile range
         col_p15 = np.where(col_data <= p15, 1, 0)
