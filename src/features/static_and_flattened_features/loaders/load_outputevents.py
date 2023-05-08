@@ -2,8 +2,8 @@
 
 Outputevents covers all fluids which have either been excreted by the
 patient, such as urine output, or extracted from the patient, for
-example through a drain.Outputevents loaders data register naming convention:
-'<ITEMID>_<AMOUNTUOM>'
+example through a drain.Outputevents loaders data register naming
+convention: '<ITEMID>_<AMOUNTUOM>'
 """
 
 import time
@@ -11,12 +11,11 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-
 from utils import (
     DATA_PATH,
-    load_dataset_from_file,
     _drop_rows_with_too_small_patient_or_admission_frequency,
     _drop_rows_with_too_small_value_frequency,
+    load_dataset_from_file,
     load_sql_query,
 )
 
@@ -84,7 +83,34 @@ def load_urine(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
 
-    urine_list  = [40055, 43175, 40069, 40094, 40715, 40473, 40085, 40057, 40056, 40405, 40428, 40086, 40096, 40651, 226559, 226560, 226561, 226584, 226563, 226564, 226565, 226567, 226557, 226558, 227488, 227489]
+    urine_list = [
+        40055,
+        43175,
+        40069,
+        40094,
+        40715,
+        40473,
+        40085,
+        40057,
+        40056,
+        40405,
+        40428,
+        40086,
+        40096,
+        40651,
+        226559,
+        226560,
+        226561,
+        226584,
+        226563,
+        226564,
+        226565,
+        226567,
+        226557,
+        226558,
+        227488,
+        227489,
+    ]
 
     df = load_outputevents(nrows=nrows, load_for_flattening=False)
 

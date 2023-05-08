@@ -1,10 +1,13 @@
-"""Copy code"""
+"""Copy code."""
 import numpy as np
 import pandas as pd
 
-def aggregate_co_vectors(co_df: pd.DataFrame, binary_feature_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Function for aggregating co-occurrence vectors for each admission to create admission-level patient vectors.
+
+def aggregate_co_vectors(
+    co_df: pd.DataFrame, binary_feature_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Function for aggregating co-occurrence vectors for each admission to
+    create admission-level patient vectors.
 
     Args:
         co_df: pandas DataFrame containing the co-occurrence vectors for each admission.
@@ -14,7 +17,7 @@ def aggregate_co_vectors(co_df: pd.DataFrame, binary_feature_df: pd.DataFrame) -
         aggregated_feature_vectors: pandas DataFrame containing the aggregated feature vectors for each admission.
     """
 
-    feature_cols_df = binary_feature_df.filter(regex=r'^pred_')
+    feature_cols_df = binary_feature_df.filter(regex=r"^pred_")
     other_cols_df = binary_feature_df.drop(columns=feature_cols_df.columns)
 
     # convert the co-occurrence matrix to a numpy array
@@ -42,13 +45,14 @@ def aggregate_co_vectors(co_df: pd.DataFrame, binary_feature_df: pd.DataFrame) -
         aggregated_feature_vectors.append(aggregated_vector)
 
     # convert the aggregated feature vectors list to a pandas DataFrame
-    aggregated_dataframe = pd.DataFrame(aggregated_feature_vectors, columns=co_df.columns)
+    aggregated_dataframe = pd.DataFrame(
+        aggregated_feature_vectors, columns=co_df.columns
+    )
 
     # round all values to 2 decimal places
     aggregated_dataframe = aggregated_dataframe.round(2)
 
     # concatenate the aggregated feature vectors with the other columns
     aggregated_dataframe = pd.concat([other_cols_df, aggregated_dataframe], axis=1)
-
 
     return aggregated_dataframe

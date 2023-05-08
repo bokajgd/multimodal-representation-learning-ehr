@@ -11,9 +11,9 @@ from psycop_feature_generation.application_modules.project_setup import ProjectI
 from text_features.loaders.load_notes import load_notes
 from timeseriesflattener.feature_spec_objects import (
     BaseModel,
+    OutcomeSpec,
     PredictorGroupSpec,
     PredictorSpec,
-    OutcomeSpec,
     StaticSpec,
     TextPredictorSpec,
     _AnySpec,
@@ -35,7 +35,6 @@ class FeatureSpecifier:
         self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
 
-
     def _get_outcome_specs(self) -> list[OutcomeSpec]:
         """Get outcome specs."""
         logging.info("-------- Generating outcome specs --------")
@@ -55,16 +54,15 @@ class FeatureSpecifier:
 
         return [
             OutcomeSpec(
-                    values_loader="date_of_death",
-                    lookahead_days=30,
-                    resolve_multiple_fn="bool",
-                    fallback=0,
-                    incident=True,
-                    allowed_nan_value_prop=0,
-                    prefix=self.project_info.prefix.outcome,
-                ),
-            ]
-
+                values_loader="date_of_death",
+                lookahead_days=30,
+                resolve_multiple_fn="bool",
+                fallback=0,
+                incident=True,
+                allowed_nan_value_prop=0,
+                prefix=self.project_info.prefix.outcome,
+            ),
+        ]
 
     def _get_static_predictor_specs(self):
         """Get static predictor specs."""
@@ -214,7 +212,7 @@ class FeatureSpecifier:
         if self.min_set_for_debug:
             return self._get_temporal_predictor_specs() + self._get_outcome_specs()
 
-        logging.info('–––––––– Done generating specs ––––––––')
+        logging.info("–––––––– Done generating specs ––––––––")
 
         return (
             self._get_temporal_predictor_specs()
@@ -222,5 +220,3 @@ class FeatureSpecifier:
             + self._get_static_predictor_specs()
             + self._get_outcome_specs()
         )
-    
-

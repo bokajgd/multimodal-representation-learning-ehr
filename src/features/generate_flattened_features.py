@@ -11,7 +11,9 @@ from utils.utils import add_age, remove_outliers
 log = logging.getLogger(__name__)
 
 
-def generate_flattened_features(save_to_disk: bool = False, min_set_for_debug: bool = False,) -> pd.DataFrame:
+def generate_flattened_features(
+    save_to_disk: bool = False, min_set_for_debug: bool = False
+) -> pd.DataFrame:
     """Main function for generating a feature dataset."""
 
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
@@ -44,7 +46,7 @@ def generate_flattened_features(save_to_disk: bool = False, min_set_for_debug: b
 
     # Add age
     flattened_df = add_age(flattened_df)
-    
+
     if save_to_disk:
         if project_info.dataset_format == "parquet":
             flattened_df.to_parquet(

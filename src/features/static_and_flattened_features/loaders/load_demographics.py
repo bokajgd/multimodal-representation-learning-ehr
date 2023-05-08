@@ -74,7 +74,8 @@ def load_dob(nrows: Optional[int] = None) -> pd.DataFrame:
 
 @data_loaders.register("date_of_death")
 def load_dod(nrows: Optional[int] = None) -> pd.DataFrame:
-    """Load date of deaths. Keeps only rows with dates and adds a value column with all 1's
+    """Load date of deaths. Keeps only rows with dates and adds a value column
+    with all 1's.
 
     Args:
         nrows (int): Number of rows to load.

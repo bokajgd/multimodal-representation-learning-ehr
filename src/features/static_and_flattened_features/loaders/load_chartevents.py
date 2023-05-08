@@ -8,7 +8,6 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-
 from utils import load_sql_query
 
 BASE_QUERY = """
@@ -93,7 +92,7 @@ def load_systolic_blood_pressure(
 
     df = load_sql_query(QUERY)
 
-    # Drop rows with nan values in the VALLUENUM column or with a value of 0 
+    # Drop rows with nan values in the VALLUENUM column or with a value of 0
     df = df.dropna(subset=["VALUENUM"])
     df = df[df["VALUENUM"] != 0]
 
@@ -112,7 +111,7 @@ def load_systolic_blood_pressure(
     return df.reset_index(drop=True)
 
 
-@data_loaders.register("heart_rate") 
+@data_loaders.register("heart_rate")
 def load_heart_rate(
     base_query: str = BASE_QUERY,
     nrows: Optional[int] = None,
@@ -126,7 +125,7 @@ def load_heart_rate(
 
     df = load_sql_query(QUERY)
 
-    # Drop rows with nan values in the VALLUENUM column or with a value of 0    
+    # Drop rows with nan values in the VALLUENUM column or with a value of 0
     df = df.dropna(subset=["VALUENUM"])
     df = df[df["VALUENUM"] != 0]
 
@@ -145,7 +144,7 @@ def load_heart_rate(
     return df.reset_index(drop=True)
 
 
-@data_loaders.register("temperature") 
+@data_loaders.register("temperature")
 def load_temperature(
     base_query: str = BASE_QUERY,
     nrows: Optional[int] = None,
@@ -159,12 +158,14 @@ def load_temperature(
 
     df = load_sql_query(QUERY)
 
-    # Drop rows with nan values in the VALLUENUM column or with a value of 0 
+    # Drop rows with nan values in the VALLUENUM column or with a value of 0
     df = df.dropna(subset=["VALUENUM"])
     df = df[df["VALUENUM"] != 0]
 
     # Convert temperature from Fahrenheit to Celsius (all values above 50 are assumed to be in Fahrenheit)
-    df.loc[df["VALUENUM"] > 50, "VALUENUM"] = round((df.loc[df["VALUENUM"] > 50, "VALUENUM"] - 32) * 5/9, 2)
+    df.loc[df["VALUENUM"] > 50, "VALUENUM"] = round(
+        (df.loc[df["VALUENUM"] > 50, "VALUENUM"] - 32) * 5 / 9, 2
+    )
 
     # Keep only the relevant columns and rename to match the format of the other tables
     df = df[["SUBJECT_ID", "VALUENUM", "CHARTTIME"]].rename(
@@ -179,6 +180,7 @@ def load_temperature(
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     return df.reset_index(drop=True)
+
 
 if __name__ == "__main__":
 

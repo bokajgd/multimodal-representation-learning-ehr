@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 def calculate_co_occurrence(df: pd.DataFrame) -> pd.DataFrame:
@@ -36,9 +36,13 @@ def calculate_co_occurrence(df: pd.DataFrame) -> pd.DataFrame:
                 co_occurrence_matrix[feature_j, feature_i] += 1
 
     # Convert the NumPy array into a pandas DataFrame
-    co_occurrence_df = pd.DataFrame(co_occurrence_matrix, index=pred_cols, columns=pred_cols)
+    co_occurrence_df = pd.DataFrame(
+        co_occurrence_matrix, index=pred_cols, columns=pred_cols
+    )
 
     # normalize the co-occurrence counts
-    normalized_co_occurrence_df = (co_occurrence_df - co_occurrence_df.min().min()) / (co_occurrence_df.max().max() - co_occurrence_df.min().min())
+    normalized_co_occurrence_df = (co_occurrence_df - co_occurrence_df.min().min()) / (
+        co_occurrence_df.max().max() - co_occurrence_df.min().min()
+    )
 
     return normalized_co_occurrence_df
