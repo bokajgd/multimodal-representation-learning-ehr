@@ -37,7 +37,9 @@ def calculate_co_occurrence(df: pd.DataFrame) -> pd.DataFrame:
 
     # Convert the NumPy array into a pandas DataFrame
     co_occurrence_df = pd.DataFrame(
-        co_occurrence_matrix, index=pred_cols, columns=pred_cols
+        co_occurrence_matrix,
+        index=pred_cols,
+        columns=pred_cols,
     )
 
     # normalize the co-occurrence counts

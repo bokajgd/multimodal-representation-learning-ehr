@@ -89,7 +89,8 @@ def load_a_diagnoses(
 
 
 def _load_icd9_range(
-    icd9_range: tuple[int, int], nrows: Optional[int] = None
+    icd9_range: tuple[int, int],
+    nrows: Optional[int] = None,
 ) -> pd.DataFrame:
     """Load all diagnoses for a given range of ICD9 codes.
 

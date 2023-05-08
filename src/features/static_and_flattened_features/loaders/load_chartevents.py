@@ -164,7 +164,8 @@ def load_temperature(
 
     # Convert temperature from Fahrenheit to Celsius (all values above 50 are assumed to be in Fahrenheit)
     df.loc[df["VALUENUM"] > 50, "VALUENUM"] = round(
-        (df.loc[df["VALUENUM"] > 50, "VALUENUM"] - 32) * 5 / 9, 2
+        (df.loc[df["VALUENUM"] > 50, "VALUENUM"] - 32) * 5 / 9,
+        2,
     )
 
     # Keep only the relevant columns and rename to match the format of the other tables

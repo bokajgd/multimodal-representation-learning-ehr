@@ -18,7 +18,8 @@ def main(save_to_disk: bool = False, min_set_for_debug: bool = False):
 
     logging.info("Generating features...")
     flattened_df = generate_flattened_features(
-        save_to_disk=save_to_disk, min_set_for_debug=min_set_for_debug
+        save_to_disk=save_to_disk,
+        min_set_for_debug=min_set_for_debug,
     )
 
     logging.info("Binary-encoding features...")
@@ -31,7 +32,8 @@ def main(save_to_disk: bool = False, min_set_for_debug: bool = False):
 
     logging.info("Aggregating co-occurrence counts to admission level vectors...")
     admission_level_vectors_df = aggregate_co_vectors(
-        co_df=co_df, binary_feature_df=binary_feature_df
+        co_df=co_df,
+        binary_feature_df=binary_feature_df,
     )
 
     if save_to_disk:
@@ -47,17 +49,17 @@ def main(save_to_disk: bool = False, min_set_for_debug: bool = False):
             )
         elif project_info.dataset_format == "csv":
             binary_feature_df.to_csv(
-                project_info.feature_set_path / "binary_feature_df.csv"
+                project_info.feature_set_path / "binary_feature_df.csv",
             )
             co_df.to_csv(project_info.feature_set_path / "co_counts.csv")
             admission_level_vectors_df.to_csv(
-                project_info.feature_set_path / "admission_level_vectors_df.csv"
+                project_info.feature_set_path / "admission_level_vectors_df.csv",
             )
 
     binary_feature_df.to_csv(project_info.feature_set_path / "binary_feature_df.csv")
     co_df.to_csv(project_info.feature_set_path / "co_counts.csv")
     admission_level_vectors_df.to_csv(
-        project_info.feature_set_path / "admission_level_vectors_df.csv"
+        project_info.feature_set_path / "admission_level_vectors_df.csv",
     )
 
     return None

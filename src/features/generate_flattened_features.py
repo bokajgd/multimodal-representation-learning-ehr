@@ -12,7 +12,8 @@ log = logging.getLogger(__name__)
 
 
 def generate_flattened_features(
-    save_to_disk: bool = False, min_set_for_debug: bool = False
+    save_to_disk: bool = False,
+    min_set_for_debug: bool = False,
 ) -> pd.DataFrame:
     """Main function for generating a feature dataset."""
 

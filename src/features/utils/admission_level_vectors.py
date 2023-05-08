@@ -4,7 +4,8 @@ import pandas as pd
 
 
 def aggregate_co_vectors(
-    co_df: pd.DataFrame, binary_feature_df: pd.DataFrame
+    co_df: pd.DataFrame,
+    binary_feature_df: pd.DataFrame,
 ) -> pd.DataFrame:
     """Function for aggregating co-occurrence vectors for each admission to
     create admission-level patient vectors.
@@ -46,7 +47,8 @@ def aggregate_co_vectors(
 
     # convert the aggregated feature vectors list to a pandas DataFrame
     aggregated_dataframe = pd.DataFrame(
-        aggregated_feature_vectors, columns=co_df.columns
+        aggregated_feature_vectors,
+        columns=co_df.columns,
     )
 
     # round all values to 2 decimal places
