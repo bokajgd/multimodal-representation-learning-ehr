@@ -28,7 +28,7 @@ def add_age(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     # Use .apply to combat OverflowError due to dates being offset
-    df["age"] = df.apply(
+    df["pred_age"] = df.apply(
         lambda x: round(
             (x["timestamp"].to_pydatetime() - x["date_of_birth"].to_pydatetime()).days
             / 365,

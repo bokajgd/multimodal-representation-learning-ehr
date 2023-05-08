@@ -78,7 +78,7 @@ def get_project_info() -> ProjectInfo:
         tuple[Path, str]: Tuple of project path, and feature_set_id
     """
     log.info("Setting up project")
-    proj_path = Path(__file__).resolve().parents[4]
+    proj_path = Path(__file__).resolve().parents[3]
 
     feature_set_id = (
         f"multimodal_rep_learning_ehr_features_{time.strftime('%Y_%m_%d_%H_%M')}"

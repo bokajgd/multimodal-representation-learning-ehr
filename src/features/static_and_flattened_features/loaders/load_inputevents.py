@@ -57,13 +57,9 @@ def load_inputevents(
         columns=["CANCELREASON"],
     )
 
-    # Remove all items that have only been administered to less than 10% of the patients
-    inputevents = _drop_rows_with_too_small_patient_or_admission_frequency(
-        df=inputevents,
-        patient_or_admission_col_name="SUBJECT_ID",
-        item_col_name="ITEMID",
-        threshold=0.05,
-    )
+    # Remove rows where VALUE is NaN or 0
+    inputevents = inputevents[inputevents["VALUE"].notna()]
+    inputevents = inputevents[inputevents["VALUE"] != 0]
 
     # Rename columns
     inputevents = inputevents.rename(

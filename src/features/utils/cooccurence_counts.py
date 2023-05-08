@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def calculate_co_occurrence(df: pd.DataFrame) -> pd.DataFrame:
@@ -15,20 +16,29 @@ def calculate_co_occurrence(df: pd.DataFrame) -> pd.DataFrame:
     # Get the columns that start with 'pred_'
     pred_cols = [col for col in df.columns if col.startswith("pred_")]
 
-    # Create an empty DataFrame to store the co-occurrence counts
-    co_occurrence_df = pd.DataFrame(index=pred_cols, columns=pred_cols)
-    co_occurrence_df = co_occurrence_df.fillna(0)
+    # Create an empty co-occurrence matrix
+    co_occurrence_matrix = np.zeros((len(pred_cols), len(pred_cols)), dtype=np.int32)
 
     # Loop through each row in the DataFrame
-    for i, row in df.iterrows():
+    for _, row in df.iterrows():
         # Get the binary features for the row
-        binary_features = row[pred_cols]
+        binary_features = row[pred_cols].values.astype(bool)
 
-        # Loop through each pair of binary features and increment the co-occurrence count
-        for i in range(len(pred_cols)):
-            for j in range(i + 1, len(pred_cols)):
-                if binary_features[i] == 1 and binary_features[j] == 1:
-                    co_occurrence_df.at[pred_cols[i], pred_cols[j]] += 1
-                    co_occurrence_df.at[pred_cols[j], pred_cols[i]] += 1
+        # Compute the indices of binary features that are True
+        true_indices = np.where(binary_features)[0]
 
-    return co_occurrence_df
+        # Increment the co-occurrence count for all pairs of true indices
+        for i in range(len(true_indices)):
+            for j in range(i + 1, len(true_indices)):
+                feature_i = true_indices[i]
+                feature_j = true_indices[j]
+                co_occurrence_matrix[feature_i, feature_j] += 1
+                co_occurrence_matrix[feature_j, feature_i] += 1
+
+    # Convert the NumPy array into a pandas DataFrame
+    co_occurrence_df = pd.DataFrame(co_occurrence_matrix, index=pred_cols, columns=pred_cols)
+
+    # normalize the co-occurrence counts
+    normalized_co_occurrence_df = (co_occurrence_df - co_occurrence_df.min().min()) / (co_occurrence_df.max().max() - co_occurrence_df.min().min())
+
+    return normalized_co_occurrence_df

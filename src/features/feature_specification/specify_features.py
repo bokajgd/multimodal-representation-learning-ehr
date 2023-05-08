@@ -13,6 +13,7 @@ from timeseriesflattener.feature_spec_objects import (
     BaseModel,
     PredictorGroupSpec,
     PredictorSpec,
+    OutcomeSpec,
     StaticSpec,
     TextPredictorSpec,
     _AnySpec,
@@ -20,8 +21,6 @@ from timeseriesflattener.feature_spec_objects import (
 from timeseriesflattener.text_embedding_functions import sklearn_embedding
 
 from .utils import load_text_model
-
-log = logging.getLogger(__name__)
 
 
 class SpecSet(BaseModel):
@@ -36,8 +35,42 @@ class FeatureSpecifier:
         self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
 
+
+    def _get_outcome_specs(self) -> list[OutcomeSpec]:
+        """Get outcome specs."""
+        logging.info("-------- Generating outcome specs --------")
+
+        if self.min_set_for_debug:
+            return [
+                OutcomeSpec(
+                    values_loader="date_of_death",
+                    lookahead_days=30,
+                    resolve_multiple_fn="bool",
+                    fallback=0,
+                    incident=True,
+                    allowed_nan_value_prop=0,
+                    prefix=self.project_info.prefix.outcome,
+                ),
+            ]
+
+        return [
+            OutcomeSpec(
+                    values_loader="date_of_death",
+                    lookahead_days=30,
+                    resolve_multiple_fn="bool",
+                    fallback=0,
+                    incident=True,
+                    allowed_nan_value_prop=0,
+                    prefix=self.project_info.prefix.outcome,
+                ),
+            ]
+
+
     def _get_static_predictor_specs(self):
         """Get static predictor specs."""
+
+        logging.info("-------- Generating static specs --------")
+
         return [
             StaticSpec(
                 values_loader="sex_is_female",
@@ -53,7 +86,7 @@ class FeatureSpecifier:
     ):
         """Get admissions specs."""
 
-        log.info("–––––––– Generating admissions specs ––––––––")
+        logging.info("–––––––– Generating admissions specs ––––––––")
 
         admissions = PredictorGroupSpec(
             values_loader=("emergency_admissions",),
@@ -72,7 +105,7 @@ class FeatureSpecifier:
     ):
         """Get inputevents specs."""
 
-        log.info("–––––––– Generating inputevents specs ––––––––")
+        logging.info("–––––––– Generating inputevents specs ––––––––")
 
         inputevents = PredictorGroupSpec(
             values_loader=("nacl_0_9_ml", "weight", "fentanyl_mg"),
@@ -91,7 +124,7 @@ class FeatureSpecifier:
     ):
         """Get chartevents specs."""
 
-        log.info("–––––––– Generating chartevents specs ––––––––")
+        logging.info("–––––––– Generating chartevents specs ––––––––")
 
         admissions = PredictorGroupSpec(
             values_loader=("gcs",),
@@ -110,7 +143,7 @@ class FeatureSpecifier:
     ):
         """Get specs for tfidf features from all notes."""
 
-        log.info("–––––––– Generating tfidf specs ––––––––")
+        logging.info("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
             filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_250.pkl",
@@ -132,7 +165,7 @@ class FeatureSpecifier:
 
     def _get_temporal_predictor_specs(self) -> list[PredictorSpec]:
         """Generate predictor spec list."""
-        log.info("–––––––– Generating temporal predictor specs ––––––––")
+        logging.info("–––––––– Generating temporal predictor specs ––––––––")
 
         if self.min_set_for_debug:
             return [
@@ -140,7 +173,7 @@ class FeatureSpecifier:
                     values_loader="weight",
                     lookbehind_days=2,
                     resolve_multiple_fn="latest",
-                    fallback=0,
+                    fallback=np.NaN,
                     allowed_nan_value_prop=0,
                     prefix=self.project_info.prefix.predictor,
                 ),
@@ -166,7 +199,7 @@ class FeatureSpecifier:
     def _get_text_predictor_specs(self) -> list[TextPredictorSpec]:
         """Generate text predictor spec list."""
 
-        log.info("–––––––– Generating text predictor specs ––––––––")
+        logging.info("–––––––– Generating text predictor specs ––––––––")
 
         noteevents = self._get_tfidf_all_notes_specs(
             resolve_multiple="concatenate",
@@ -179,10 +212,15 @@ class FeatureSpecifier:
         """Get a spec set."""
 
         if self.min_set_for_debug:
-            return self._get_temporal_predictor_specs()
+            return self._get_temporal_predictor_specs() + self._get_outcome_specs()
+
+        logging.info('–––––––– Done generating specs ––––––––')
 
         return (
             self._get_temporal_predictor_specs()
             + self._get_text_predictor_specs()
             + self._get_static_predictor_specs()
+            + self._get_outcome_specs()
         )
+    
+

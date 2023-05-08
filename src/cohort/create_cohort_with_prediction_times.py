@@ -8,7 +8,11 @@ from utils import DATA_PATH, load_dataset_from_file, load_sql_query
 ICU_STAYS_QUERY = """
         SELECT icu.SUBJECT_ID, icu.OUTTIME, icu.LOS,
         FROM physionet-data.mimiciii_clinical.icustays icu
-        WHERE icu.HADM_ID IN (SELECT DISTINCT HADM_ID FROM physionet-data.mimiciii_clinical.inputevents_mv)
+        WHERE icd.HADM_ID IN (
+            SELECT DISTINCT ic.HADM_ID
+            FROM physionet-data.mimiciii_clinical.icustays ic
+            WHERE ic.DBSOURCE = 'metavision'
+        )
         """
 
 PATIENTS_QUERY = """

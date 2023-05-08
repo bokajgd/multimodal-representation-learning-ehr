@@ -72,6 +72,34 @@ def load_dob(nrows: Optional[int] = None) -> pd.DataFrame:
     return dob.reset_index(drop=True)
 
 
+@data_loaders.register("date_of_death")
+def load_dod(nrows: Optional[int] = None) -> pd.DataFrame:
+    """Load date of deaths. Keeps only rows with dates and adds a value column with all 1's
+
+    Args:
+        nrows (int): Number of rows to load.
+
+    Returns:
+        pd.DataFrame: Date of deaths.
+    """
+
+    dod = demographic_loader("PATIENTS.csv.gz", "DOD", nrows)
+
+    # rename column
+    dod = dod.rename(columns={"DOD": "timestamp"})
+
+    # drop rows with no date of death
+    dod = dod.dropna()
+
+    # convert to datetime
+    dod["timestamp"] = pd.to_datetime(dod["timestamp"], format="%Y-%m-%d")
+
+    # add a value column with all 1's
+    dod["value"] = 1
+
+    return dod.reset_index(drop=True)
+
+
 @data_loaders.register("sex_is_female")
 def load_sex(nrows: Optional[int] = None) -> pd.DataFrame:
     """Load gender of each patient. Female patients are assigned a value of 1.
@@ -94,4 +122,4 @@ def load_sex(nrows: Optional[int] = None) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    load_sex(nrows=1000)
+    load_dod(nrows=1000)

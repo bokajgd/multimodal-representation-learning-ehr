@@ -11,15 +11,14 @@ from utils.utils import add_age, remove_outliers
 log = logging.getLogger(__name__)
 
 
-def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
-    """Main function for loading, generating and evaluating a flattened
-    dataset."""
+def generate_flattened_features(save_to_disk: bool = False, min_set_for_debug: bool = False,) -> pd.DataFrame:
+    """Main function for generating a feature dataset."""
 
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
     prediction_times_df = pd.read_csv(predictions_times_df_path)
 
     # Keep only the last 1000 rows
-    prediction_times_df = prediction_times_df.iloc[11000:].reset_index(drop=True)
+    prediction_times_df = prediction_times_df.iloc[5000:].reset_index(drop=True)
 
     # Convert to datetime
     prediction_times_df["timestamp"] = pd.to_datetime(
@@ -30,7 +29,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
 
     feature_specs = FeatureSpecifier(
         project_info=project_info,
-        min_set_for_debug=True,
+        min_set_for_debug=min_set_for_debug,
     ).get_feature_specs()
 
     flattened_df = create_flattened_dataset(
@@ -45,7 +44,7 @@ def generate_flattened_features(save_to_disk: bool = False) -> pd.DataFrame:
 
     # Add age
     flattened_df = add_age(flattened_df)
-
+    
     if save_to_disk:
         if project_info.dataset_format == "parquet":
             flattened_df.to_parquet(
