@@ -40,16 +40,16 @@ def create_model_pipeline(cfg: FullConfigSchema) -> Pipeline:
     )
     steps.append(
         (
-        "feature_selection",
-        SelectPercentile(
-            mutual_info_classif,
-            percentile=50,
+            "feature_selection",
+            SelectPercentile(
+                mutual_info_classif,
+                percentile=50,
             ),
         ),
     )
 
     mdl = create_model(cfg)
-    
+
     steps.append(("model", mdl))
 
     return Pipeline(steps)

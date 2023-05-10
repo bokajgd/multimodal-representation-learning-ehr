@@ -18,7 +18,7 @@ def get_eval_dir() -> Path:
     """Get the directory to save evaluation results to."""
 
     eval_dir_path = PROJECT_ROOT / "tests" / "test_eval_results"
-    
+
     eval_dir_path.mkdir(parents=True, exist_ok=True)
 
     return eval_dir_path
@@ -133,7 +133,7 @@ def train_and_predict(
 
     Returns:
         Evaluation dataset
-    """    
+    """
     if cfg.model.name in ("ebm", "xgboost"):
         pipe["model"].feature_names = train_col_names  # type: ignore
 
@@ -158,11 +158,11 @@ def train_model(
     data_path = cfg.data.dir
 
     train_datasets = pd.read_csv(
-        data_path / [file for file in data_path.iterdir() if "train" in file.name][0]
+        data_path / [file for file in data_path.iterdir() if "train" in file.name][0],
     )
 
-    val_datasets = pd.read_csv( 
-        data_path / [file for file in data_path.iterdir() if "val" in file.name][0]
+    val_datasets = pd.read_csv(
+        data_path / [file for file in data_path.iterdir() if "val" in file.name][0],
     )
 
     eval_dir_path = get_eval_dir(cfg)

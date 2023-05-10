@@ -106,7 +106,11 @@ class SAPSFeatureSpecifier:
         print("–––––––– Generating diagnoses specs ––––––––")
 
         diagnoses = PredictorGroupSpec(
-            values_loader=("metastatic_cancer", "hematologic_malignancy", "acquired_immunodeficiency_syndrome",),
+            values_loader=(
+                "metastatic_cancer",
+                "hematologic_malignancy",
+                "acquired_immunodeficiency_syndrome",
+            ),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
             fallback=[0],
@@ -132,7 +136,7 @@ class SAPSFeatureSpecifier:
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
-        return chartevents   
+        return chartevents
 
     def _get_chartevents_min_specs(
         self,
@@ -151,7 +155,7 @@ class SAPSFeatureSpecifier:
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
-        return chartevents 
+        return chartevents
 
     def _get_chartevents_max_specs(
         self,
@@ -170,8 +174,8 @@ class SAPSFeatureSpecifier:
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
-        return chartevents 
-    
+        return chartevents
+
     def _get_labevents_min_max_specs(
         self,
         resolve_multiple=None,
@@ -182,7 +186,7 @@ class SAPSFeatureSpecifier:
         print("–––––––– Generating labevents specs ––––––––")
 
         labevents = PredictorGroupSpec(
-            values_loader=("white_blod_cells", "sodium_level", "potassium_level",),
+            values_loader=("white_blod_cells", "sodium_level", "potassium_level"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
             fallback=[0],
@@ -190,7 +194,7 @@ class SAPSFeatureSpecifier:
         ).create_combinations()
 
         return labevents
-    
+
     def _get_labevents_min_specs(
         self,
         resolve_multiple=None,
@@ -248,7 +252,6 @@ class SAPSFeatureSpecifier:
 
         return outputevents
 
-
     def _get_tfidf_all_notes_specs(
         self,
         resolve_multiple=None,
@@ -303,50 +306,52 @@ class SAPSFeatureSpecifier:
         )
 
         chartevents_min_max = self._get_chartevents_min_max_specs(
-            resolve_multiple=["min", "max",],
+            resolve_multiple=["min", "max"],
             interval_days=[1],
         )
-    
+
         chartevents_min = self._get_chartevents_min_specs(
-            resolve_multiple=["min",],
+            resolve_multiple=["min"],
             interval_days=[1],
         )
-    
+
         chartevents_max = self._get_chartevents_max_specs(
-            resolve_multiple=["max",],
+            resolve_multiple=["max"],
             interval_days=[1],
         )
 
         labevents_min_max = self._get_labevents_min_max_specs(
-            resolve_multiple=["min", "max",],
+            resolve_multiple=["min", "max"],
             interval_days=[1],
         )
 
         labevents_min = self._get_labevents_min_specs(
-            resolve_multiple=["min",],
+            resolve_multiple=["min"],
             interval_days=[1],
         )
-    
+
         labevents_max = self._get_labevents_max_specs(
-            resolve_multiple=["max",],
+            resolve_multiple=["max"],
             interval_days=[1],
         )
 
         outputevents = self._get_outputevents_specs(
-            resolve_multiple=["sum",],
+            resolve_multiple=["sum"],
             interval_days=[1],
         )
 
-        return (admissions + 
-                diagnoses + 
-                chartevents_min_max + 
-                chartevents_min + 
-                chartevents_max + 
-                labevents_min_max + 
-                labevents_min + 
-                labevents_max + 
-                outputevents)
-    
+        return (
+            admissions
+            + diagnoses
+            + chartevents_min_max
+            + chartevents_min
+            + chartevents_max
+            + labevents_min_max
+            + labevents_min
+            + labevents_max
+            + outputevents
+        )
+
     def _get_text_predictor_specs(self) -> list[TextPredictorSpec]:
         """Generate text predictor spec list."""
 

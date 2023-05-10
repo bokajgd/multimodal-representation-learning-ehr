@@ -79,7 +79,6 @@ class ModelEvaluator:
             roc_auc=roc_auc,
         )
 
-
         logging.info(
             f"ROC AUC: {roc_auc}",
         )

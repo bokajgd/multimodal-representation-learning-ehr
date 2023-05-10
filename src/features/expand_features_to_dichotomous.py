@@ -41,7 +41,8 @@ def expand_numeric_cols_to_binary_percentile_cols(
 
     # drop columns with only two unique values and keep theese in a separate df
     binary_cols = numeric_cols.copy().loc[
-        :, numeric_cols.nunique().sort_values() == 2
+        :,
+        numeric_cols.nunique().sort_values() == 2,
     ]
 
     numeric_cols = numeric_cols.loc[:, numeric_cols.nunique() > 2]
@@ -85,7 +86,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
         ],
         axis=1,
     )
-    
+
     # concatenate the newly generated binary columns with the columns who were already binary
     output_data = pd.concat([output_data, binary_cols], axis=1)
 

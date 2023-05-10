@@ -34,9 +34,7 @@ def load_inputevents(
     Returns:
         pd.DataFrame: inputevents table.
     """
-    file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "INPUTEVENTS_MV.csv.gz"
-    )
+    file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "INPUTEVENTS_MV.csv.gz"
 
     df = load_dataset_from_file(
         file_path=file_path,
@@ -68,7 +66,7 @@ def load_inputevents(
             "STARTTIME": "timestamp",
         },
     )
-    
+
     # Convert to datetime
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 

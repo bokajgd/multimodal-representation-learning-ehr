@@ -33,10 +33,12 @@ class EvalDataset(BaseModel):
         self,
         desired_positive_rate: float,
     ) -> tuple[pd.Series, Union[float, float64]]:
-        """Takes the top positive_rate% of predicted probabilities and turns them into 1, the rest 0.
+        """Takes the top positive_rate% of predicted probabilities and turns
+        them into 1, the rest 0.
 
-
-        Note that this won't always match the desired positive rate exactly for e.g tree-based models, where predicted probabilities are binned, but it'll get as close as possible.
+        Note that this won't always match the desired positive rate
+        exactly for e.g tree-based models, where predicted probabilities
+        are binned, but it'll get as close as possible.
         """
         positive_threshold = self.y_hat_probs.quantile(desired_positive_rate)
 

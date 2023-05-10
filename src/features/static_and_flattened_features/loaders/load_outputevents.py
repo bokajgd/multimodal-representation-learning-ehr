@@ -36,9 +36,7 @@ def load_outputevents(
     Returns:
         pd.DataFrame: inputevents table.
     """
-    file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "outputevents.csv.gz"
-    )
+    file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "outputevents.csv.gz"
 
     outputevents = load_dataset_from_file(
         file_path=file_path,

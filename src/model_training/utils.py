@@ -15,7 +15,7 @@ from dataclasses_schemas import ModelEvalData
 from sklearn.pipeline import Pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_ROOT = PROJECT_ROOT / 'outputs'
+OUTPUT_ROOT = PROJECT_ROOT / "outputs"
 FEATURE_SETS_PATH = OUTPUT_ROOT / "feature_sets"
 OUTCOME_DATA_PATH = OUTPUT_ROOT / "outcome_data"
 RAW_DATA_VALIDATION_PATH = OUTPUT_ROOT / "raw_data_validation"
@@ -203,9 +203,8 @@ def positive_rate_to_pred_probs(
     pred_probs: pd.Series,
     positive_rates: Iterable,
 ) -> list[Any]:
-    """Get thresholds for a set of percentiles. E.g. if one
-    positive_rate == 1, return the value where 1% of predicted
-    probabilities lie above.
+    """Get thresholds for a set of percentiles. E.g. if one positive_rate == 1,
+    return the value where 1% of predicted probabilities lie above.
 
     Args:
         pred_probs (pd.Sereis): Predicted probabilities.

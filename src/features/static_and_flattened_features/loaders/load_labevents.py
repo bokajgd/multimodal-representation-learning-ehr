@@ -29,10 +29,7 @@ def load_labevents(
         pd.DataFrame: Labevents table.
     """
 
-    file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "LABEVENTS.csv.gz"
-    )
-
+    file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "LABEVENTS.csv.gz"
 
     df = load_dataset_from_file(
         file_path=file_path,
@@ -60,16 +57,17 @@ def load_labevents(
     )
 
     # Convert to datetime
-    df["timestamp"] = pd.to_datetime(df["timestamp"]
-                                     )
-    return df.reset_index(drop=True)    
+    df["timestamp"] = pd.to_datetime(
+        df["timestamp"],
+    )
+    return df.reset_index(drop=True)
 
 
 @data_loaders.register("urea_nitrogen")
 def load_urea_nitrogen(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 51006]
@@ -81,14 +79,14 @@ def load_urea_nitrogen(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("bicarbonate")
 def load_bicarbonate(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 50882]
@@ -100,14 +98,14 @@ def load_bicarbonate(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("white_blod_cells")
 def load_white_blod_cells(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([51300, 51301])]
@@ -119,14 +117,14 @@ def load_white_blod_cells(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("sodium_level")
 def load_sodium_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([950824, 50983])]
@@ -138,15 +136,14 @@ def load_sodium_level(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
-
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("potassium_level")
 def load_potassium_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([50822, 50971])]
@@ -158,14 +155,14 @@ def load_potassium_level(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("bilirubin_level")
 def load_bilirubin_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-    
+
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 50885]
@@ -177,7 +174,7 @@ def load_bilirubin_level(
         threshold=0.1,
     )
 
-    return df[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 if __name__ == "__main__":

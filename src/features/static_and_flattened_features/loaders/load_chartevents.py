@@ -57,7 +57,6 @@ def load_gcs(
         QUERY += f"LIMIT {nrows}"
 
     df = load_sql_query(QUERY)
-    
 
     # Drop rows with nan values in the VALLUENUM column
     df = df.dropna(subset=["VALUENUM"])
@@ -201,9 +200,7 @@ def load_pao2_fio2_ratio(
     fio2_df = load_sql_query(QUERY)
 
     # laod pao2 data
-    file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "LABEVENTS.csv.gz"
-    )
+    file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "LABEVENTS.csv.gz"
 
     pao2_df = load_dataset_from_file(
         file_path=file_path,
@@ -228,47 +225,60 @@ def load_pao2_fio2_ratio(
     # drop rows with 0 in VALUENUM columns
     pao2_df = pao2_df[pao2_df["VALUENUM"] != 0]
     fio2_df = fio2_df[fio2_df["VALUENUM"] != 0]
-    
+
     # convert admission IDs to integers
-    pao2_df['HADM_ID'] = pao2_df['HADM_ID'].astype(int)
-    fio2_df['HADM_ID'] = fio2_df['HADM_ID'].astype(int)
+    pao2_df["HADM_ID"] = pao2_df["HADM_ID"].astype(int)
+    fio2_df["HADM_ID"] = fio2_df["HADM_ID"].astype(int)
 
     # convert the CHARTTIME columns in both DataFrames to datetime objects
-    pao2_df['CHARTTIME'] = pd.to_datetime(pao2_df['CHARTTIME'])
-    fio2_df['CHARTTIME'] = pd.to_datetime(fio2_df['CHARTTIME'])
+    pao2_df["CHARTTIME"] = pd.to_datetime(pao2_df["CHARTTIME"])
+    fio2_df["CHARTTIME"] = pd.to_datetime(fio2_df["CHARTTIME"])
 
     # keep only rows with HADM_IDs that are in both DataFrames
-    pao2_df = pao2_df[pao2_df['HADM_ID'].isin(fio2_df['HADM_ID'])]
-    fio2_df = fio2_df[fio2_df['HADM_ID'].isin(pao2_df['HADM_ID'])]
+    pao2_df = pao2_df[pao2_df["HADM_ID"].isin(fio2_df["HADM_ID"])]
+    fio2_df = fio2_df[fio2_df["HADM_ID"].isin(pao2_df["HADM_ID"])]
 
     # Group pao2 and fio2 DataFrames by HADM_ID
-    pao2_grouped = pao2_df.groupby('HADM_ID')
-    fio2_grouped = fio2_df.groupby('HADM_ID')
+    pao2_grouped = pao2_df.groupby("HADM_ID")
+    fio2_grouped = fio2_df.groupby("HADM_ID")
 
     # Create an empty DataFrame to store the results
-    result_df = pd.DataFrame(columns=['SUBJECT_ID', 'HADM_ID', 'CHARTTIME', 'PaO2', 'FiO2', 'ratio'])
+    result_df = pd.DataFrame(
+        columns=["SUBJECT_ID", "HADM_ID", "CHARTTIME", "PaO2", "FiO2", "ratio"]
+    )
 
     # Iterate over each HADM_ID
-    for hadm_id in pao2_df['HADM_ID'].unique():
+    for hadm_id in pao2_df["HADM_ID"].unique():
         # get the pao2 measurements for the current HADM_ID
         hadm_pao2 = pao2_grouped.get_group(hadm_id)
-        
+
         # get the fio2 measurements for the current HADM_ID
         hadm_fio2 = fio2_grouped.get_group(hadm_id)
-        
+
         # Iterate over each pao2 measurement
         for index, row in hadm_pao2.iterrows():
-            
+
             # Get the most recent prior fio2 measurement for the current pao2 measurement
-            recent_fio2 = hadm_fio2[(hadm_fio2['CHARTTIME'] < row['CHARTTIME']) & (hadm_fio2['CHARTTIME'] >= row['CHARTTIME'] - pd.Timedelta(hours=2))].head(1)
-            
+            recent_fio2 = hadm_fio2[
+                (hadm_fio2["CHARTTIME"] < row["CHARTTIME"])
+                & (hadm_fio2["CHARTTIME"] >= row["CHARTTIME"] - pd.Timedelta(hours=2))
+            ].head(1)
+
             # Calculate the pao2/fio2 ratio and append the result to the result DataFrame
             if not recent_fio2.empty:
-                ratio = row['VALUENUM'] / recent_fio2['VALUENUM'].values[0]
-                subset_df = pd.DataFrame({'SUBJECT_ID': row['SUBJECT_ID'], 'HADM_ID': hadm_id, 'CHARTTIME': row['CHARTTIME'], 
-                                            'PaO2': row['VALUENUM'], 'FiO2': recent_fio2['VALUENUM'].values[0], 
-                                            'ratio': ratio*100}, index=[0])
-                
+                ratio = row["VALUENUM"] / recent_fio2["VALUENUM"].values[0]
+                subset_df = pd.DataFrame(
+                    {
+                        "SUBJECT_ID": row["SUBJECT_ID"],
+                        "HADM_ID": hadm_id,
+                        "CHARTTIME": row["CHARTTIME"],
+                        "PaO2": row["VALUENUM"],
+                        "FiO2": recent_fio2["VALUENUM"].values[0],
+                        "ratio": ratio * 100,
+                    },
+                    index=[0],
+                )
+
                 result_df = pd.concat([result_df, subset_df], ignore_index=True)
 
     # keep only the relevant columns and rename to match the format of the other tables

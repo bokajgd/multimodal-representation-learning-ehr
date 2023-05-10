@@ -40,7 +40,7 @@ def add_age(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(columns=["date_of_birth"])
 
     # if age is over 100, set to 90
-    df['pred_age'] = np.where(df['pred_age'] > 100, 90, df['pred_age'])
+    df["pred_age"] = np.where(df["pred_age"] > 100, 90, df["pred_age"])
 
     return df.reset_index(drop=True)
 

@@ -1,5 +1,4 @@
-"""Script for training a model based on config.
-"""
+"""Script for training a model based on config."""
 from pathlib import Path
 
 import hydra
@@ -10,8 +9,7 @@ from train_model_functions import train_model
 from utils import PROJECT_ROOT
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-CONFIG_PATH = PROJECT_ROOT  / "config"
-
+CONFIG_PATH = PROJECT_ROOT / "config"
 
 
 @hydra.main(

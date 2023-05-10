@@ -179,9 +179,7 @@ def load_emergency_admissions(
 
 
 def _load_services(nrows):
-    file_path = (
-        DATA_PATH / "mimic-iii-clinical-database-1.4" / "SERVICES.csv.gz"
-    )
+    file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "SERVICES.csv.gz"
 
     services = load_dataset_from_file(
         file_path=file_path,
@@ -193,8 +191,10 @@ def _load_services(nrows):
             "CURR_SERVICE",
         ],
     )
-    
-    admissions = load_admissions_base_df(nrows=nrows)[["admission_id", "admission_type"]]
+
+    admissions = load_admissions_base_df(nrows=nrows)[
+        ["admission_id", "admission_type"]
+    ]
 
     # rename columns
     services = services.rename(
@@ -204,7 +204,7 @@ def _load_services(nrows):
             "TRANSFERTIME": "timestamp",
         },
     )
-        
+
     # merge admission_type onto services
     services = services.merge(admissions, on="admission_id")
 
@@ -222,17 +222,18 @@ def load_scheduled_surgical(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
     """Load scheduled surgical admissions table."""
-    
+
     services = _load_services(nrows=nrows)
-    
+
     # flag elective surgical services as 1, the rest as 0
     services["value"] = np.where(
-        (services["CURR_SERVICE"].str.contains("SURG")) & (services["admission_type"] == "ELECTIVE"),
+        (services["CURR_SERVICE"].str.contains("SURG"))
+        & (services["admission_type"] == "ELECTIVE"),
         1,
         0,
     )
 
-    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return services[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("unscheduled_surgical")
@@ -240,17 +241,18 @@ def load_unscheduled_surgical(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
     """Load unscheduled surgical admissions table."""
-    
+
     services = _load_services(nrows=nrows)
-    
+
     # flag emergency surgical services as 1, the rest as 0
     services["value"] = np.where(
-        (services["CURR_SERVICE"].str.contains("SURG")) & (services["admission_type"].isin(['EMERGENCY', 'URGENT'])),
+        (services["CURR_SERVICE"].str.contains("SURG"))
+        & (services["admission_type"].isin(["EMERGENCY", "URGENT"])),
         1,
         0,
     )
 
-    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return services[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 @data_loaders.register("medical")
@@ -258,9 +260,9 @@ def load_medical(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
     """Load medical admissions table."""
-    
+
     services = _load_services(nrows=nrows)
-    
+
     # flag medical services as 1, the rest as 0
     services["value"] = np.where(
         (~services["CURR_SERVICE"].str.contains("SURG")),
@@ -268,7 +270,7 @@ def load_medical(
         0,
     )
 
-    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+    return services[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 
 if __name__ == "__main__":

@@ -54,7 +54,7 @@ def generate_flattened_features(
     flattened_df = remove_outliers(flattened_df)
 
     # add age
-    flattened_df = add_age(flattened_df)    
+    flattened_df = add_age(flattened_df)
 
     if save_to_disk:
         if project_info.dataset_format == "parquet":

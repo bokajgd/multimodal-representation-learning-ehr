@@ -1,5 +1,4 @@
-"""Utilities for handling config objects, e.g. load, change format.
-"""
+"""Utilities for handling config objects, e.g. load, change format."""
 from full_config import FullConfigSchema
 from omegaconf import DictConfig, OmegaConf
 
