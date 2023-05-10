@@ -11,9 +11,8 @@ from typing import Any, Union
 import dill as pkl
 import numpy as np
 import pandas as pd
-from sklearn.pipeline import Pipeline
-
 from dataclasses_schemas import ModelEvalData
+from sklearn.pipeline import Pipeline
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_ROOT = PROJECT_ROOT / 'outputs'

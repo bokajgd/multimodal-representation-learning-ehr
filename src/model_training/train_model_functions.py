@@ -3,20 +3,16 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import roc_auc_score
-
-from model_pipeline import (
-    create_model_pipeline,
-)
-from model_evaluator import ModelEvaluator
-from full_config import FullConfigSchema
-from dataclasses_schemas import EvalDataset
-from data_schema import ColumnNamesSchema
 from col_name_inference import get_col_names
-
+from data_schema import ColumnNamesSchema
+from dataclasses_schemas import EvalDataset
+from full_config import FullConfigSchema
+from model_evaluator import ModelEvaluator
+from model_pipeline import create_model_pipeline
+from sklearn.metrics import roc_auc_score
+from sklearn.pipeline import Pipeline
 from utils import PROJECT_ROOT
+
 
 def get_eval_dir() -> Path:
     """Get the directory to save evaluation results to."""

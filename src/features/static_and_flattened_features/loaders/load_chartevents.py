@@ -8,11 +8,8 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from .utils import (
-    load_sql_query,
-    DATA_PATH,
-    load_dataset_from_file,
-)
+
+from .utils import DATA_PATH, load_dataset_from_file, load_sql_query
 
 BASE_QUERY = """
         SELECT ce.SUBJECT_ID, ce.HADM_ID, ce.ITEMID, ce.VALUE, ce.VALUENUM, ce.VALUEUOM, ce.CHARTTIME,

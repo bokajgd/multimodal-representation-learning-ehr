@@ -1,9 +1,10 @@
 """Loaders for the admissions table."""
 from typing import Optional
-import numpy as np
 
+import numpy as np
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
+
 from .utils import DATA_PATH, load_dataset_from_file
 
 

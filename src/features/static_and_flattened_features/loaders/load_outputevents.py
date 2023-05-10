@@ -11,6 +11,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
+
 from .utils import (
     DATA_PATH,
     _drop_rows_with_too_small_patient_or_admission_frequency,

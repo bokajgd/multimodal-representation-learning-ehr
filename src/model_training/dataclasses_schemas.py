@@ -2,9 +2,10 @@
 from typing import Any, Optional, Union
 
 import pandas as pd
-from numpy import float64
 from basemodel import BaseModel
 from full_config import FullConfigSchema
+from numpy import float64
+
 
 class EvalDataset(BaseModel):
     """Evaluation dataset.

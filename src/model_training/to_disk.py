@@ -6,10 +6,10 @@ from typing import Any, Optional, Union
 import dill as pkl
 import pandas as pd
 import wandb
-from full_config import FullConfigSchema
 from dataclasses_schemas import EvalDataset, PipeMetadata
-from utils import write_df_to_file
+from full_config import FullConfigSchema
 from sklearn.pipeline import Pipeline
+from utils import write_df_to_file
 
 log = logging.getLogger(__name__)
 

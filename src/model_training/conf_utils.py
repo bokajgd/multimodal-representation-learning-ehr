@@ -1,8 +1,7 @@
 """Utilities for handling config objects, e.g. load, change format.
 """
-from omegaconf import DictConfig, OmegaConf
-
 from full_config import FullConfigSchema
+from omegaconf import DictConfig, OmegaConf
 
 
 def convert_omegaconf_to_pydantic_object(

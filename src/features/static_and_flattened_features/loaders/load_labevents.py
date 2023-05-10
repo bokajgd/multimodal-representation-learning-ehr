@@ -11,9 +11,9 @@ from timeseriesflattener.utils import data_loaders
 
 from .utils import (
     DATA_PATH,
-    load_dataset_from_file,
     _drop_rows_with_too_small_value_frequency,
-    )
+    load_dataset_from_file,
+)
 
 
 @data_loaders.register("labevents")

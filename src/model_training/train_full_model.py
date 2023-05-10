@@ -3,12 +3,10 @@
 from pathlib import Path
 
 import hydra
+from conf_utils import convert_omegaconf_to_pydantic_object
+from full_config import FullConfigSchema
 from omegaconf import DictConfig
 from train_model_functions import train_model
-from conf_utils import (
-    convert_omegaconf_to_pydantic_object,
-)
-from full_config import FullConfigSchema
 from utils import PROJECT_ROOT
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

@@ -2,17 +2,10 @@
 from typing import Any
 
 from full_config import FullConfigSchema
-
-from sklearn.pipeline import Pipeline
-from sklearn.feature_selection import (
-    SelectPercentile,
-    f_classif,
-    mutual_info_classif
-)
+from model_specs import MODELS
+from sklearn.feature_selection import SelectPercentile, f_classif, mutual_info_classif
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-
-from model_specs import MODELS
 
 
 def create_model(cfg: FullConfigSchema) -> Any:
