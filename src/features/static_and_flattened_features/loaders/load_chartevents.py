@@ -244,7 +244,7 @@ def load_pao2_fio2_ratio(
 
     # Create an empty DataFrame to store the results
     result_df = pd.DataFrame(
-        columns=["SUBJECT_ID", "HADM_ID", "CHARTTIME", "PaO2", "FiO2", "ratio"]
+        columns=["SUBJECT_ID", "HADM_ID", "CHARTTIME", "PaO2", "FiO2", "ratio"],
     )
 
     # Iterate over each HADM_ID

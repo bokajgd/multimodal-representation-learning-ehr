@@ -53,7 +53,8 @@ def main(
     co_df = calculate_co_occurrence(df=binary_feature_df)
 
     print(
-        "Aggregating co-occurrence counts to admission level vectors...", curr_timestamp
+        "Aggregating co-occurrence counts to admission level vectors...",
+        curr_timestamp,
     )
     admission_level_vectors_df = aggregate_co_vectors(
         co_df=co_df,
@@ -67,7 +68,9 @@ def main(
     # split the data into train and test sets based on the patient ID and prediction time
     patients = flattened_df["patient_id"].unique()
     train_patients, test_patients = train_test_split(
-        patients, test_size=test_size, random_state=42
+        patients,
+        test_size=test_size,
+        random_state=42,
     )
 
     train_flattened_df = flattened_df[flattened_df["patient_id"].isin(train_patients)]
@@ -99,10 +102,10 @@ def main(
 
     # print the shapes of the train and test sets for the co_df
     print(
-        f"Train set shape (admission_level_vectors_df): {train_admission_level_vectors_df.shape}"
+        f"Train set shape (admission_level_vectors_df): {train_admission_level_vectors_df.shape}",
     )
     print(
-        f"Test set shape (admission_level_vectors_df): {test_admission_level_vectors_df.shape}"
+        f"Test set shape (admission_level_vectors_df): {test_admission_level_vectors_df.shape}",
     )
 
     if save_to_disk:
