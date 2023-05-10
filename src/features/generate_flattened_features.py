@@ -2,7 +2,8 @@
 import logging
 
 import pandas as pd
-from feature_specification.specify_features import FeatureSpecifier
+from feature_specification.full_feature_specification import FullFeatureSpecifier
+from feature_specification.saps_ii_feature_specification import SAPSFeatureSpecifier
 from static_and_flattened_features.loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
@@ -14,6 +15,7 @@ log = logging.getLogger(__name__)
 def generate_flattened_features(
     save_to_disk: bool = False,
     min_set_for_debug: bool = False,
+    saps_ii: bool = True,
 ) -> pd.DataFrame:
     """Main function for generating a feature dataset."""
 
@@ -21,7 +23,7 @@ def generate_flattened_features(
     prediction_times_df = pd.read_csv(predictions_times_df_path)
 
     # Keep only the last 1000 rows
-    prediction_times_df = prediction_times_df.iloc[5000:].reset_index(drop=True)
+    prediction_times_df = prediction_times_df.iloc[10000:].reset_index(drop=True)
 
     # Convert to datetime
     prediction_times_df["timestamp"] = pd.to_datetime(
@@ -30,10 +32,16 @@ def generate_flattened_features(
 
     project_info = get_project_info()
 
-    feature_specs = FeatureSpecifier(
-        project_info=project_info,
-        min_set_for_debug=min_set_for_debug,
-    ).get_feature_specs()
+    if saps_ii:
+        feature_specs = SAPSFeatureSpecifier(
+            project_info=project_info,
+            min_set_for_debug=min_set_for_debug,
+        ).get_feature_specs()
+    else:
+        feature_specs = FullFeatureSpecifier(
+            project_info=project_info,
+            min_set_for_debug=min_set_for_debug,
+        ).get_feature_specs()
 
     flattened_df = create_flattened_dataset(
         feature_specs=feature_specs,
@@ -42,11 +50,11 @@ def generate_flattened_features(
         project_info=project_info,
     )
 
-    # Remove outliers
+    # remove outliers
     flattened_df = remove_outliers(flattened_df)
 
-    # Add age
-    flattened_df = add_age(flattened_df)
+    # add age
+    flattened_df = add_age(flattened_df)    
 
     if save_to_disk:
         if project_info.dataset_format == "parquet":
@@ -62,4 +70,4 @@ def generate_flattened_features(
 
 
 if __name__ == "__main__":
-    generate_flattened_features(save_to_disk=True)
+    generate_flattened_features(save_to_disk=False)

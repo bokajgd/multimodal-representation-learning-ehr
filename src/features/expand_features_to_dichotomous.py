@@ -39,7 +39,11 @@ def expand_numeric_cols_to_binary_percentile_cols(
         .drop(columns=text_cols.columns)
     )
 
-    # disregard columns with only two unique values to avoid binarizing columns that are already binary
+    # drop columns with only two unique values and keep theese in a separate df
+    binary_cols = numeric_cols.copy().loc[
+        :, numeric_cols.nunique().sort_values() == 2
+    ]
+
     numeric_cols = numeric_cols.loc[:, numeric_cols.nunique() > 2]
 
     # initialize an empty list to store the new DataFrames for each column
@@ -55,8 +59,8 @@ def expand_numeric_cols_to_binary_percentile_cols(
 
         # calc new binary columns for each percentile range
         col_p15 = np.where(col_data <= p15, 1, 0)
-        col_p_mid = np.where((col_data > p15) & (col_data <= p85), 1, 0)
-        col_p85 = np.where(col_data > p85, 1, 0)
+        col_p_mid = np.where((col_data > p15) & (col_data < p85), 1, 0)
+        col_p85 = np.where(col_data >= p85, 1, 0)
 
         # create a new df with the expanded columns for the current column
         new_data = pd.DataFrame(
@@ -81,6 +85,9 @@ def expand_numeric_cols_to_binary_percentile_cols(
         ],
         axis=1,
     )
+    
+    # concatenate the newly generated binary columns with the columns who were already binary
+    output_data = pd.concat([output_data, binary_cols], axis=1)
 
     # concatenate the text columns with the expanded columns
     output_data = pd.concat([output_data, text_cols], axis=1)

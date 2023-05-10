@@ -11,7 +11,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import (
+from .utils import (
     DATA_PATH,
     _drop_rows_with_too_small_patient_or_admission_frequency,
     _drop_rows_with_too_small_value_frequency,
@@ -35,12 +35,12 @@ def load_outputevents(
     Returns:
         pd.DataFrame: inputevents table.
     """
-    inputevents_file_path = (
+    file_path = (
         DATA_PATH / "mimic-iii-clinical-database-1.4" / "outputevents.csv.gz"
     )
 
     outputevents = load_dataset_from_file(
-        file_path=inputevents_file_path,
+        file_path=file_path,
         nrows=nrows,
         cols_to_load=[
             "SUBJECT_ID",

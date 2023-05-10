@@ -34,12 +34,12 @@ def load_inputevents(
     Returns:
         pd.DataFrame: inputevents table.
     """
-    inputevents_file_path = (
+    file_path = (
         DATA_PATH / "mimic-iii-clinical-database-1.4" / "INPUTEVENTS_MV.csv.gz"
     )
 
-    inputevents = load_dataset_from_file(
-        file_path=inputevents_file_path,
+    df = load_dataset_from_file(
+        file_path=file_path,
         nrows=nrows,
         cols_to_load=[
             "SUBJECT_ID",
@@ -53,35 +53,35 @@ def load_inputevents(
     )
 
     # Remove cancelled events
-    inputevents = inputevents[inputevents["CANCELREASON"] == 0].drop(
+    df = df[df["CANCELREASON"] == 0].drop(
         columns=["CANCELREASON"],
     )
 
     # Remove rows where VALUE is NaN or 0
-    inputevents = inputevents[inputevents["VALUE"].notna()]
-    inputevents = inputevents[inputevents["VALUE"] != 0]
+    df = df[df["AMOUNT"].notna()]
+    df = df[df["AMOUNT"] != 0]
 
     # Rename columns
-    inputevents = inputevents.rename(
+    df = df.rename(
         columns={
             "SUBJECT_ID": "patient_id",
             "STARTTIME": "timestamp",
         },
     )
-
+    
     # Convert to datetime
-    inputevents["timestamp"] = pd.to_datetime(inputevents["timestamp"])
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     if load_for_flattening:
 
-        inputevents["value"] = 1
+        df["value"] = 1
 
         # Keep only columns for feature generation
-        return inputevents[["patient_id", "timestamp", "value"]].reset_index(drop=True)
+        return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
     else:
 
-        return inputevents.reset_index(drop=True)
+        return df.reset_index(drop=True)
 
 
 @data_loaders.register("weight")
@@ -116,7 +116,7 @@ def load_fentanyl(
     # Filter for fentanyl (221744, 225972 and 225942)
     df = inputevents[inputevents["ITEMID"].isin([221744, 225942])]
 
-    # Drop rows with amountuom value that only appears in less than 10% of the rows
+    # Drop rows with unit (AMOUNTUOM) that only appears in less than 10% of the rows
     df = _drop_rows_with_too_small_value_frequency(
         df=df,
         value_col_name="AMOUNTUOM",

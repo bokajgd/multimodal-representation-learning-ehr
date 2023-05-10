@@ -1,9 +1,10 @@
 """Loaders for the admissions table."""
 from typing import Optional
+import numpy as np
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import DATA_PATH, load_dataset_from_file
+from .utils import DATA_PATH, load_dataset_from_file
 
 
 @data_loaders.register("admissions")
@@ -176,6 +177,98 @@ def load_emergency_admissions(
         return emergency_admissions.reset_index(drop=True)
 
 
+def _load_services(nrows):
+    file_path = (
+        DATA_PATH / "mimic-iii-clinical-database-1.4" / "SERVICES.csv.gz"
+    )
+
+    services = load_dataset_from_file(
+        file_path=file_path,
+        nrows=nrows,
+        cols_to_load=[
+            "SUBJECT_ID",
+            "HADM_ID",
+            "TRANSFERTIME",
+            "CURR_SERVICE",
+        ],
+    )
+    
+    admissions = load_admissions_base_df(nrows=nrows)[["admission_id", "admission_type"]]
+
+    # rename columns
+    services = services.rename(
+        columns={
+            "SUBJECT_ID": "patient_id",
+            "HADM_ID": "admission_id",
+            "TRANSFERTIME": "timestamp",
+        },
+    )
+        
+    # merge admission_type onto services
+    services = services.merge(admissions, on="admission_id")
+
+    # convert timestamp to datetime
+    services["timestamp"] = pd.to_datetime(services["timestamp"])
+
+    # remove newborn admissions
+    services = services[services["admission_type"] != "NEWBORN"]
+
+    return services.reset_index(drop=True)
+
+
+@data_loaders.register("scheduled_surgical")
+def load_scheduled_surgical(
+    nrows: Optional[int] = None,
+) -> pd.DataFrame:
+    """Load scheduled surgical admissions table."""
+    
+    services = _load_services(nrows=nrows)
+    
+    # flag elective surgical services as 1, the rest as 0
+    services["value"] = np.where(
+        (services["CURR_SERVICE"].str.contains("SURG")) & (services["admission_type"] == "ELECTIVE"),
+        1,
+        0,
+    )
+
+    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+
+
+@data_loaders.register("unscheduled_surgical")
+def load_unscheduled_surgical(
+    nrows: Optional[int] = None,
+) -> pd.DataFrame:
+    """Load unscheduled surgical admissions table."""
+    
+    services = _load_services(nrows=nrows)
+    
+    # flag emergency surgical services as 1, the rest as 0
+    services["value"] = np.where(
+        (services["CURR_SERVICE"].str.contains("SURG")) & (services["admission_type"].isin(['EMERGENCY', 'URGENT'])),
+        1,
+        0,
+    )
+
+    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+
+
+@data_loaders.register("medical")
+def load_medical(
+    nrows: Optional[int] = None,
+) -> pd.DataFrame:
+    """Load medical admissions table."""
+    
+    services = _load_services(nrows=nrows)
+    
+    # flag medical services as 1, the rest as 0
+    services["value"] = np.where(
+        (~services["CURR_SERVICE"].str.contains("SURG")),
+        1,
+        0,
+    )
+
+    return services[['patient_id', 'timestamp', 'value']].reset_index(drop=True)
+
+
 if __name__ == "__main__":
-    emergency_admissions = load_emergency_admissions()
-    admission_discharge_times = load_admission_discharge_timestamps()
+    df = load_medical()

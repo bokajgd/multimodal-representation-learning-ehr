@@ -1,4 +1,4 @@
-"""Feature specification module."""
+"""Full feature set specification module."""
 import logging
 import sys
 
@@ -30,7 +30,7 @@ class SpecSet(BaseModel):
     static_predictors: list[StaticSpec]
 
 
-class FeatureSpecifier:
+class FullFeatureSpecifier:
     def __init__(self, project_info: ProjectInfo, min_set_for_debug: bool = False):
         self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
