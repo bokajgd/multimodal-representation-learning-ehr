@@ -14,7 +14,7 @@ import pandas as pd
 from dataclasses_schemas import ModelEvalData
 from sklearn.pipeline import Pipeline
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_ROOT = PROJECT_ROOT / "outputs"
 FEATURE_SETS_PATH = OUTPUT_ROOT / "feature_sets"
 OUTCOME_DATA_PATH = OUTPUT_ROOT / "outcome_data"

@@ -29,7 +29,6 @@ def aggregate_co_vectors(
 
     # iterate over each row in the feature dataframe
     for _, row in feature_cols_df.iterrows():
-
         # extract binary feature vector for that row
         feature_vector = row.values
 
@@ -51,8 +50,8 @@ def aggregate_co_vectors(
         columns=co_df.columns,
     )
 
-    # round all values to 2 decimal places
-    aggregated_dataframe = aggregated_dataframe.round(2)
+    # round all values to 4 decimal places
+    aggregated_dataframe = aggregated_dataframe.round(4)
 
     # concatenate the aggregated feature vectors with the other columns
     aggregated_dataframe = pd.concat([other_cols_df, aggregated_dataframe], axis=1)

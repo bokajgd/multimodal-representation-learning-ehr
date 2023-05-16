@@ -34,6 +34,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
             columns=[
                 "patient_id",
                 "outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
+                "age",
             ],
         )
         .drop(columns=text_cols.columns)
@@ -52,7 +53,6 @@ def expand_numeric_cols_to_binary_percentile_cols(
 
     # iterate over each column
     for col in numeric_cols.columns:
-
         col_data = numeric_cols[col].values
 
         # calc the percentiles for the column data
@@ -80,6 +80,10 @@ def expand_numeric_cols_to_binary_percentile_cols(
                     "timestamp",
                     "prediction_time_uuid",
                     "outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
+                    "outcome_timestamp",
+                    "sex_is_female",
+                    "age",
+                    "eval_dod",
                 ]
             ],
             *expanded_data,

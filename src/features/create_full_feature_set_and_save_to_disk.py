@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 from utils.admission_level_vectors import aggregate_co_vectors
 from utils.cooccurence_counts import calculate_co_occurrence
 from utils.project_setup import get_project_info
+from static_and_flattened_features.loaders.load_demographics import load_dod
 
 
 def main(
@@ -20,6 +21,7 @@ def main(
     read_flattened_features_from_disk: bool = False,
     save_to_disk: bool = True,
     min_set_for_debug: bool = False,
+    flattened_feature_set_filename: Optional[str] = "flattened_features.csv",
 ) -> None:
     """Main function for loading, generating and evaluating a flattened
     dataset."""
@@ -34,15 +36,41 @@ def main(
             / "data"
             / "feature_sets"
             / flattened_feature_set_path
-            / "flattened_features.csv",
+            / flattened_feature_set_filename
         )
+
+        # if there is a column called "Unnamed: 0", drop it
+        if "Unnamed: 0" in flattened_df.columns:
+            flattened_df = flattened_df.drop("Unnamed: 0", axis=1)
+
+        feature_set_prefix = flattened_feature_set_filename.split("_")[0]
+
     else:
         print("Generating features...", curr_timestamp)
-        flattened_df = generate_flattened_features(
+        flattened_df, feature_set_prefix = generate_flattened_features(
             save_to_disk=save_to_disk,
             min_set_for_debug=min_set_for_debug,
             saps_ii=True,
         )
+
+    flattened_df["sex_is_female"] = flattened_df["pred_sex_is_female"].copy()
+    flattened_df["age"] = flattened_df["pred_age"].copy()
+
+    print("Adding outcome timestamp col...", curr_timestamp)
+    dod_df = load_dod()
+    dod_df = dod_df.rename(columns={"timestamp": "date_of_death"})
+    dod_df = dod_df.drop("value", axis=1)
+
+    outc_col_name = [
+        col_name for col_name in flattened_df.columns if col_name.startswith("outc_")
+    ][0]
+
+    flattened_df = pd.merge(flattened_df, dod_df, on="patient_id", how="left")
+    flattened_df["outcome_timestamp"] = pd.NaT
+    flattened_df.loc[
+        flattened_df[outc_col_name] == 1, "outcome_timestamp"
+    ] = flattened_df["date_of_death"]
+    flattened_df = flattened_df.drop("date_of_death", axis=1)
 
     print("Binary-encoding features...", curr_timestamp)
     binary_feature_df = expand_numeric_cols_to_binary_percentile_cols(
@@ -110,30 +138,46 @@ def main(
 
     if save_to_disk:
         test_flattened_df.to_csv(
-            project_info.feature_set_path / "test_flattened_features.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{test_flattened_df.shape[0]}rows_{test_flattened_df.shape[1]}cols_test_flattened_features.csv",
+            index=False,
         )
         train_flattened_df.to_csv(
-            project_info.feature_set_path / "train_flattened_features.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{train_flattened_df.shape[0]}rows_{train_flattened_df.shape[1]}cols_train_flattened_features.csv",
+            index=False,
         )
         train_binary_feature_df.to_csv(
-            project_info.feature_set_path / "train_binary_feature_df.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{train_binary_feature_df.shape[0]}rows_{train_binary_feature_df.shape[1]}cols_train_binary_feature_df.csv",
+            index=False,
         )
         test_binary_feature_df.to_csv(
-            project_info.feature_set_path / "test_binary_feature_df.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{test_binary_feature_df.shape[0]}rows_{test_binary_feature_df.shape[1]}cols_test_binary_feature_df.csv",
+            index=False,
         )
         train_admission_level_vectors_df.to_csv(
-            project_info.feature_set_path / "train_admission_level_vectors_df.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{train_admission_level_vectors_df.shape[0]}rows_{train_admission_level_vectors_df.shape[1]}cols_train_admission_level_vectors_df.csv",
+            index=False,
         )
         test_admission_level_vectors_df.to_csv(
-            project_info.feature_set_path / "test_admission_level_vectors_df.csv",
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{test_admission_level_vectors_df.shape[0]}rows_{test_admission_level_vectors_df.shape[1]}cols_test_admission_level_vectors_df.csv",
+            index=False,
         )
-        co_df.to_csv(project_info.feature_set_path / "co_counts.csv")
+        co_df.to_csv(
+            project_info.feature_set_path
+            / f"{feature_set_prefix}_{co_df.shape[0]}rows_{co_df.shape[1]}cols_co_counts.csv",
+            index=False,
+        )
 
     return None
 
 
 if __name__ == "__main__":
     main(
-        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_09_15_09",
+        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_15_10_45",
         read_flattened_features_from_disk=True,
     )

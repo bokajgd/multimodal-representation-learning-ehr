@@ -24,7 +24,6 @@ def get_col_names(
         c
         for c in dataset.columns
         if cfg.data.outc_prefix in c
-        and str(cfg.preprocessing.pre_split.min_lookahead_days) in c
     ]
 
     if len(potential_outcome_col_names) != 1:

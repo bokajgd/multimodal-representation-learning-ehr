@@ -2,7 +2,7 @@
 data:
   # General config
   n_training_samples: null
-  dir: /Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/data/feature_sets/multimodal_rep_learning_ehr_features_2023_05_09_16_16
+  dir: /Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/data/feature_sets/multimodal_rep_learning_ehr_features_2023_05_15_14_47
   suffix: csv
 
   # Feature specs
@@ -16,5 +16,6 @@ data:
     pred_timestamp: timestamp
     outcome_timestamp: outcome_timestamp
     id: patient_id
-    age: pred_age
+    age: age
+    is_female: sex_is_female
     exclusion_timestamp:

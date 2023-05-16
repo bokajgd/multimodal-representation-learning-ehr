@@ -8,22 +8,27 @@ from static_and_flattened_features.loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
 from utils.utils import add_age, remove_outliers
+from static_and_flattened_features.loaders.load_demographics import load_dod
 
 log = logging.getLogger(__name__)
 
 
 def generate_flattened_features(
     save_to_disk: bool = False,
-    min_set_for_debug: bool = False,
+    min_set_for_debug: bool = True,
     saps_ii: bool = True,
+    feature_set_prefix: str = "saps_ii",
 ) -> pd.DataFrame:
     """Main function for generating a feature dataset."""
 
+    # Load prediction times
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
-    prediction_times_df = pd.read_csv(predictions_times_df_path)
+    prediction_times_df = pd.read_csv(predictions_times_df_path).drop(
+        columns=["HADM_ID"]
+    )
 
     # Keep only the last 1000 rows
-    prediction_times_df = prediction_times_df.iloc[10000:].reset_index(drop=True)
+    # prediction_times_df = prediction_times_df.iloc[10000:].reset_index(drop=True)
 
     # Convert to datetime
     prediction_times_df["timestamp"] = pd.to_datetime(
@@ -56,6 +61,19 @@ def generate_flattened_features(
     # add age
     flattened_df = add_age(flattened_df)
 
+    # add dod
+    dod = load_dod()
+
+    # rename timestamp to eval_dod
+    dod = dod.rename(columns={"timestamp": "eval_dod"})
+
+    # merge dod with flattened_df on patient_id
+    flattened_df = flattened_df.merge(
+        dod[["patient_id", "eval_dod"]],
+        on="patient_id",
+        how="left",
+    )
+
     if save_to_disk:
         if project_info.dataset_format == "parquet":
             flattened_df.to_parquet(
@@ -66,7 +84,7 @@ def generate_flattened_features(
                 project_info.feature_set_path / "flattened_features.csv",
             )
 
-    return flattened_df
+    return flattened_df, feature_set_prefix
 
 
 if __name__ == "__main__":

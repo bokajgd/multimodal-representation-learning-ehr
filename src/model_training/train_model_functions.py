@@ -2,7 +2,15 @@
 from pathlib import Path
 from typing import Optional
 
+import numpy as np
 import pandas as pd
+
+from wasabi import Printer
+
+from datetime import datetime
+
+curr_timestamp = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
+
 from col_name_inference import get_col_names
 from data_schema import ColumnNamesSchema
 from dataclasses_schemas import EvalDataset
@@ -10,6 +18,7 @@ from full_config import FullConfigSchema
 from model_evaluator import ModelEvaluator
 from model_pipeline import create_model_pipeline
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import Pipeline
 from utils import PROJECT_ROOT
 
@@ -17,7 +26,9 @@ from utils import PROJECT_ROOT
 def get_eval_dir() -> Path:
     """Get the directory to save evaluation results to."""
 
-    eval_dir_path = PROJECT_ROOT / "tests" / "test_eval_results"
+    eval_dir_path = (
+        PROJECT_ROOT / "outputs" / "model_outputs" / f"model_outputs_{curr_timestamp}"
+    )
 
     eval_dir_path.mkdir(parents=True, exist_ok=True)
 
@@ -113,6 +124,92 @@ def train_validate(
     )
 
 
+def stratified_cross_validation(  # pylint: disable=too-many-locals
+    cfg: FullConfigSchema,
+    pipe: Pipeline,
+    train_df: pd.DataFrame,
+    train_col_names: list[str],
+    outcome_col_name: str,
+) -> pd.DataFrame:
+    """Performs stratified and grouped cross validation using the pipeline."""
+    msg = Printer(timestamp=True)
+
+    X = train_df[train_col_names]  # pylint: disable=invalid-name
+    y = train_df[outcome_col_name]  # pylint: disable=invalid-name
+
+    # Create folds
+    msg.info("Creating folds")
+    msg.info(f"Training on {X.shape[1]} columns and {X.shape[0]} rows")
+
+    folds = StratifiedGroupKFold(n_splits=5).split(
+        X=X,
+        y=y,
+        groups=train_df[cfg.data.col_name.id],
+    )
+
+    # Perform CV and get out of fold predictions
+    train_df["oof_y_hat"] = np.nan
+
+    for i, (train_idxs, val_idxs) in enumerate(folds):
+        msg_prefix = f"Fold {i + 1}"
+
+        msg.info(f"{msg_prefix}: Training fold")
+
+        X_train, y_train = (  # pylint: disable=invalid-name
+            X.loc[train_idxs],
+            y.loc[train_idxs],
+        )  # pylint: disable=invalid-name
+        pipe.fit(X_train, y_train)
+
+        y_pred = pipe.predict_proba(X_train)[:, 1]
+
+        msg.info(f"{msg_prefix}: AUC = {round(roc_auc_score(y_train,y_pred), 3)}")
+
+        train_df.loc[val_idxs, "oof_y_hat"] = pipe.predict_proba(X.loc[val_idxs])[
+            :,
+            1,
+        ]
+
+    return train_df
+
+
+def crossvalidate(
+    cfg: FullConfigSchema,
+    train: pd.DataFrame,
+    pipe: Pipeline,
+    outcome_col_name: str,
+    train_col_names: list[str],
+) -> EvalDataset:
+    """Train model on cross validation folds and return evaluation dataset.
+
+    Args:
+        cfg: Config object
+        train: Training dataset
+        pipe: Pipeline
+        outcome_col_name: Name of the outcome column
+        train_col_names: Names of the columns to use for training
+
+    Returns:
+        Evaluation dataset
+    """
+
+    df = stratified_cross_validation(
+        cfg=cfg,
+        pipe=pipe,
+        train_df=train,
+        train_col_names=train_col_names,
+        outcome_col_name=outcome_col_name,
+    )
+
+    df = df.rename(columns={"oof_y_hat": "y_hat_prob"})
+
+    return create_eval_dataset(
+        col_names=cfg.data.col_name,
+        outcome_col_name=outcome_col_name,
+        df=df,
+    )
+
+
 def train_and_predict(
     cfg,
     train_datasets: pd.DataFrame,
@@ -137,44 +234,55 @@ def train_and_predict(
     if cfg.model.name in ("ebm", "xgboost"):
         pipe["model"].feature_names = train_col_names  # type: ignore
 
-    eval_dataset = train_validate(
-        cfg=cfg,
-        train=train_datasets,
-        val=val_datasets,
-        pipe=pipe,
-        outcome_col_name=outcome_col_name,
-        train_col_names=train_col_names,
-    )
+    if val_datasets is not None:
+        eval_dataset = train_validate(
+            cfg=cfg,
+            train=train_datasets,
+            val=val_datasets,
+            pipe=pipe,
+            outcome_col_name=outcome_col_name,
+            train_col_names=train_col_names,
+        )
+    else:
+        eval_dataset = crossvalidate(
+            cfg=cfg,
+            train=train_datasets,
+            pipe=pipe,
+            outcome_col_name=outcome_col_name,
+            train_col_names=train_col_names,
+        )
 
     return eval_dataset
 
 
 def train_model(
     cfg,
+    train_dataset_name: str = "train_flattened_",
+    test_dataset_name: str = "test_flattened_",
     override_output_dir: Optional[Path] = None,
 ) -> float:
     """Train a single model and evaluate it."""
 
     data_path = cfg.data.dir
 
-    train_datasets = pd.read_csv(
-        data_path / [file for file in data_path.iterdir() if "train" in file.name][0],
+    eval_dir_path = get_eval_dir()
+
+    train_data = pd.read_csv(
+        [file for file in data_path.iterdir() if train_dataset_name in file.name][0],
     )
 
-    val_datasets = pd.read_csv(
-        data_path / [file for file in data_path.iterdir() if "val" in file.name][0],
+    val_data = pd.read_csv(
+        [file for file in data_path.iterdir() if test_dataset_name in file.name][0],
     )
-
-    eval_dir_path = get_eval_dir(cfg)
 
     pipe = create_model_pipeline(cfg)
 
-    outcome_col_name, train_col_names = get_col_names(cfg, train_datasets)
+    outcome_col_name, train_col_names = get_col_names(cfg, train_data)
 
     eval_dataset = train_and_predict(
         cfg=cfg,
-        train_datasets=train_datasets,
-        val_datasets=val_datasets,
+        train_datasets=train_data,
+        val_datasets=val_data,
         pipe=pipe,
         outcome_col_name=outcome_col_name,
         train_col_names=train_col_names,

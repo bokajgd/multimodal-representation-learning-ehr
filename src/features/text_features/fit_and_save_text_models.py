@@ -7,8 +7,8 @@ if __name__ == "__main__":
     text_model_pipeline(
         model="tfidf",
         df=df,
-        max_features=250,
-        max_df=0.95,
+        max_features=500,
+        max_df=0.90,
         min_df=10,
         ngram_range=(1, 3),
     )

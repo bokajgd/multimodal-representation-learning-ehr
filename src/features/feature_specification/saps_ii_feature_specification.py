@@ -12,6 +12,7 @@ from text_features.loaders.load_notes import load_notes
 from timeseriesflattener.feature_spec_objects import (
     BaseModel,
     OutcomeSpec,
+    OutcomeGroupSpec,
     PredictorGroupSpec,
     PredictorSpec,
     StaticSpec,
@@ -52,17 +53,15 @@ class SAPSFeatureSpecifier:
                 ),
             ]
 
-        return [
-            OutcomeSpec(
-                values_loader="date_of_death",
-                lookahead_days=30,
-                resolve_multiple_fn="bool",
-                fallback=0,
-                incident=True,
-                allowed_nan_value_prop=0,
-                prefix=self.project_info.prefix.outcome,
-            ),
-        ]
+        return OutcomeGroupSpec(
+            values_loader=["date_of_death"],
+            lookahead_days=[3, 30],
+            resolve_multiple_fn=["bool"],
+            fallback=[0],
+            incident=[True],
+            allowed_nan_value_prop=[0],
+            prefix=self.project_info.prefix.outcome,
+        ).create_combinations()
 
     def _get_static_predictor_specs(self):
         """Get static predictor specs."""
@@ -262,7 +261,7 @@ class SAPSFeatureSpecifier:
         print("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
-            filename="tfidf_ngram_range_13_max_df_095_min_df_10_max_features_250.pkl",
+            filename="tfidf_ngram_range_13_max_df_09_min_df_10_max_features_500.pkl",
         )
 
         tfidf = TextPredictorSpec(
@@ -286,9 +285,9 @@ class SAPSFeatureSpecifier:
         if self.min_set_for_debug:
             return [
                 PredictorSpec(
-                    values_loader="gcs",
+                    values_loader="weight",
                     lookbehind_days=2,
-                    resolve_multiple_fn="min",
+                    resolve_multiple_fn="mean",
                     fallback=np.NaN,
                     allowed_nan_value_prop=0,
                     prefix=self.project_info.prefix.predictor,
@@ -368,7 +367,11 @@ class SAPSFeatureSpecifier:
         """Get a spec set."""
 
         if self.min_set_for_debug:
-            return self._get_temporal_predictor_specs() + self._get_outcome_specs()
+            return (
+                self._get_temporal_predictor_specs()
+                + self._get_static_predictor_specs()
+                + self._get_outcome_specs()
+            )
 
         print("–––––––– Done generating specs ––––––––")
 

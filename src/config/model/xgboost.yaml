@@ -4,7 +4,7 @@ model:
   require_imputation: false
   args:
     n_estimators: 433
-    tree_method: gpu_hist # set to gpu_hist to enable GPU training (default auto)
+    tree_method: auto # set to gpu_hist to enable GPU training (default auto)
     booster: gbtree
     random_state: 42
     alpha: 0.05442377426915552

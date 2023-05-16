@@ -66,7 +66,7 @@ class ArtifactsToDiskSaver:
 
         write_df_to_file(df=df, file_path=file_path)
 
-    def save_run_performance_to_group_parquet(
+    def save_run_performance_to_group_csv(
         self,
         roc_auc: float,
         cfg: FullConfigSchema,
@@ -75,7 +75,6 @@ class ArtifactsToDiskSaver:
         lookahead_days = cfg.preprocessing.pre_split.min_lookahead_days
 
         row = {
-            "run_name": wandb.run.name,  # type: ignore
             "roc_auc": roc_auc,
             "timestamp": pd.Timestamp.now(),
             "lookahead_days": lookahead_days,
@@ -85,7 +84,7 @@ class ArtifactsToDiskSaver:
         # Append row to parquet file in group dir
         run_group_path = self.dir_path.parent
         run_performance_path = (
-            run_group_path / f"{cfg.model.name}_{lookahead_days}.parquet"
+            run_group_path / f"{cfg.model.name}_{lookahead_days}.csv"
         )
 
         if run_performance_path.exists():
@@ -109,7 +108,7 @@ class ArtifactsToDiskSaver:
         if eval_dataset is not None:
             self.eval_dataset_to_disk(
                 eval_dataset,
-                self.dir_path / "evaluation_dataset.parquet",
+                self.dir_path / "evaluation_dataset.csv",
             )
 
         if cfg is not None:
@@ -125,7 +124,7 @@ class ArtifactsToDiskSaver:
         if pipe is not None:
             dump_to_pickle(pipe, self.dir_path / "pipe.pkl")
 
-        self.save_run_performance_to_group_parquet(roc_auc=roc_auc, cfg=cfg)
+        self.save_run_performance_to_group_csv(roc_auc=roc_auc, cfg=cfg)
 
         log.info(  # pylint: disable=logging-fstring-interpolation
             f"Saved evaluation dataset, cfg and pipe metadata to {self.dir_path}",

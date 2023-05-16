@@ -136,6 +136,8 @@ dmypy.json
 *.pkl
 *.csv.gz
 *.txt
+/data
+/outputs
 
 .DS_Store
 poetry.lock

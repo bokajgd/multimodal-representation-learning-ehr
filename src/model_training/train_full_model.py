@@ -23,7 +23,11 @@ def main(cfg: DictConfig):
     if not isinstance(cfg, FullConfigSchema):
         cfg = convert_omegaconf_to_pydantic_object(cfg)
 
-    return train_model(cfg=cfg)
+    return train_model(
+        cfg=cfg,
+        train_dataset_name="train_flattened",
+        test_dataset_name="test_flattened",
+    )
 
 
 if __name__ == "__main__":

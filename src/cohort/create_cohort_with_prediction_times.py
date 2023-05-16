@@ -6,12 +6,15 @@ from timeseriesflattener.utils import data_loaders
 from utils import DATA_PATH, load_dataset_from_file, load_sql_query
 
 ICU_STAYS_QUERY = """
-        SELECT icu.SUBJECT_ID, icu.OUTTIME, icu.LOS,
+        SELECT icu.SUBJECT_ID, icu.OUTTIME, icu.INTIME, icu.LOS, icu.HADM_ID,
         FROM physionet-data.mimiciii_clinical.icustays icu
-        WHERE icd.HADM_ID IN (
+        WHERE icu.HADM_ID IN (
             SELECT DISTINCT ic.HADM_ID
             FROM physionet-data.mimiciii_clinical.icustays ic
+            JOIN physionet-data.mimiciii_clinical.admissions adm
+            ON ic.HADM_ID = adm.HADM_ID
             WHERE ic.DBSOURCE = 'metavision'
+            AND adm.HAS_CHARTEVENTS_DATA = 1
         )
         """
 
@@ -27,7 +30,7 @@ def generate_prediction_times_df(
     save_to_disk: bool = False,
 ) -> pd.DataFrame:
     """Load icu stays table to generate prediction times. Drops admissions
-    without chartevents data, patients below the age of 18, icu stays under 48
+    without chartevents data, patients below the age of 15, icu stays with LOS under 24
     hours and duplicate rows. Returns a df with columns for patient_id and
     timestamp. Prediction times are the time of admission to the ICU + 48
     hours.
@@ -51,7 +54,9 @@ def generate_prediction_times_df(
     # Merge the DOB column to the cohort using the SUBJECT_ID column as the key
     cohort = cohort.merge(patients[["SUBJECT_ID", "DOB"]], on="SUBJECT_ID")
 
-    # Drop rows with a null value in the DOB or OUTTIME column
+    # Drop rows with a null value in
+    #
+    # the DOB or OUTTIME column
     cohort = (
         cohort.dropna(subset=["DOB", "OUTTIME_date"]).dropna().reset_index(drop=True)
     )
@@ -62,20 +67,25 @@ def generate_prediction_times_df(
         axis=1,
     )
 
-    # Drop patients below the age of 18, drop rows with a null value, drop duplicates and drop rows with a LOS under 2
+    # Drop patients below the age of 15, drop rows with a null value, drop duplicates and drop rows with a LOS under 1
     cohort = (
-        cohort.query("AGE >= 18")
-        .query("LOS >= 2")
+        cohort.query("AGE >= 15")
+        .query("LOS >= 1")
         .drop_duplicates()
         .reset_index(drop=True)
     )
 
     # Drop all columns except for SUBJECT_ID and OUTTIME
-    cohort = cohort.drop(cohort.columns.difference(["SUBJECT_ID", "OUTTIME"]), axis=1)
+    cohort = cohort.drop(
+        cohort.columns.difference(["SUBJECT_ID", "INTIME", "HADM_ID"]), axis=1
+    )
+
+    # Add 24 hours to the intime column values
+    cohort["INTIME"] = cohort["INTIME"] + pd.Timedelta(hours=24)
 
     # Rename columns
     cohort = cohort.rename(
-        columns={"SUBJECT_ID": "patient_id", "OUTTIME": "timestamp"},
+        columns={"SUBJECT_ID": "patient_id", "INTIME": "timestamp"},
     )
 
     if save_to_disk:
