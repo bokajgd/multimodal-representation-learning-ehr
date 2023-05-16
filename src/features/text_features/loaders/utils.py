@@ -2,9 +2,9 @@
 
 utility functions for free-text notes loaders.
 """
-from typing import Optional
 import re
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 from google.cloud import bigquery

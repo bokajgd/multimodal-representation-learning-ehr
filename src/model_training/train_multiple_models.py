@@ -1,14 +1,12 @@
 """Example script to train multiple models and subsequently log the results to
-wandb.
-"""
-import pandas as pd
+wandb."""
 from pathlib import Path
-from get_search_space import (
-    SearchSpaceInferrer,
-)
+
+import pandas as pd
+from full_config import FullConfigSchema
+from get_search_space import SearchSpaceInferrer
 from process_manager_setup import setup
 from trainer_spawner import spawn_trainers
-from full_config import FullConfigSchema
 
 
 def main(
@@ -40,7 +38,7 @@ def main(
         cfg=cfg,
         config_file_name=CONFIG_FILE_NAME,
         trainer_specs=trainer_specs,
-        train_single_model_file_path=Path(f"src/model_training/train_full_model.py"),
+        train_single_model_file_path=Path("src/model_training/train_full_model.py"),
     )
 
 

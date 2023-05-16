@@ -4,11 +4,11 @@ import logging
 import pandas as pd
 from feature_specification.full_feature_specification import FullFeatureSpecifier
 from feature_specification.saps_ii_feature_specification import SAPSFeatureSpecifier
+from static_and_flattened_features.loaders.load_demographics import load_dod
 from static_and_flattened_features.loaders.utils import DATA_PATH
 from utils.flatten_dataset import create_flattened_dataset
 from utils.project_setup import get_project_info
 from utils.utils import add_age, remove_outliers
-from static_and_flattened_features.loaders.load_demographics import load_dod
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def generate_flattened_features(
     # Load prediction times
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
     prediction_times_df = pd.read_csv(predictions_times_df_path).drop(
-        columns=["HADM_ID"]
+        columns=["HADM_ID"],
     )
 
     # Keep only the last 1000 rows

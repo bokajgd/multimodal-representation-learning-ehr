@@ -10,10 +10,10 @@ import pandas as pd
 from expand_features_to_dichotomous import expand_numeric_cols_to_binary_percentile_cols
 from generate_flattened_features import generate_flattened_features
 from sklearn.model_selection import train_test_split
+from static_and_flattened_features.loaders.load_demographics import load_dod
 from utils.admission_level_vectors import aggregate_co_vectors
 from utils.cooccurence_counts import calculate_co_occurrence
 from utils.project_setup import get_project_info
-from static_and_flattened_features.loaders.load_demographics import load_dod
 
 
 def main(
@@ -36,7 +36,7 @@ def main(
             / "data"
             / "feature_sets"
             / flattened_feature_set_path
-            / flattened_feature_set_filename
+            / flattened_feature_set_filename,
         )
 
         # if there is a column called "Unnamed: 0", drop it
@@ -68,7 +68,8 @@ def main(
     flattened_df = pd.merge(flattened_df, dod_df, on="patient_id", how="left")
     flattened_df["outcome_timestamp"] = pd.NaT
     flattened_df.loc[
-        flattened_df[outc_col_name] == 1, "outcome_timestamp"
+        flattened_df[outc_col_name] == 1,
+        "outcome_timestamp",
     ] = flattened_df["date_of_death"]
     flattened_df = flattened_df.drop("date_of_death", axis=1)
 

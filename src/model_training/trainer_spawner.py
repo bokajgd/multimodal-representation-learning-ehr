@@ -5,8 +5,8 @@ import time
 from pathlib import Path
 from typing import Optional, Union
 
-from get_search_space import TrainerSpec
 from full_config import FullConfigSchema
+from get_search_space import TrainerSpec
 from wasabi import Printer
 
 

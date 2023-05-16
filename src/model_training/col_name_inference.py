@@ -21,9 +21,7 @@ def get_col_names(
         train_col_names: Names of the columns to use for training
     """
     potential_outcome_col_names = [
-        c
-        for c in dataset.columns
-        if cfg.data.outc_prefix in c
+        c for c in dataset.columns if cfg.data.outc_prefix in c
     ]
 
     if len(potential_outcome_col_names) != 1:

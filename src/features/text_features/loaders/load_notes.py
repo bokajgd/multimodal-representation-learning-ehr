@@ -6,7 +6,7 @@ from typing import Any, Optional
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import text_preprocessing, DATA_PATH, load_dataset_from_file
+from .utils import DATA_PATH, load_dataset_from_file, text_preprocessing
 
 
 @data_loaders.register("noteevents")
@@ -43,12 +43,12 @@ def load_notes(
             "SUBJECT_ID": "patient_id",
             "CHARTTIME": "timestamp",
             "TEXT": "text",
-        }
+        },
     )
 
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
     prediction_times_df = pd.read_csv(predictions_times_df_path).drop(
-        columns="timestamp"
+        columns="timestamp",
     )
 
     # Only keep notes from admissions that are in the prediction_times_df

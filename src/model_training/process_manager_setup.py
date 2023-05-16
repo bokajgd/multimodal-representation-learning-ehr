@@ -1,6 +1,6 @@
-
 from conf_utils import load_app_cfg_as_pydantic
 from full_config import FullConfigSchema
+
 
 def setup(
     config_file_name: str,

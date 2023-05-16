@@ -11,8 +11,8 @@ from psycop_feature_generation.application_modules.project_setup import ProjectI
 from text_features.loaders.load_notes import load_notes
 from timeseriesflattener.feature_spec_objects import (
     BaseModel,
-    OutcomeSpec,
     OutcomeGroupSpec,
+    OutcomeSpec,
     PredictorGroupSpec,
     PredictorSpec,
     StaticSpec,

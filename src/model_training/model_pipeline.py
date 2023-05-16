@@ -10,9 +10,8 @@ from sklearn.feature_selection import (
     mutual_info_classif,
 )
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-
+from sklearn.preprocessing import StandardScaler
 from wasabi import Printer
 
 

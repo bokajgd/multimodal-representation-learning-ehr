@@ -1,11 +1,11 @@
 from pathlib import Path
-import pandas as pd
-import numpy as np
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FEATURE_SET_PATH = (
@@ -75,8 +75,8 @@ def plot_pca_projections():
 
     print(
         "Explained variation per principal component: {}".format(
-            pca.explained_variance_ratio_
-        )
+            pca.explained_variance_ratio_,
+        ),
     )
 
     # Create colourmap

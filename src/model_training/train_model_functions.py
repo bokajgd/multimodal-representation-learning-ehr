@@ -1,13 +1,11 @@
 """Train a single model and evaluate it."""
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
 import pandas as pd
-
 from wasabi import Printer
-
-from datetime import datetime
 
 curr_timestamp = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 

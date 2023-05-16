@@ -1,9 +1,13 @@
-"""Script for misc. plots and tables."""
-import seaborn as sns
+"""Script for misc.
+
+plots and tables.
+"""
+from pathlib import Path
+from typing import Any, Dict, List, Tuple, Union
+
 import matplotlib.pyplot as plt
 import pandas as pd
-from pathlib import Path
-from typing import List, Tuple, Union, Dict, Any
+import seaborn as sns
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EVAL_DF_PATH = (

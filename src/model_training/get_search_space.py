@@ -2,11 +2,8 @@ import random
 
 import pandas as pd
 from basemodel import BaseModel
+from col_name_inference import infer_look_distance, infer_outcome_col_name
 from full_config import FullConfigSchema
-from col_name_inference import (
-    infer_look_distance,
-    infer_outcome_col_name,
-)
 from wasabi import Printer
 
 

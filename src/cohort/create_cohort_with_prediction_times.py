@@ -30,9 +30,9 @@ def generate_prediction_times_df(
     save_to_disk: bool = False,
 ) -> pd.DataFrame:
     """Load icu stays table to generate prediction times. Drops admissions
-    without chartevents data, patients below the age of 15, icu stays with LOS under 24
-    hours and duplicate rows. Returns a df with columns for patient_id and
-    timestamp. Prediction times are the time of admission to the ICU + 48
+    without chartevents data, patients below the age of 15, icu stays with LOS
+    under 24 hours and duplicate rows. Returns a df with columns for patient_id
+    and timestamp. Prediction times are the time of admission to the ICU + 48
     hours.
 
     Args:
@@ -77,7 +77,8 @@ def generate_prediction_times_df(
 
     # Drop all columns except for SUBJECT_ID and OUTTIME
     cohort = cohort.drop(
-        cohort.columns.difference(["SUBJECT_ID", "INTIME", "HADM_ID"]), axis=1
+        cohort.columns.difference(["SUBJECT_ID", "INTIME", "HADM_ID"]),
+        axis=1,
     )
 
     # Add 24 hours to the intime column values

@@ -210,7 +210,11 @@ class FullFeatureSpecifier:
         """Get a spec set."""
 
         if self.min_set_for_debug:
-            return self._get_temporal_predictor_specs() + self._get_text_predictor_specs() + self._get_outcome_specs()
+            return (
+                self._get_temporal_predictor_specs()
+                + self._get_text_predictor_specs()
+                + self._get_outcome_specs()
+            )
 
         logging.info("–––––––– Done generating specs ––––––––")
 

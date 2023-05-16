@@ -1,10 +1,10 @@
 """Utilities for handling config objects, e.g. load, change format."""
 from typing import Optional
 
+from full_config import FullConfigSchema
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
-from full_config import FullConfigSchema
-from omegaconf import DictConfig, OmegaConf
+
 
 def convert_omegaconf_to_pydantic_object(
     conf: DictConfig,
