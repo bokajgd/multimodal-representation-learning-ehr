@@ -34,6 +34,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
             columns=[
                 "patient_id",
                 "outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
+                "outc_date_of_death_within_3_days_bool_fallback_0_dichotomous",
                 "age",
             ],
         )
@@ -80,6 +81,7 @@ def expand_numeric_cols_to_binary_percentile_cols(
                     "timestamp",
                     "prediction_time_uuid",
                     "outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
+                    "outc_date_of_death_within_3_days_bool_fallback_0_dichotomous",
                     "outcome_timestamp",
                     "sex_is_female",
                     "age",

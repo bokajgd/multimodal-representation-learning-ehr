@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 RELATIVE_PROJECT_ROOT = Path(__file__).resolve().parents[4]
 TEXT_MODEL_PATH = RELATIVE_PROJECT_ROOT / "text_models"
+DATA_PATH = RELATIVE_PROJECT_ROOT / "data"
 
 
 def save_text_model_to_dir(
@@ -35,7 +36,6 @@ def save_model_vocab_to_dir(
     model_filename: str,
     save_path: str = TEXT_MODEL_PATH,
 ):
-
     # Saving text model vocabulary
     vocab_path = Path(save_path) / "vocabs" / f"{model_filename}_vocab.pkl"
     with open(vocab_path, "wb") as fw:

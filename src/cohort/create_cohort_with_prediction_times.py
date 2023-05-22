@@ -54,12 +54,8 @@ def generate_prediction_times_df(
     # Merge the DOB column to the cohort using the SUBJECT_ID column as the key
     cohort = cohort.merge(patients[["SUBJECT_ID", "DOB"]], on="SUBJECT_ID")
 
-    # Drop rows with a null value in
-    #
-    # the DOB or OUTTIME column
-    cohort = (
-        cohort.dropna(subset=["DOB", "OUTTIME_date"]).dropna().reset_index(drop=True)
-    )
+    # Drop rows with a null value in the DOB or OUTTIME column
+    cohort = cohort.dropna(subset=["DOB", "OUTTIME_date"]).reset_index(drop=True)
 
     # Calculate age for each patient
     cohort["AGE"] = cohort.apply(

@@ -2,7 +2,7 @@
 data:
   # General config
   n_training_samples: null
-  dir: /Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/data/feature_sets/multimodal_rep_learning_ehr_features_2023_05_15_14_47
+  dir: /Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/data/feature_sets/multimodal_rep_learning_ehr_features_2023_05_20_10_28
   suffix: csv
 
   # Feature specs

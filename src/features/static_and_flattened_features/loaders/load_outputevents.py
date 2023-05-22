@@ -14,10 +14,7 @@ from timeseriesflattener.utils import data_loaders
 
 from .utils import (
     DATA_PATH,
-    _drop_rows_with_too_small_patient_or_admission_frequency,
-    _drop_rows_with_too_small_value_frequency,
     load_dataset_from_file,
-    load_sql_query,
 )
 
 
@@ -41,12 +38,7 @@ def load_outputevents(
     outputevents = load_dataset_from_file(
         file_path=file_path,
         nrows=nrows,
-        cols_to_load=[
-            "SUBJECT_ID",
-            "ITEMID",
-            "CHARTTIME",
-            "VALUE",
-        ],
+        cols_to_load=["SUBJECT_ID", "ITEMID", "CHARTTIME", "VALUE", "VALUEUOM"],
     )
 
     # Rename columns
@@ -66,14 +58,12 @@ def load_outputevents(
     outputevents["timestamp"] = pd.to_datetime(outputevents["timestamp"])
 
     if load_for_flattening:
-
         outputevents["value"] = 1
 
         # Keep only columns for feature generation
         return outputevents[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
     else:
-
         return outputevents.reset_index(drop=True)
 
 
@@ -81,7 +71,6 @@ def load_outputevents(
 def load_urine(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     urine_list = [
         40055,
         43175,
@@ -114,7 +103,6 @@ def load_urine(
     df = load_outputevents(nrows=nrows, load_for_flattening=False)
 
     df = df[df["ITEMID"].isin(urine_list)]
-
     return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
 

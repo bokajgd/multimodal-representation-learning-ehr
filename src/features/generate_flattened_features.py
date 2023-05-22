@@ -16,8 +16,8 @@ log = logging.getLogger(__name__)
 def generate_flattened_features(
     save_to_disk: bool = False,
     min_set_for_debug: bool = True,
-    saps_ii: bool = True,
-    feature_set_prefix: str = "saps_ii",
+    saps_ii: bool = False,
+    get_text_features: bool = False,
 ) -> pd.DataFrame:
     """Main function for generating a feature dataset."""
 
@@ -38,14 +38,18 @@ def generate_flattened_features(
     project_info = get_project_info()
 
     if saps_ii:
+        feature_set_prefix = "saps_ii"
         feature_specs = SAPSFeatureSpecifier(
             project_info=project_info,
             min_set_for_debug=min_set_for_debug,
+            get_text_specs=get_text_features,
         ).get_feature_specs()
     else:
+        feature_set_prefix = "full"
         feature_specs = FullFeatureSpecifier(
             project_info=project_info,
             min_set_for_debug=min_set_for_debug,
+            get_text_specs=get_text_features,
         ).get_feature_specs()
 
     flattened_df = create_flattened_dataset(
@@ -77,14 +81,16 @@ def generate_flattened_features(
     if save_to_disk:
         if project_info.dataset_format == "parquet":
             flattened_df.to_parquet(
-                project_info.feature_set_path / "flattened_features.parquet",
+                project_info.feature_set_path
+                / f"{feature_set_prefix}_flattened_features.parquet",
             )
         elif project_info.dataset_format == "csv":
             flattened_df.to_csv(
-                project_info.feature_set_path / "flattened_features.csv",
+                project_info.feature_set_path
+                / f"{feature_set_prefix}_flattened_features.csv",
             )
 
-    return flattened_df, feature_set_prefix
+    return flattened_df, feature_set_prefix, project_info
 
 
 if __name__ == "__main__":

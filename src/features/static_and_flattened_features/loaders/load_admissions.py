@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import DATA_PATH, load_dataset_from_file
+from utils import DATA_PATH, load_dataset_from_file
 
 
 @data_loaders.register("admissions")
@@ -187,13 +187,13 @@ def _load_services(nrows):
         cols_to_load=[
             "SUBJECT_ID",
             "HADM_ID",
-            "TRANSFERTIME",
             "CURR_SERVICE",
+            "TRANSFERTIME",
         ],
     )
 
     admissions = load_admissions_base_df(nrows=nrows)[
-        ["admission_id", "admission_type"]
+        ["admission_id", "admission_type", "admission_timestamp"]
     ]
 
     # rename columns
@@ -201,13 +201,18 @@ def _load_services(nrows):
         columns={
             "SUBJECT_ID": "patient_id",
             "HADM_ID": "admission_id",
-            "TRANSFERTIME": "timestamp",
         },
     )
 
     # merge admission_type onto services
     services = services.merge(admissions, on="admission_id")
 
+    # rename timestamp column
+    services = services.rename(
+        columns={
+            "admission_timestamp": "timestamp",
+        },
+    )
     # convert timestamp to datetime
     services["timestamp"] = pd.to_datetime(services["timestamp"])
 

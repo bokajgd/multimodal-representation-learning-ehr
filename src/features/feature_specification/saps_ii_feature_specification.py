@@ -32,9 +32,30 @@ class SpecSet(BaseModel):
 
 
 class SAPSFeatureSpecifier:
-    def __init__(self, project_info: ProjectInfo, min_set_for_debug: bool = False):
+    def __init__(
+        self,
+        project_info: ProjectInfo,
+        min_set_for_debug: bool = False,
+        get_text_specs: bool = True,
+    ):
         self.min_set_for_debug = min_set_for_debug
         self.project_info = project_info
+        self.get_text_specs = get_text_specs
+
+    def _get_metadata_specs(self) -> list[_AnySpec]:
+        """Get metadata specs for evalutation."""
+        print("-------- Generating metadata specs --------")
+
+        admission_types = PredictorGroupSpec(
+            values_loader=("scheduled_surgical", "unscheduled_surgical", "medical"),
+            lookbehind_days=[1000],
+            resolve_multiple_fn=["latest"],
+            fallback=[0],
+            allowed_nan_value_prop=[0],
+            prefix=self.project_info.prefix.eval,
+        ).create_combinations()
+
+        return admission_types
 
     def _get_outcome_specs(self) -> list[OutcomeSpec]:
         """Get outcome specs."""
@@ -131,7 +152,7 @@ class SAPSFeatureSpecifier:
             values_loader=("systolic_blood_pressure", "heart_rate"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -150,7 +171,7 @@ class SAPSFeatureSpecifier:
             values_loader=("gcs", "pao2_fio2_ratio"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -169,7 +190,7 @@ class SAPSFeatureSpecifier:
             values_loader=("temperature",),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -188,7 +209,7 @@ class SAPSFeatureSpecifier:
             values_loader=("white_blod_cells", "sodium_level", "potassium_level"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -207,7 +228,7 @@ class SAPSFeatureSpecifier:
             values_loader=("bicarbonate",),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -226,7 +247,7 @@ class SAPSFeatureSpecifier:
             values_loader=("bilirubin_level", "urea_nitrogen"),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -245,7 +266,7 @@ class SAPSFeatureSpecifier:
             values_loader=("urine",),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -296,7 +317,7 @@ class SAPSFeatureSpecifier:
 
         admissions = self._get_admissions_specs(
             resolve_multiple=["latest"],
-            interval_days=[2],
+            interval_days=[1000],
         )
 
         diagnoses = self._get_diagnoses_specs(
@@ -363,21 +384,33 @@ class SAPSFeatureSpecifier:
 
         return [noteevents]
 
-    def get_feature_specs(self) -> list[Union[TextPredictorSpec, PredictorSpec]]:
+    def get_feature_specs(
+        self,
+    ) -> list[Union[TextPredictorSpec, PredictorSpec]]:
         """Get a spec set."""
 
         if self.min_set_for_debug:
             return (
                 self._get_temporal_predictor_specs()
                 + self._get_static_predictor_specs()
+                + self._get_metadata_specs()
                 + self._get_outcome_specs()
             )
 
         print("–––––––– Done generating specs ––––––––")
 
-        return (
-            self._get_temporal_predictor_specs()
-            + self._get_text_predictor_specs()
-            + self._get_static_predictor_specs()
-            + self._get_outcome_specs()
-        )
+        if self.get_text_specs:
+            return (
+                self._get_temporal_predictor_specs()
+                + self._get_text_predictor_specs()
+                + self._get_static_predictor_specs()
+                + self._get_metadata_specs()
+                + self._get_outcome_specs()
+            )
+        else:
+            return (
+                self._get_temporal_predictor_specs()
+                + self._get_static_predictor_specs()
+                + self._get_metadata_specs()
+                + self._get_outcome_specs()
+            )

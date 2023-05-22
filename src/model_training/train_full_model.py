@@ -25,8 +25,8 @@ def main(cfg: DictConfig):
 
     return train_model(
         cfg=cfg,
-        train_dataset_name="train_flattened",
-        test_dataset_name="test_flattened",
+        dataset="flattened",
+        outcome_col_to_drop="outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
     )
 
 

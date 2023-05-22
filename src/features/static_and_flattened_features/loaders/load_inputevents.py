@@ -71,14 +71,12 @@ def load_inputevents(
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
     if load_for_flattening:
-
         df["value"] = 1
 
         # Keep only columns for feature generation
         return df[["patient_id", "timestamp", "value"]].reset_index(drop=True)
 
     else:
-
         return df.reset_index(drop=True)
 
 
@@ -86,7 +84,6 @@ def load_inputevents(
 def load_weight(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     # Keep only columns with patient_id, weight and timestamp and drop duplicates
@@ -108,7 +105,6 @@ def _calc_amount_to_bodyweight_ratio(df: pd.DataFrame) -> pd.DataFrame:
 def load_fentanyl(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     # Filter for fentanyl (221744, 225972 and 225942)
@@ -135,7 +131,6 @@ def load_fentanyl(
 def load_albumin_5(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([220864])]
@@ -149,7 +144,6 @@ def load_albumin_5(
 def load_fresh_frozen_plasma(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([220970])]
@@ -163,7 +157,6 @@ def load_fresh_frozen_plasma(
 def load_sterile_water(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([225944])]
@@ -177,7 +170,6 @@ def load_sterile_water(
 def load_potassium_chloride(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([225166])]
@@ -191,7 +183,6 @@ def load_potassium_chloride(
 def load_gastric_meds(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([225799])]
@@ -205,7 +196,6 @@ def load_gastric_meds(
 def load_nacl_0_9(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     inputevents = load_inputevents(nrows=nrows, load_for_flattening=False)
 
     df = inputevents[inputevents["ITEMID"].isin([225158])]
@@ -223,5 +213,5 @@ def load_nacl_0_9(
 
 if __name__ == "__main__":
     start_time = time.time()
-    df = load_inputevents()
+    df = load_nacl_0_9()
     print(f"Time to load inputevents: {time.time() - start_time:.2f} seconds")

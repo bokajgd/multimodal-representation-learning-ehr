@@ -18,10 +18,12 @@ from utils.project_setup import get_project_info
 
 def main(
     flattened_feature_set_path: Optional[str],
+    flattened_feature_set_filename: Optional[str] = "full_flattened_features.csv",
     read_flattened_features_from_disk: bool = False,
     save_to_disk: bool = True,
     min_set_for_debug: bool = False,
-    flattened_feature_set_filename: Optional[str] = "flattened_features.csv",
+    saps_ii: bool = True,
+    get_text_features: bool = True,
 ) -> None:
     """Main function for loading, generating and evaluating a flattened
     dataset."""
@@ -47,10 +49,11 @@ def main(
 
     else:
         print("Generating features...", curr_timestamp)
-        flattened_df, feature_set_prefix = generate_flattened_features(
+        flattened_df, feature_set_prefix, project_info = generate_flattened_features(
             save_to_disk=save_to_disk,
             min_set_for_debug=min_set_for_debug,
-            saps_ii=True,
+            saps_ii=saps_ii,
+            get_text_features=get_text_features,
         )
 
     flattened_df["sex_is_female"] = flattened_df["pred_sex_is_female"].copy()
@@ -137,40 +140,45 @@ def main(
         f"Test set shape (admission_level_vectors_df): {test_admission_level_vectors_df.shape}",
     )
 
+    if get_text_features:
+        text_features_tag = "with_text_features"
+    else:
+        text_features_tag = "no_text_features"
+
     if save_to_disk:
         test_flattened_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{test_flattened_df.shape[0]}rows_{test_flattened_df.shape[1]}cols_test_flattened_features.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{test_flattened_df.shape[0]}rows_{test_flattened_df.shape[1]}cols_test_flattened_features.csv",
             index=False,
         )
         train_flattened_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{train_flattened_df.shape[0]}rows_{train_flattened_df.shape[1]}cols_train_flattened_features.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{train_flattened_df.shape[0]}rows_{train_flattened_df.shape[1]}cols_train_flattened_features.csv",
             index=False,
         )
         train_binary_feature_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{train_binary_feature_df.shape[0]}rows_{train_binary_feature_df.shape[1]}cols_train_binary_feature_df.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{train_binary_feature_df.shape[0]}rows_{train_binary_feature_df.shape[1]}cols_train_binary_feature_df.csv",
             index=False,
         )
         test_binary_feature_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{test_binary_feature_df.shape[0]}rows_{test_binary_feature_df.shape[1]}cols_test_binary_feature_df.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{test_binary_feature_df.shape[0]}rows_{test_binary_feature_df.shape[1]}cols_test_binary_feature_df.csv",
             index=False,
         )
         train_admission_level_vectors_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{train_admission_level_vectors_df.shape[0]}rows_{train_admission_level_vectors_df.shape[1]}cols_train_admission_level_vectors_df.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{train_admission_level_vectors_df.shape[0]}rows_{train_admission_level_vectors_df.shape[1]}cols_train_admission_level_vectors_df.csv",
             index=False,
         )
         test_admission_level_vectors_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{test_admission_level_vectors_df.shape[0]}rows_{test_admission_level_vectors_df.shape[1]}cols_test_admission_level_vectors_df.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{test_admission_level_vectors_df.shape[0]}rows_{test_admission_level_vectors_df.shape[1]}cols_test_admission_level_vectors_df.csv",
             index=False,
         )
         co_df.to_csv(
             project_info.feature_set_path
-            / f"{feature_set_prefix}_{co_df.shape[0]}rows_{co_df.shape[1]}cols_co_counts.csv",
+            / f"{feature_set_prefix}_{text_features_tag}_{co_df.shape[0]}rows_{co_df.shape[1]}cols_co_counts.csv",
             index=False,
         )
 
@@ -179,6 +187,10 @@ def main(
 
 if __name__ == "__main__":
     main(
-        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_15_10_45",
-        read_flattened_features_from_disk=True,
+        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_17_02_15",
+        read_flattened_features_from_disk=False,
+        save_to_disk=True,
+        min_set_for_debug=False,
+        saps_ii=True,
+        get_text_features=True,
     )

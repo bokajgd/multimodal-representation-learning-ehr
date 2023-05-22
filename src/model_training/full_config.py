@@ -3,7 +3,6 @@ from typing import Optional
 
 from basemodel import BaseModel
 from data_schema import DataSchema
-from debug import DebugConfSchema
 from model import ModelConfSchema
 from preprocessing import PreprocessingConfigSchema
 from project import ProjectSchema
@@ -18,4 +17,3 @@ class FullConfigSchema(BaseModel):
     preprocessing: PreprocessingConfigSchema
     model: ModelConfSchema
     train: TrainConfSchema
-    debug: Optional[DebugConfSchema]

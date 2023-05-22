@@ -255,23 +255,44 @@ def train_and_predict(
 
 def train_model(
     cfg,
-    train_dataset_name: str = "train_flattened_",
-    test_dataset_name: str = "test_flattened_",
+    dataset: str = "flattened",
+    outcome_col_to_drop: Optional[
+        str
+    ] = "outc_date_of_death_within_3_days_bool_fallback_0_dichotomous",
     override_output_dir: Optional[Path] = None,
+    cross_validate_model: bool = False,
 ) -> float:
-    """Train a single model and evaluate it."""
+    """Train a single model and evaluate it.
+
+    Args:
+        cfg: Config object
+        dataset: Dataset to train model on
+        outcome_col_to_drop: Outcome column to drop
+        override_output_dir: Override output directory
+        cross_validate_model: Whether to cross validate the model or not
+
+    Returns:
+        AUC score
+    """
 
     data_path = cfg.data.dir
 
     eval_dir_path = get_eval_dir()
 
+    # Load data
+    train_dataset_name = f"train_{dataset}"
+    test_dataset_name = f"test_{dataset}"
+
     train_data = pd.read_csv(
         [file for file in data_path.iterdir() if train_dataset_name in file.name][0],
-    )
+    ).drop(columns=outcome_col_to_drop)
 
     val_data = pd.read_csv(
         [file for file in data_path.iterdir() if test_dataset_name in file.name][0],
-    )
+    ).drop(columns=outcome_col_to_drop)
+
+    if cross_validate_model:
+        train_data = pd.concat([train_data, val_data], ignore_index=True)
 
     pipe = create_model_pipeline(cfg)
 
@@ -280,7 +301,7 @@ def train_model(
     eval_dataset = train_and_predict(
         cfg=cfg,
         train_datasets=train_data,
-        val_datasets=val_data,
+        val_datasets=val_data if not cross_validate_model else None,
         pipe=pipe,
         outcome_col_name=outcome_col_name,
         train_col_names=train_col_names,
@@ -296,5 +317,4 @@ def train_model(
         outcome_col_name=outcome_col_name,
         train_col_names=train_col_names,
     ).evaluate_and_save_eval_data()
-
     return roc_auc

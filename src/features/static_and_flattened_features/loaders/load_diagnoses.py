@@ -4,8 +4,8 @@ from typing import Optional
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .load_admissions import load_admission_timestamps
-from .utils import load_sql_query
+from load_admissions import load_admission_timestamps
+from utils import load_sql_query
 
 BASE_QUERY = """
         SELECT icd.SUBJECT_ID, icd.HADM_ID, icd.SEQ_NUM, icd.ICD9_CODE,
@@ -103,7 +103,7 @@ def _load_icd9_range(
         pd.DataFrame: Diagnoses table.
     """
 
-    df = load_a_diagnoses(nrows=nrows)
+    df = load_diagnoses(nrows=nrows)
 
     # discard diagnoses that start with V or E
     df = df[~df["ICD9_CODE"].str.startswith(("V", "E"))]
@@ -150,7 +150,7 @@ def load_acquired_immunodeficiency_syndrome(
     """Load all acquired immunodeficiency syndrome A-diagnoses for each
     admission."""
 
-    df = load_a_diagnoses(nrows=nrows)
+    df = load_diagnoses(nrows=nrows)
 
     # keep only rows where ICD9_CODE is 042, V08, or 079.53
     df = df[df["ICD9_CODE"].isin(["042", "V08", "07953"])]

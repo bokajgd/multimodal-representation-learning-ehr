@@ -67,7 +67,6 @@ def load_labevents(
 def load_urea_nitrogen(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 51006]
@@ -86,7 +85,6 @@ def load_urea_nitrogen(
 def load_bicarbonate(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 50882]
@@ -105,7 +103,6 @@ def load_bicarbonate(
 def load_white_blod_cells(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([51300, 51301])]
@@ -124,7 +121,6 @@ def load_white_blod_cells(
 def load_sodium_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([950824, 50983])]
@@ -143,7 +139,6 @@ def load_sodium_level(
 def load_potassium_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"].isin([50822, 50971])]
@@ -162,7 +157,6 @@ def load_potassium_level(
 def load_bilirubin_level(
     nrows: Optional[int] = None,
 ) -> pd.DataFrame:
-
     labevents = load_labevents(nrows=nrows)
 
     df = labevents[labevents["ITEMID"] == 50885]
@@ -179,5 +173,5 @@ def load_bilirubin_level(
 
 if __name__ == "__main__":
     start_time = time.time()
-    df = load_bilirubin_level(nrows=100000)
+    df = load_urea_nitrogen()
     print(f"Time to load: {time.time() - start_time:.2f} seconds")

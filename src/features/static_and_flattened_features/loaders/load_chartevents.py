@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
 
-from .utils import DATA_PATH, load_dataset_from_file, load_sql_query
+from utils import DATA_PATH, load_dataset_from_file, load_sql_query
 
 BASE_QUERY = """
         SELECT ce.SUBJECT_ID, ce.HADM_ID, ce.ITEMID, ce.VALUE, ce.VALUENUM, ce.VALUEUOM, ce.CHARTTIME,
@@ -257,7 +257,6 @@ def load_pao2_fio2_ratio(
 
         # Iterate over each pao2 measurement
         for index, row in hadm_pao2.iterrows():
-
             # Get the most recent prior fio2 measurement for the current pao2 measurement
             recent_fio2 = hadm_fio2[
                 (hadm_fio2["CHARTTIME"] < row["CHARTTIME"])
@@ -297,7 +296,7 @@ def load_pao2_fio2_ratio(
 
 
 if __name__ == "__main__":
-    df = load_pao2_fio2_ratio()
+    # df = load_pao2_fio2_ratio()
     start_time = time.time()
-    df = load_temperature()
+    df = load_heart_rate()
     print(f"Time to load: {time.time() - start_time:.2f} seconds")
