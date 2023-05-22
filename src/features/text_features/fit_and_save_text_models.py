@@ -1,16 +1,16 @@
+import pandas as pd
 from loaders.load_notes import load_notes
 from text_model_pipeline import text_model_pipeline
 from utils.utils import DATA_PATH
 
-import pandas as pd
-
 
 def load_notes_for_text_model() -> pd.DataFrame:
-    """Loads the notes for the text model pipeline.
-    Keeps only notes that are not within any observation window.
+    """Loads the notes for the text model pipeline. Keeps only notes that are
+    not within any observation window.
 
     Returns:
-        pd.DataFrame: The notes dataframes"""
+        pd.DataFrame: The notes dataframes
+    """
 
     df = load_notes(nrows=500000)
 

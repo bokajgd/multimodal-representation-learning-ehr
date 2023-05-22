@@ -64,8 +64,7 @@ def _plot_tsne_projections(
     save_plot: bool = False,
     indices_to_plot: Optional[list] = None,
 ):
-    """
-    Plot t-SNE projections
+    """Plot t-SNE projections.
 
     Args:
         df (pd.DataFrame): DataFrame containing the data to project and metadata columns to colour the points by
@@ -122,9 +121,7 @@ def calculate_feature_tsne_compoents(
     random_state: int = 0,
     angle: float = 0.5,
 ):
-    """
-    Calculate t-SNE projections of feature vectors
-    """
+    """Calculate t-SNE projections of feature vectors."""
 
     # Load data
     df = pd.read_csv(
@@ -148,10 +145,11 @@ def calculate_feature_tsne_compoents(
 
 
 def plot_tsne_feature_vectors_by_feature_type(
-    df: pd.DataFrame, comp_1: np.ndarray, comp_2: np.ndarray
+    df: pd.DataFrame,
+    comp_1: np.ndarray,
+    comp_2: np.ndarray,
 ):
-    """
-    Plot t-SNE projections of feature vectors coloured by feature type
+    """Plot t-SNE projections of feature vectors coloured by feature type.
 
     Args:
         df (pd.DataFrame): DataFrame containing the data to project and metadata columns to colour the points by
@@ -182,11 +180,11 @@ def plot_tsne_feature_vectors_by_feature_type(
 
 
 def plot_tsne_feature_vectors_by_quantile(
-    df: pd.DataFrame, comp_1: np.ndarray, comp_2: np.ndarray
+    df: pd.DataFrame,
+    comp_1: np.ndarray,
+    comp_2: np.ndarray,
 ):
-    """
-    Plot t-SNE projections of feature vectors coloured by quantile
-    """
+    """Plot t-SNE projections of feature vectors coloured by quantile."""
 
     # Add a column labelling which quantile the feature represents (if numeric)
     df["feature_quantile"] = "Non numeric"

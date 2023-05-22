@@ -50,7 +50,8 @@ def plot_days_to_outcome_distribution(eval_df: pd.DataFrame = eval_df) -> None:
 
 
 def plot_outcome_labe_pie_chart(eval_df: pd.DataFrame = eval_df) -> None:
-    """Plot a pie chart showing the fraction of positive and negative outcome labels.
+    """Plot a pie chart showing the fraction of positive and negative outcome
+    labels.
 
     Args:
         eval_df (pd.DataFrame, optional): The evaluation dataset. Defaults to eval_df.
