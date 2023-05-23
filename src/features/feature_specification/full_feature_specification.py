@@ -129,7 +129,7 @@ class FullFeatureSpecifier:
             values_loader=("emergency_admissions",),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -156,7 +156,7 @@ class FullFeatureSpecifier:
             ),
             lookbehind_days=interval_days,
             resolve_multiple_fn=resolve_multiple,
-            fallback=[0],
+            fallback=[np.NaN],
             allowed_nan_value_prop=[0],
         ).create_combinations()
 
@@ -284,7 +284,7 @@ class FullFeatureSpecifier:
         print("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
-            filename="tfidf_ngram_range_13_max_df_09_min_df_10_max_features_500.pkl",
+            filename="tfidf_ngram_range_13_max_df_066_min_df_10_max_features_500.pkl",
         )
 
         tfidf = TextPredictorSpec(
@@ -338,8 +338,8 @@ class FullFeatureSpecifier:
         )
 
         weight = self._get_weight_specs(
-            resolve_multiple=["min", "max", "mean", "latest"],
-            interval_days=[1, 182],
+            resolve_multiple=["min", "max", "mean", "latest", "change_per_day"],
+            interval_days=[1, 30, 182],
         )
 
         chartevents = self._get_chartevents_specs(

@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+import os
 import numpy as np
 import pandas as pd
 from wasabi import Printer
@@ -21,12 +22,12 @@ from sklearn.pipeline import Pipeline
 from utils import PROJECT_ROOT
 
 
-def get_eval_dir() -> Path:
+def get_eval_dir(feature_set: str, outcome_prediction_window: int) -> Path:
     """Get the directory to save evaluation results to."""
 
-    eval_dir_path = (
-        PROJECT_ROOT / "outputs" / "model_outputs" / f"model_outputs_{curr_timestamp}"
-    )
+    folder_str = f"model_outputs_from_{feature_set}_with_{outcome_prediction_window}_pred_window_{curr_timestamp}"
+
+    eval_dir_path = PROJECT_ROOT / "outputs" / "model_outputs" / folder_str
 
     eval_dir_path.mkdir(parents=True, exist_ok=True)
 
@@ -168,6 +169,8 @@ def stratified_cross_validation(  # pylint: disable=too-many-locals
             1,
         ]
 
+        # calculate AUCROC
+
     return train_df
 
 
@@ -255,20 +258,20 @@ def train_and_predict(
 
 def train_model(
     cfg,
+    outcome_prediction_window: int,
     dataset: str = "flattened",
     outcome_col_to_drop: Optional[
         str
     ] = "outc_date_of_death_within_3_days_bool_fallback_0_dichotomous",
-    override_output_dir: Optional[Path] = None,
     cross_validate_model: bool = False,
 ) -> float:
     """Train a single model and evaluate it.
 
     Args:
         cfg: Config object
+        outcome_prediction_window: Outcome prediction window for the chosen outcome column
         dataset: Dataset to train model on
         outcome_col_to_drop: Outcome column to drop
-        override_output_dir: Override output directory
         cross_validate_model: Whether to cross validate the model or not
 
     Returns:
@@ -276,8 +279,6 @@ def train_model(
     """
 
     data_path = cfg.data.dir
-
-    eval_dir_path = get_eval_dir()
 
     # Load data
     train_dataset_name = f"train_{dataset}"
@@ -298,6 +299,19 @@ def train_model(
 
     outcome_col_name, train_col_names = get_col_names(cfg, train_data)
 
+    eval_dir = get_eval_dir(
+        feature_set=os.path.splitext(
+            os.path.basename(
+                [
+                    file
+                    for file in data_path.iterdir()
+                    if train_dataset_name in file.name
+                ][0]
+            )
+        )[0],
+        outcome_prediction_window=outcome_prediction_window,
+    )
+
     eval_dataset = train_and_predict(
         cfg=cfg,
         train_datasets=train_data,
@@ -307,8 +321,6 @@ def train_model(
         train_col_names=train_col_names,
     )
 
-    eval_dir = eval_dir_path if override_output_dir is None else override_output_dir
-
     roc_auc = ModelEvaluator(
         eval_dir_path=eval_dir,
         cfg=cfg,
@@ -317,4 +329,5 @@ def train_model(
         outcome_col_name=outcome_col_name,
         train_col_names=train_col_names,
     ).evaluate_and_save_eval_data()
+
     return roc_auc

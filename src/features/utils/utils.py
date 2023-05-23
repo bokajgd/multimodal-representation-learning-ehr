@@ -72,7 +72,6 @@ def remove_outliers(df: pd.DataFrame) -> pd.DataFrame:
 
     # iterate over each column and set outliers to 0
     for column in numeric_cols.columns:
-
         # disregard 0 values when calculating bottom quantile
         bottom_quantile = (
             numeric_cols[column].loc[numeric_cols[column] != 0].quantile(0.01)

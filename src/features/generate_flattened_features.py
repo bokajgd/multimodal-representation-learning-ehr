@@ -79,12 +79,12 @@ def generate_flattened_features(
     )
 
     if save_to_disk:
-        if project_info.dataset_format == "parquet":
-            flattened_df.to_parquet(
+        if get_text_features:
+            flattened_df.to_csv(
                 project_info.feature_set_path
-                / f"{feature_set_prefix}_flattened_features.parquet",
+                / f"{feature_set_prefix}_flattened_features_with_text.csv",
             )
-        elif project_info.dataset_format == "csv":
+        else:
             flattened_df.to_csv(
                 project_info.feature_set_path
                 / f"{feature_set_prefix}_flattened_features.csv",

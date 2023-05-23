@@ -1,6 +1,4 @@
-"""Script for misc.
-
-plots and tables.
+"""Script for misc. plots and tables.
 """
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
@@ -16,7 +14,9 @@ EVAL_DF_PATH = (
 eval_df = pd.read_csv(EVAL_DF_PATH / "evaluation_dataset.csv")
 
 
-def plot_days_to_outcome_distribution(eval_df: pd.DataFrame = eval_df) -> None:
+def plot_days_to_outcome_distribution(
+    eval_df: pd.DataFrame = eval_df, save_plot: bool = False
+) -> None:
     """Plot the distribution of days between prediction and outcome.
 
     Args:
@@ -44,12 +44,23 @@ def plot_days_to_outcome_distribution(eval_df: pd.DataFrame = eval_df) -> None:
     # add a title and x-axis label
     plt.title("Days to Outcome (Death)")
     plt.xlabel("Days from Prediction Timestamp")
+
+    if save_plot:
+        plt.savefig(
+            PROJECT_ROOT
+            / "outputs"
+            / "eval_outputs"
+            / "days_to_outcome_distribution.png"
+        )
+
     plt.show()
 
     print("Done")
 
 
-def plot_outcome_labe_pie_chart(eval_df: pd.DataFrame = eval_df) -> None:
+def plot_outcome_labe_pie_chart(
+    eval_df: pd.DataFrame = eval_df, save_plot: bool = False
+) -> None:
     """Plot a pie chart showing the fraction of positive and negative outcome
     labels.
 
@@ -74,6 +85,11 @@ def plot_outcome_labe_pie_chart(eval_df: pd.DataFrame = eval_df) -> None:
     plt.legend(labels=labels, loc="lower left", bbox_to_anchor=(-0.1, -0.1))
 
     plt.axis("equal")
+
+    if save_plot:
+        plt.savefig(
+            PROJECT_ROOT / "outputs" / "eval_outputs" / "outcome_label_pie_chart.png"
+        )
 
     plt.show()
 

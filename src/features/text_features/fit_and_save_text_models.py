@@ -12,7 +12,7 @@ def load_notes_for_text_model() -> pd.DataFrame:
         pd.DataFrame: The notes dataframes
     """
 
-    df = load_notes(nrows=500000)
+    df = load_notes()
 
     predictions_times_df_path = DATA_PATH / "misc" / "cohort_with_prediction_times.csv"
     prediction_times_df = pd.read_csv(predictions_times_df_path)
@@ -39,7 +39,11 @@ def load_notes_for_text_model() -> pd.DataFrame:
         df = df[df["patient_id"] != patient_id]
         df = pd.concat([df, filtered_data])
 
-    return df
+    # concatenate the notes for each distinct date for each patient
+    df["timestamp"] = pd.to_datetime(df["timestamp"]).dt.date
+    df = df.groupby(["patient_id", "timestamp"]).agg({"text": " ".join}).reset_index()
+
+    return df.reset_index(drop=True)
 
 
 if __name__ == "__main__":
@@ -49,7 +53,7 @@ if __name__ == "__main__":
         model="tfidf",
         df=df,
         max_features=500,
-        max_df=0.90,
+        max_df=0.66,
         min_df=10,
         ngram_range=(1, 3),
     )

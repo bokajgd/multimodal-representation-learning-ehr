@@ -6,6 +6,7 @@ Code adapted from GitHub repository 'psycop-feature-generation'
 from typing import Literal, Optional, Union
 
 import pandas as pd
+from sklearn.feature_extraction import text
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 
@@ -38,9 +39,32 @@ def fit_text_model(
             f"model name '{model}' not in vec_type. Available choices are 'bow' or 'tfidf'",
         )
 
+    expanded_stop_words_list = text.ENGLISH_STOP_WORDS.union(
+        [
+            "mg",
+            "mcg",
+            "ml",
+            "mgdl",
+            "meql",
+            "mmol",
+            "mmoll",
+            "mmhg",
+            "bpm",
+            "po",
+            "pm",
+            "kul",
+            "l",
+            "ng",
+            "bp",
+            "hr",
+            "kg",
+            "cm",
+        ]
+    )
+
     # Define vectorizer
     vec = vec_type[model](
-        stop_words="english",
+        stop_words=list(expanded_stop_words_list),
         ngram_range=ngram_range,
         max_df=max_df,
         min_df=min_df,

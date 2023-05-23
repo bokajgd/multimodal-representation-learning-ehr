@@ -27,6 +27,8 @@ def main(cfg: DictConfig):
         cfg=cfg,
         dataset="flattened",
         outcome_col_to_drop="outc_date_of_death_within_30_days_bool_fallback_0_dichotomous",
+        outcome_prediction_window=3,
+        cross_validate_model=True,
     )
 
 

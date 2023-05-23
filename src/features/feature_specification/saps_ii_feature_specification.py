@@ -282,7 +282,7 @@ class SAPSFeatureSpecifier:
         print("–––––––– Generating tfidf specs ––––––––")
 
         tfidf_model = load_text_model(
-            filename="tfidf_ngram_range_13_max_df_09_min_df_10_max_features_500.pkl",
+            filename="tfidf_ngram_range_13_max_df_066_min_df_10_max_features_500.pkl",
         )
 
         tfidf = TextPredictorSpec(

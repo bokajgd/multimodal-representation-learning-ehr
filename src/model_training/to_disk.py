@@ -82,8 +82,8 @@ class ArtifactsToDiskSaver:
         }
 
         # Append row to parquet file in group dir
-        run_group_path = self.dir_path.parent
-        run_performance_path = run_group_path / f"{cfg.model.name}_{lookahead_days}.csv"
+        path = self.dir_path
+        run_performance_path = path / f"{cfg.model.name}_{lookahead_days}.csv"
 
         if run_performance_path.exists():
             df = pd.read_parquet(run_performance_path)
@@ -91,7 +91,7 @@ class ArtifactsToDiskSaver:
         else:
             df = pd.DataFrame([row])
 
-        df.to_parquet(run_performance_path, index=False)
+        df.to_csv(run_performance_path, index=False)
 
     def save(
         self,

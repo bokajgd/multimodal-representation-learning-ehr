@@ -8,7 +8,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
-from utils import DATA_PATH, load_dataset_from_file, load_sql_query
+from .utils import DATA_PATH, load_dataset_from_file, load_sql_query
 
 BASE_QUERY = """
         SELECT ce.SUBJECT_ID, ce.HADM_ID, ce.ITEMID, ce.VALUE, ce.VALUENUM, ce.VALUEUOM, ce.CHARTTIME,
@@ -186,7 +186,7 @@ def load_temperature(
 @data_loaders.register("pao2_fio2_ratio")
 def load_pao2_fio2_ratio(
     base_query: str = BASE_QUERY,
-    nrows: Optional[int] = 2000,
+    nrows: Optional[int] = None,
 ) -> pd.DataFrame:
     """Load pao2/fio2 ratio."""
 
@@ -197,6 +197,14 @@ def load_pao2_fio2_ratio(
         QUERY += f"LIMIT {nrows}"
 
     fio2_df = load_sql_query(QUERY)
+
+    # if value is between 0 and 1, multiply by 100 to get percentage
+    fio2_df.loc[
+        (fio2_df["VALUENUM"] > 0) & (fio2_df["VALUENUM"] < 1), "VALUENUM"
+    ] *= 100
+
+    # if value is between 1 and 21, remove from dataset as they are likely errors
+    fio2_df = fio2_df[~((fio2_df["VALUENUM"] > 1) & (fio2_df["VALUENUM"] < 21))]
 
     # laod pao2 data
     file_path = DATA_PATH / "mimic-iii-clinical-database-1.4" / "LABEVENTS.csv.gz"
@@ -297,5 +305,5 @@ def load_pao2_fio2_ratio(
 if __name__ == "__main__":
     # df = load_pao2_fio2_ratio()
     start_time = time.time()
-    df = load_heart_rate()
+    df = load_pao2_fio2_ratio()
     print(f"Time to load: {time.time() - start_time:.2f} seconds")
