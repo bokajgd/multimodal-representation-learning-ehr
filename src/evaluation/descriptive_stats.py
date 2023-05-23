@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -89,9 +90,11 @@ def _calculate_stats(subset_df: pd.DataFrame, full_df: pd.DataFrame, subset_name
 
 
 def generate_descriptive_stats_table(
-    feature_df: pd.DataFrame = feature_df, save_table: bool = False
+    feature_df: pd.DataFrame = feature_df,
+    save_table: bool = False,
 ) -> pd.DataFrame:
-    """Function for generation of descriptive stats table from the study dataset.
+    """Function for generation of descriptive stats table from the study
+    dataset.
 
     Args:
         eval_df (pd.DataFrame, optional): The evaluation dataset. Defaults to eval_df.

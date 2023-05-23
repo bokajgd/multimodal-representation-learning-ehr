@@ -2,8 +2,9 @@
 from typing import Optional
 
 import pandas as pd
-from .load_admissions import load_admission_timestamps
 from timeseriesflattener.utils import data_loaders
+
+from .load_admissions import load_admission_timestamps
 from .utils import load_sql_query
 
 BASE_QUERY = """

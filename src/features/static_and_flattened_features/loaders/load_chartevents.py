@@ -8,6 +8,7 @@ from typing import Optional
 
 import pandas as pd
 from timeseriesflattener.utils import data_loaders
+
 from .utils import DATA_PATH, load_dataset_from_file, load_sql_query
 
 BASE_QUERY = """
@@ -200,7 +201,8 @@ def load_pao2_fio2_ratio(
 
     # if value is between 0 and 1, multiply by 100 to get percentage
     fio2_df.loc[
-        (fio2_df["VALUENUM"] > 0) & (fio2_df["VALUENUM"] < 1), "VALUENUM"
+        (fio2_df["VALUENUM"] > 0) & (fio2_df["VALUENUM"] < 1),
+        "VALUENUM",
     ] *= 100
 
     # if value is between 1 and 21, remove from dataset as they are likely errors

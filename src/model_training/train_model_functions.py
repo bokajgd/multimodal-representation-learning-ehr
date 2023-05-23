@@ -1,9 +1,9 @@
 """Train a single model and evaluate it."""
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-import os
 import numpy as np
 import pandas as pd
 from wasabi import Printer
@@ -306,8 +306,8 @@ def train_model(
                     file
                     for file in data_path.iterdir()
                     if train_dataset_name in file.name
-                ][0]
-            )
+                ][0],
+            ),
         )[0],
         outcome_prediction_window=outcome_prediction_window,
     )

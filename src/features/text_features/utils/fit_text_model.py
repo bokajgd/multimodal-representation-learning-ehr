@@ -59,7 +59,7 @@ def fit_text_model(
             "hr",
             "kg",
             "cm",
-        ]
+        ],
     )
 
     # Define vectorizer

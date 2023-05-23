@@ -203,7 +203,7 @@ def calculate_patient_embeddings_tsne_compoents(
             "pred_unscheduled_surgical_within_2_days_latest_fallback_0": "unscheduled_surgical",
             "pred_scheduled_surgical_within_2_days_latest_fallback_0": "scheduled_surgical",
             "pred_medical_within_2_days_latest_fallback_0": "medical",
-        }
+        },
     )
 
     df = df.merge(
@@ -251,8 +251,7 @@ def plot_tsne_patient_ebmeddings_by_outcome_label(
     outcome_prediction_window: int = 30,
     save_plot: bool = False,
 ):
-    """
-    Plot t-SNE projections of patient embeddings coloured by outcome label.
+    """Plot t-SNE projections of patient embeddings coloured by outcome label.
 
     Args:
         df (pd.DataFrame): DataFrame containing the data to project and metadata columns to colour the points by
@@ -283,8 +282,7 @@ def plot_tsne_patient_ebmeddings_by_age_bin(
     comp_2: np.ndarray,
     save_plot: bool = False,
 ):
-    """
-    Plot t-SNE projections of patient embeddings coloured by age bin.
+    """Plot t-SNE projections of patient embeddings coloured by age bin.
 
     Args:
         df (pd.DataFrame): DataFrame containing the data to project and metadata columns to colour the points by
@@ -328,8 +326,7 @@ def plot_tsne_patient_ebmeddings_by_admission_type(
     comp_2: np.ndarray,
     save_plot: bool = False,
 ):
-    """
-    Plot t-SNE projections of patient embeddings coloured by admission type.
+    """Plot t-SNE projections of patient embeddings coloured by admission type.
 
     Args:
         df (pd.DataFrame): DataFrame containing the data to project and metadata columns to colour the points by
@@ -542,11 +539,15 @@ if "__main__" == __name__:
         patient_comp2,
     ) = calculate_patient_embeddings_tsne_compoents()
     plot_tsne_patient_ebmeddings_by_admission_type(
-        patient_df, patient_comp1, patient_comp2
+        patient_df,
+        patient_comp1,
+        patient_comp2,
     )
     plot_tsne_patient_ebmeddings_by_age_bin(patient_df, patient_comp1, patient_comp2)
     plot_tsne_patient_ebmeddings_by_outcome_label(
-        patient_df, patient_comp1, patient_comp2
+        patient_df,
+        patient_comp1,
+        patient_comp2,
     )
     co_df, co_comp_1, co_comp_2 = calculate_co_vectors_tsne_compoents()
     plot_tsne_co_vectors_by_feature_type(co_df, co_comp_1, co_comp_2)
