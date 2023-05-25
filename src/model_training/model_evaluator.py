@@ -5,7 +5,7 @@ from dataclasses_schemas import EvalDataset, PipeMetadata
 
 # Set matplotlib backend to Agg to avoid errors when running on a server in parallel
 from full_config import FullConfigSchema
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.pipeline import Pipeline
 from to_disk import ArtifactsToDiskSaver
 from utils import get_feature_importance_dict, get_selected_features_dict
@@ -71,6 +71,11 @@ class ModelEvaluator:
             self.eval_ds.y_hat_probs,
         )
 
+        aps: float = average_precision_score(  # type: ignore
+            self.eval_ds.y,
+            self.eval_ds.y_hat_probs,
+        )
+
         self.disk_saver.save(
             cfg=self.cfg,
             eval_dataset=self.eval_ds,
@@ -83,4 +88,8 @@ class ModelEvaluator:
             f"ROC AUC: {roc_auc}",
         )
 
-        return roc_auc
+        logging.info(
+            f"AUPRC: {aps}",
+        )
+
+        return roc_auc, aps

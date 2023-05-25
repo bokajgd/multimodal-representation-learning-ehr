@@ -11,7 +11,7 @@ model:
     gamma: 0.00022890588912611955
     lambda: 0.3333089630085611
     learning_rate: 0.024525414190942597
-    max_depth: 5
+    max_depth: 4
     grow_policy: "lossguide"
 
 # Parameters that will only take effect if running with --multirun

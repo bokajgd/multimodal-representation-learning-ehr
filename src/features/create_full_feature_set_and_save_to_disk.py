@@ -18,7 +18,9 @@ from utils.project_setup import get_project_info
 
 def main(
     flattened_feature_set_path: Optional[str],
-    flattened_feature_set_filename: Optional[str] = "full_flattened_features.csv",
+    flattened_feature_set_filename: Optional[
+        str
+    ] = "full_flattened_features_with_text.csv",
     read_flattened_features_from_disk: bool = False,
     save_to_disk: bool = True,
     min_set_for_debug: bool = False,
@@ -187,10 +189,10 @@ def main(
 
 if __name__ == "__main__":
     main(
-        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_17_02_15",
+        flattened_feature_set_path="multimodal_rep_learning_ehr_features_2023_05_24_08_24",
         read_flattened_features_from_disk=False,
         save_to_disk=True,
         min_set_for_debug=False,
-        saps_ii=True,
-        get_text_features=True,
+        saps_ii=False,
+        get_text_features=False,
     )

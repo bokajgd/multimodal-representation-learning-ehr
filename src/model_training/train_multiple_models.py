@@ -38,15 +38,15 @@ def main(
         cfg=cfg,
         config_file_name=CONFIG_FILE_NAME,
         trainer_specs=trainer_specs,
-        train_single_model_file_path=Path("src/model_training/train_full_model.py"),
+        train_single_model_file_path=Path(
+            "/Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/src/model_training/train_full_model.py"
+        ),
     )
 
 
 if __name__ == "__main__":
     CONFIG_FILE_NAME = "default_config.yaml"
 
-    # Must run cfg before main to ensure that wandb is initialized
-    # before adding wandb_alert_on_exception decorator
     cfg = setup(
         config_file_name=CONFIG_FILE_NAME,
         application_config_dir_relative_path="../../src/config/",

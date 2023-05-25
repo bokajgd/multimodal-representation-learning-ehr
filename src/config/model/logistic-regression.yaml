@@ -8,9 +8,9 @@ model:
     C: 1.0
     fit_intercept: True
     intercept_scaling: True
-    class_weight: Null
+    class_weight: 'balanced'
     penalty_solver: "l2_lbfgs" # custom argument is split into penalty and solver
-    max_iter: 100
+    max_iter: 250
     l1_ratio: 0.5
     random_state: 42
 
