@@ -134,5 +134,10 @@ dmypy.json
 *.xlsx
 *.parquet
 *.pkl
+*.csv.gz
+*.txt
+/data
+/outputs
 
 .DS_Store
+poetry.lock
