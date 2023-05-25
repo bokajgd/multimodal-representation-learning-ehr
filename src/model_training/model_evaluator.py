@@ -5,7 +5,7 @@ from dataclasses_schemas import EvalDataset, PipeMetadata
 
 # Set matplotlib backend to Agg to avoid errors when running on a server in parallel
 from full_config import FullConfigSchema
-from sklearn.metrics import roc_auc_score, average_precision_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.pipeline import Pipeline
 from to_disk import ArtifactsToDiskSaver
 from utils import get_feature_importance_dict, get_selected_features_dict

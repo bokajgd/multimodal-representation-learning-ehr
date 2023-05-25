@@ -39,7 +39,7 @@ def main(
         config_file_name=CONFIG_FILE_NAME,
         trainer_specs=trainer_specs,
         train_single_model_file_path=Path(
-            "/Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/src/model_training/train_full_model.py"
+            "/Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/src/model_training/train_full_model.py",
         ),
     )
 
