@@ -1,3 +1,5 @@
+"""Module for generation of descriptive stats table from the study dataset."""
+
 from pathlib import Path
 
 import pandas as pd
@@ -15,7 +17,16 @@ feature_df = pd.read_csv(FEATURE_SET_DIR / "saps_ii_flattened_features.csv")
 
 
 def _calculate_stats(subset_df: pd.DataFrame, full_df: pd.DataFrame, subset_name: str):
-    """Calculate descriptive stats for the given dataframe."""
+    """Calculate descriptive stats for the given dataframe.
+
+    Args:
+        subset_df (pd.DataFrame): The dataframe to calculate the stats for.
+        full_df (pd.DataFrame): The full dataframe to compare the subset to.
+        subset_name (str): The name of the subset.
+
+    Returns:
+        dict: A dictionary containing the stats.
+    """
 
     # create a dictionary to store the stats
     stats_dict = {}

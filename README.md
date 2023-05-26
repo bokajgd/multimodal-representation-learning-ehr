@@ -1,5 +1,5 @@
 <br />
-  <h1 align="center">Learning Admission-level Multimodal Patient Representations from EHRs
+  <h1 align="center">Multimodal Elementary Clinical Information Embeddings: Encoding structured, time series and free-text data from ICU electronic health records into a common algebraic space
  </h1>
  <h2 align="center">Master's Thesis, Cognitive Sceince @ Aarhus University 2023</h2>
 
@@ -30,8 +30,8 @@
 To obtain the the code, clone the following repository.
 
 ```bash
-git clone https://github.com/bokajgd/hci-divalgo.git
-cd hci-divalgo
+git clone https://github.com/bokajgd/multimodal-representation-learning-ehr.git
+cd multimodal-representation-learning-ehr
 ```
 
 ### Virtual environment
@@ -40,8 +40,8 @@ Create and activate a new virtual environment your preferred way, and install th
 Using pip, it is done by running
 
 ```bash
-python3 -m venv divalgo
-source divalgo/bin/activate
+python3 -m venv ehr
+source ehr/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -51,27 +51,77 @@ pip install -r requirements.txt
 This repository has the following structure:
 
 ```
-├── .streamlit             <- folder with app setup configuration file
-├── divalgo                <- main folder with class and functions                      
-│   ├── .streamlit         <- folder with app setup configuration file
-│   ├── logos              <- logo and symbols for pages
-|   |   └── ...
-│   ├── pages              <- folder containing subpages for the streamlit app
-|   |   └── ...
-│   ├── demo.ipynb         <- jupyter notebook demonstrating the use of the class
-│   ├── divalgo_class.py   <- script with class and main functions 
-│   ├── utils.py           <- script with helper-functions for the class and app 
-│   └── ☌frontpage.py      <- main streamlit file and frontpage
-├── data                   <- folder containing the data - dogs vs wolf from Kaggle for the demonstration     
-|   ├── dogs               <- folder containing images of dogs
-|   └── wolves             <- folder containing images of wolves
-├── .gitignore                 
-├── README.md              <- the top-level README
-└── requirements.txt       <- required packages
+.
+├── README.md
+├── data
+│   ├── feature_sets
+│   ├── mimic-iii-clinical-database-1.4
+│   └── misc
+├── outputs
+│   ├── eval_outputs
+│   └── model_outputs
+├── poetry.lock
+├── pyproject.toml
+├── requirements.txt
+── src
+│   ├── __init__.py
+│   ├── cohort
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── create_cohort_with_prediction_times.py
+│   │   └── utils.py
+│   ├── config
+│   │   ├── __init__.py
+│   │   ├── data
+│   │   ├── default_config.yaml
+│   │   ├── eval
+│   │   ├── model
+│   │   ├── preprocessing
+│   │   ├── project
+│   │   ├── sweeper
+│   │   └── train
+│   ├── evaluation
+│   │   ├── descriptive_stats.py
+│   │   ├── misc_plots.py
+│   │   └── tsne_plot.py
+│   ├── features
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   ├── create_full_feature_set_and_save_to_disk.py
+│   │   ├── expand_features_to_dichotomous.py
+│   │   ├── feature_specification
+│   │   ├── generate_flattened_features.py
+│   │   ├── static_and_flattened_features
+│   │   ├── text_features
+│   │   └── utils
+│   └── model_training
+│       ├── __init__.py
+│       ├── __pycache__
+│       ├── basemodel.py
+│       ├── col_name_inference.py
+│       ├── conf_utils.py
+│       ├── data_schema.py
+│       ├── dataclasses_schemas.py
+│       ├── full_config.py
+│       ├── get_search_space.py
+│       ├── model.py
+│       ├── model_evaluator.py
+│       ├── model_pipeline.py
+│       ├── model_specs.py
+│       ├── outputs
+│       ├── preprocessing.py
+│       ├── process_manager_setup.py
+│       ├── project.py
+│       ├── to_disk.py
+│       ├── train.py
+│       ├── train_full_model.py
+│       ├── train_model_functions.py
+│       ├── train_multiple_models.py
+│       ├── trainer_spawner.py
+│       └── utils.py
+├── tests
+└── text_models
 ```
-
-
-## Biliography
 
 ## Contact
 **Jakob Grøhn Damgaard** 

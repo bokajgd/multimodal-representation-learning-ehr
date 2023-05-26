@@ -1,6 +1,4 @@
-"""Script for misc.
-
-plots and tables.
+"""Script for misc. plots and tables.
 """
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
@@ -11,7 +9,10 @@ import seaborn as sns
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EVAL_DF_PATH = (
-    PROJECT_ROOT / "outputs" / "model_outputs" / "model_outputs_05_13_2023_00_41_54"
+    PROJECT_ROOT
+    / "outputs"
+    / "model_outputs"
+    / "model_outputs_from_full_with_text_features_13535rows_1066cols_train_admission_level_vectors_df_with_3_pred_window_05_26_2023_01_56_18"
 )
 eval_df = pd.read_csv(EVAL_DF_PATH / "evaluation_dataset.csv")
 

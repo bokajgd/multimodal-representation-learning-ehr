@@ -1,3 +1,4 @@
+"""Script for plotting t-SNE projections of the learnt latent embeddings."""
 from pathlib import Path
 from typing import Optional
 
@@ -13,14 +14,14 @@ FEATURE_SET_PATH = (
     RELATIVE_PROJECT_ROOT
     / "data"
     / "feature_sets"
-    / "multimodal_rep_learning_ehr_features_2023_05_17_02_15"
+    / "multimodal_rep_learning_ehr_features_2023_05_24_08_24"
 )
 PLOT_OUTPUT_PATH = RELATIVE_PROJECT_ROOT / "outputs" / "eval_outputs"
 EVAL_DF_PATH = (
     RELATIVE_PROJECT_ROOT
     / "outputs"
     / "model_outputs"
-    / "model_outputs_05_20_2023_13_12_18"
+    / "model_outputs_from_full_with_text_features_13535rows_1066cols_train_admission_level_vectors_df_with_3_pred_window_05_26_2023_01_56_18"
 )
 
 
@@ -58,7 +59,7 @@ def _calculate_tsne_components(
     comp_1 = tsne_projections[:, 0]
     comp_2 = tsne_projections[:, 1]
 
-    return comp_1, comp_2
+    return df, comp_1, comp_2
 
 
 def _plot_tsne_projections(
@@ -92,12 +93,13 @@ def _plot_tsne_projections(
         comp_2 = comp_2[indices_to_plot]
         df = df.iloc[indices_to_plot]
 
-    # if number of unique values in colour_by_column is 2, use a binary colourmap
+    # set a colour map suitable for colour blindness
+    # if the number of unique values in colour_by_column is 2, use a binary color map
     if len(df[colour_by_column].unique()) == 2:
-        colour_map = np.array(["#104547", "#C13B3B"])
+        colour_map = ["#0072B2", "#D55E00"]  # Blue and orange colors for binary map
     else:
-        # set a colour map with the number of colours equal to the number of unique values in colour_by_column
-        colour_map = sns.color_palette("hls", len(df[colour_by_column].unique()))
+        # set a color map with the number of colors equal to the number of unique values in colour_by_column
+        colour_map = sns.color_palette("colorblind", len(df[colour_by_column].unique()))
 
     # adapt the size of points based on the number of points
     default_point_size = 50
@@ -110,8 +112,8 @@ def _plot_tsne_projections(
 
     plt.figure(figsize=(16, 10))
     sns.scatterplot(
-        x=comp_1,
-        y=comp_2,
+        x=comp_1 + np.random.uniform(-0.1, 0.1, size=comp_1.shape),  # add jitter
+        y=comp_2 + np.random.uniform(-0.1, 0.1, size=comp_2.shape),
         hue=colour_by_column,
         palette=sns.color_palette(colour_map, len(df[colour_by_column].unique())),
         data=df,
@@ -155,11 +157,11 @@ def calculate_co_vectors_tsne_compoents(
 
     # Load data
     df = pd.read_csv(
-        FEATURE_SET_PATH / "full_with_text_features_850rows_850cols_co_counts.csv",
+        FEATURE_SET_PATH / "full_with_text_features_1053rows_1053cols_co_counts.csv",
         index_col=False,
     )
 
-    comp_1, comp_2 = _calculate_tsne_components(
+    df, comp_1, comp_2 = _calculate_tsne_components(
         df,
         use_cols_from=0,
         use_cols_to=850,
@@ -181,28 +183,29 @@ def calculate_patient_embeddings_tsne_compoents(
     n_iter: int = 2000,
     random_state: int = 0,
     angle: float = 0.5,
+    n_samples: int = None,
 ):
     """Calculate t-SNE projections of feature vectors."""
 
     # Load data
     df = pd.read_csv(
         FEATURE_SET_PATH
-        / "full_with_text_features_13535rows_860cols_train_admission_level_vectors_df.csv",
+        / "full_with_text_features_13535rows_1066cols_train_admission_level_vectors_df.csv",
         index_col=False,
     )
 
     # add admissions_type column where 0 = unscheduled_surgical, 1 = scheduled_surgical, 2 = medical, 3 = other
     flattened_df = pd.read_csv(
         FEATURE_SET_PATH
-        / "full_with_text_features_13535rows_631cols_train_flattened_features.csv",
+        / "full_with_text_features_13535rows_701cols_train_flattened_features.csv",
         index_col=False,
     )
 
     flattened_df = flattened_df.rename(
         columns={
-            "pred_unscheduled_surgical_within_2_days_latest_fallback_0": "unscheduled_surgical",
-            "pred_scheduled_surgical_within_2_days_latest_fallback_0": "scheduled_surgical",
-            "pred_medical_within_2_days_latest_fallback_0": "medical",
+            "pred_unscheduled_surgical_within_1000_days_latest_fallback_0": "unscheduled_surgical",
+            "pred_scheduled_surgical_within_1000_days_latest_fallback_0": "scheduled_surgical",
+            "pred_medical_within_1000_days_latest_fallback_0": "medical",
         },
     )
 
@@ -229,7 +232,7 @@ def calculate_patient_embeddings_tsne_compoents(
         axis=1,
     )
 
-    comp_1, comp_2 = _calculate_tsne_components(
+    df, comp_1, comp_2 = _calculate_tsne_components(
         df,
         use_cols_from=10,
         use_cols_to=860,
@@ -239,6 +242,7 @@ def calculate_patient_embeddings_tsne_compoents(
         n_iter=n_iter,
         random_state=random_state,
         angle=angle,
+        n_samples=n_samples,
     )
 
     return df, comp_1, comp_2
@@ -437,7 +441,7 @@ def plot_tsne_co_vectors_by_quantile(
     print("Done")
 
 
-def plot_tsne_pao2_fio_2_co_vectors_by_quantile(
+def plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
     df: pd.DataFrame,
     comp_1: np.ndarray,
     comp_2: np.ndarray,
@@ -446,42 +450,48 @@ def plot_tsne_pao2_fio_2_co_vectors_by_quantile(
     """Plot t-SNE projections of feature vectors coloured by quantile."""
 
     # Add a column labelling which quantile the feature represents (if numeric)
-    df["feature_quantile"] = "Non numeric"
+    df["ards_or_ratio"] = 0
 
     for col in df.columns:
-        if "p15" in col.lower():
+        if "pao2_fio2" in col.lower():
             index = df.columns.get_loc(col)
-            df.loc[index, "feature_quantile"] = "Lower 15%"
-        elif "p_mid" in col.lower():
+            df.loc[index, "ards_or_ratio"] = 1
+        elif "ards" in col.lower():
             index = df.columns.get_loc(col)
-            df.loc[index, "feature_quantile"] = "Middle 70%"
-        elif "p85" in col.lower():
-            index = df.columns.get_loc(col)
-            df.loc[index, "feature_quantile"] = "Upper 15%"
+            df.loc[index, "ards_or_ratio"] = 2
 
     # Remove last row
-    df = df.iloc[:-1, :]
+    df = df.iloc[:-2, :]
 
-    # Get indices for columns with Pao2/Fio2 ratio features
-    pao2_fio_2_ration_indices = [
-        idx for idx, column in enumerate(df.columns) if "pao2_fio2" in column.lower()
+    # Get indices for columns with Pao2/Fio2 ratio features with with p85 in the name
+
+    pao2_fio_2_ratio_top_15_indices = [
+        idx
+        for idx, column in enumerate(df.columns)
+        if "pao2_fio2" in column.lower() and "p85" in column.lower()
     ]
+    # Get indices for columns with text features with ARDS in the name (acutre respiratory distress syndrome)
+    ards_indices = [
+        idx for idx, column in enumerate(df.columns) if "ards" in column.lower()
+    ][:-1]
+
+    # combine indices
+    indices = pao2_fio_2_ratio_top_15_indices + ards_indices
 
     # Plot t-SNE projections
     _plot_tsne_projections(
         df=df,
         comp_1=comp_1,
         comp_2=comp_2,
-        custom_legend_title="Feature quantile category",
+        custom_legend_title="Feature type",
         custom_legend_labels=(
-            "Lower 15%",
-            "Middle 70%",
-            "Upper 15%",
+            "Top 15% Pao2/Fio2 ratio features",
+            "Text features containing ARDS",
         ),
-        colour_by_column="feature_quantile",
-        colour_by_column_name="feature quantile category for all PaO2/FiO2 related features)",
+        colour_by_column="ards_or_ratio",
+        colour_by_column_name="text features containing ARDS and top 15% Pao2/Fio2 ratio features",
         save_plot=save_plot,
-        indices_to_plot=pao2_fio_2_ration_indices,
+        indices_to_plot=indices,
     )
 
     print("Done")
@@ -533,6 +543,17 @@ def plot_tsne_heart_rate_blood_pressure_feature_co_vectors(
 
 
 if "__main__" == __name__:
+    co_df, co_comp_1, co_comp_2 = calculate_co_vectors_tsne_compoents()
+
+    plot_tsne_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2, save_plot=True)
+    plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
+        co_df, co_comp_1, co_comp_2, save_plot=True
+    )
+    plot_tsne_co_vectors_by_feature_type(co_df, co_comp_1, co_comp_2, save_plot=True)
+    plot_tsne_heart_rate_blood_pressure_feature_co_vectors(
+        co_df, co_comp_1, co_comp_2, save_plot=True
+    )
+
     (
         patient_df,
         patient_comp1,
@@ -542,17 +563,15 @@ if "__main__" == __name__:
         patient_df,
         patient_comp1,
         patient_comp2,
+        save_plot=True,
     )
-    plot_tsne_patient_ebmeddings_by_age_bin(patient_df, patient_comp1, patient_comp2)
+    plot_tsne_patient_ebmeddings_by_age_bin(
+        patient_df, patient_comp1, patient_comp2, save_plot=True
+    )
     plot_tsne_patient_ebmeddings_by_outcome_label(
         patient_df,
         patient_comp1,
         patient_comp2,
+        save_plot=True,
     )
-    co_df, co_comp_1, co_comp_2 = calculate_co_vectors_tsne_compoents()
-    plot_tsne_co_vectors_by_feature_type(co_df, co_comp_1, co_comp_2)
-    plot_tsne_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2)
-    plot_tsne_pao2_fio_2_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2)
-    plot_tsne_heart_rate_blood_pressure_feature_co_vectors(co_df, co_comp_1, co_comp_2)
-
     print("Done")
