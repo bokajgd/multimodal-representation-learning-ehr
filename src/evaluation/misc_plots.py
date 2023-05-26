@@ -1,4 +1,6 @@
-"""Script for misc. plots and tables.
+"""Script for misc.
+
+plots and tables.
 """
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union

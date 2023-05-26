@@ -547,11 +547,17 @@ if "__main__" == __name__:
 
     plot_tsne_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2, save_plot=True)
     plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
-        co_df, co_comp_1, co_comp_2, save_plot=True
+        co_df,
+        co_comp_1,
+        co_comp_2,
+        save_plot=True,
     )
     plot_tsne_co_vectors_by_feature_type(co_df, co_comp_1, co_comp_2, save_plot=True)
     plot_tsne_heart_rate_blood_pressure_feature_co_vectors(
-        co_df, co_comp_1, co_comp_2, save_plot=True
+        co_df,
+        co_comp_1,
+        co_comp_2,
+        save_plot=True,
     )
 
     (
@@ -566,7 +572,10 @@ if "__main__" == __name__:
         save_plot=True,
     )
     plot_tsne_patient_ebmeddings_by_age_bin(
-        patient_df, patient_comp1, patient_comp2, save_plot=True
+        patient_df,
+        patient_comp1,
+        patient_comp2,
+        save_plot=True,
     )
     plot_tsne_patient_ebmeddings_by_outcome_label(
         patient_df,
