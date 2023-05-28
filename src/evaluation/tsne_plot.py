@@ -112,8 +112,8 @@ def _plot_tsne_projections(
 
     plt.figure(figsize=(16, 10))
     sns.scatterplot(
-        x=comp_1 + np.random.uniform(-0.1, 0.1, size=comp_1.shape),  # add jitter
-        y=comp_2 + np.random.uniform(-0.1, 0.1, size=comp_2.shape),
+        x=comp_1 + np.random.uniform(-0.2, 0.2, size=comp_1.shape),  # add jitter
+        y=comp_2 + np.random.uniform(-0.2, 0.2, size=comp_2.shape),
         hue=colour_by_column,
         palette=sns.color_palette(colour_map, len(df[colour_by_column].unique())),
         data=df,
@@ -298,8 +298,8 @@ def plot_tsne_patient_ebmeddings_by_age_bin(
     # create column that bins 'pred_age' into 10 year bins
     df["age_bins"] = pd.cut(
         df["age"],
-        bins=[10, 20, 30, 40, 50, 60, 70, 80, 90],
-        labels=["10-20", "20-30", "30-40", "40-50", "50-60", "60-70", "70-80", ">80"],
+        bins=[10, 60, 80, 90],
+        labels=["10-60", "60-80", ">70"],
     )
 
     # Plot t-SNE projections coloured by outcome label
@@ -309,14 +309,9 @@ def plot_tsne_patient_ebmeddings_by_age_bin(
         comp_2=comp_2,
         custom_legend_title="Age",
         custom_legend_labels=(
-            "10-20",
-            "20-30",
-            "30-40",
-            "40-50",
-            "50-60",
-            "60-70",
-            "70-80",
-            ">80",
+            "10-60",
+            "60-80",
+            ">70",
         ),
         colour_by_column="age_bins",
         colour_by_column_name="age category",
@@ -468,7 +463,7 @@ def plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
     pao2_fio_2_ratio_top_15_indices = [
         idx
         for idx, column in enumerate(df.columns)
-        if "pao2_fio2" in column.lower() and "p85" in column.lower()
+        if "pao2_fio2" in column.lower() and "p15" in column.lower()
     ]
     # Get indices for columns with text features with ARDS in the name (acutre respiratory distress syndrome)
     ards_indices = [
@@ -485,11 +480,11 @@ def plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
         comp_2=comp_2,
         custom_legend_title="Feature type",
         custom_legend_labels=(
-            "Top 15% Pao2/Fio2 ratio features",
+            "Bottom 15% Pao2/Fio2 ratio features",
             "Text features containing ARDS",
         ),
         colour_by_column="ards_or_ratio",
-        colour_by_column_name="text features containing ARDS and top 15% Pao2/Fio2 ratio features",
+        colour_by_column_name="text features containing ARDS and bottom 15% Pao2/Fio2 ratio features",
         save_plot=save_plot,
         indices_to_plot=indices,
     )
@@ -545,13 +540,13 @@ def plot_tsne_heart_rate_blood_pressure_feature_co_vectors(
 if "__main__" == __name__:
     co_df, co_comp_1, co_comp_2 = calculate_co_vectors_tsne_compoents()
 
-    plot_tsne_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2, save_plot=True)
     plot_tsne_ards_pao2_fio_2_co_vectors_by_quantile(
         co_df,
         co_comp_1,
         co_comp_2,
         save_plot=True,
     )
+    plot_tsne_co_vectors_by_quantile(co_df, co_comp_1, co_comp_2, save_plot=True)
     plot_tsne_co_vectors_by_feature_type(co_df, co_comp_1, co_comp_2, save_plot=True)
     plot_tsne_heart_rate_blood_pressure_feature_co_vectors(
         co_df,
@@ -565,13 +560,13 @@ if "__main__" == __name__:
         patient_comp1,
         patient_comp2,
     ) = calculate_patient_embeddings_tsne_compoents()
-    plot_tsne_patient_ebmeddings_by_admission_type(
+    plot_tsne_patient_ebmeddings_by_age_bin(
         patient_df,
         patient_comp1,
         patient_comp2,
         save_plot=True,
     )
-    plot_tsne_patient_ebmeddings_by_age_bin(
+    plot_tsne_patient_ebmeddings_by_admission_type(
         patient_df,
         patient_comp1,
         patient_comp2,

@@ -69,6 +69,7 @@ class ArtifactsToDiskSaver:
     def save_run_performance_to_group_csv(
         self,
         roc_auc: float,
+        aps: float,
         cfg: FullConfigSchema,
     ):
         # Get run performance row
@@ -76,6 +77,7 @@ class ArtifactsToDiskSaver:
 
         row = {
             "roc_auc": roc_auc,
+            "aps": aps,
             "timestamp": pd.Timestamp.now(),
             "lookahead_days": lookahead_days,
             "model_name": cfg.model.name,
@@ -96,6 +98,7 @@ class ArtifactsToDiskSaver:
     def save(
         self,
         roc_auc: float,
+        aps: float,
         cfg: FullConfigSchema,
         eval_dataset: EvalDataset,
         pipe_metadata: Optional[PipeMetadata],
@@ -122,7 +125,7 @@ class ArtifactsToDiskSaver:
         if pipe is not None:
             dump_to_pickle(pipe, self.dir_path / "pipe.pkl")
 
-        self.save_run_performance_to_group_csv(roc_auc=roc_auc, cfg=cfg)
+        self.save_run_performance_to_group_csv(roc_auc=roc_auc, aps=aps, cfg=cfg)
 
         log.info(  # pylint: disable=logging-fstring-interpolation
             f"Saved evaluation dataset, cfg and pipe metadata to {self.dir_path}",

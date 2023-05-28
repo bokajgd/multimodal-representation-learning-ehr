@@ -3,7 +3,6 @@ data:
   # General config
   n_training_samples: null
   dir: /Users/jakobgrohn/Desktop/Cognitive_Science/Masters_Thesis/multimodal-representation-learning-ehr/data/feature_sets/multimodal_rep_learning_ehr_features_2023_05_24_08_24
-  pred_prefix: pred_
   outc_prefix: outc_
 
   splits_for_training: ["train"]

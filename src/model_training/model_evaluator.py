@@ -82,6 +82,7 @@ class ModelEvaluator:
             pipe=self.pipe,
             pipe_metadata=self.pipeline_metadata,
             roc_auc=roc_auc,
+            aps=aps,
         )
 
         logging.info(
