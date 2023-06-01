@@ -1,5 +1,4 @@
-"""Example script to train multiple models and subsequently log the results to
-wandb."""
+"""Script to train multiple modelS based on config."""
 from pathlib import Path
 
 import pandas as pd

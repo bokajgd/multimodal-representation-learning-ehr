@@ -1,4 +1,4 @@
-"""Main feature generation."""
+"""Feature generation script."""
 import logging
 
 import pandas as pd

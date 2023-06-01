@@ -58,7 +58,7 @@ The source code is structured in distinct subfolders that each represent one maj
 
 | Column | Description|
 |--------|:-----------|
-```features```| This subfolder contains the majority of the code and the backbone of the pipeline. In short, it contains the following components:<br> •	Loader functions that extract data from the MIMIC data base and prepares it for timeseriesflattener <br> •	Feature specification scripts that specify all the features for the raw feature sets  <br> •	All the code for generating the raw features sets, binarising the features, calculating co-occurrence vectors and obtaining patient embeddings
+```features```| This subfolder contains the majority of the code and the backbone of the pipeline. In short, it contains the following components:<br> •	Loader functions that extract data from the MIMIC data base and prepares it for timeseriesflattener <br> •	Feature specification scripts that specify all the features for the raw feature sets  <br> •	All the code for generating the raw features sets, binarising the features, calculating co-occurrence vectors and obtaining patient embeddings (full pipeline implemented in `create_full_feature_set_and_save_to_disk.py´)
 ```model_training``` | This folder contains all scripts for excecuting and evaluating prediction models.
 ```cohort``` | This contains the scripts used for creating the overall study dataset with prediction times.
 ```evaluation``` | Contains all the code for producing, e.g. descriptive statistics table, t-sne visualisations, othr misc. plots 

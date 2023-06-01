@@ -1,4 +1,5 @@
 """Script for training a model based on config."""
+
 from pathlib import Path
 
 import hydra
