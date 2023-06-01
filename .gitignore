@@ -135,7 +135,6 @@ dmypy.json
 *.parquet
 *.pkl
 *.csv.gz
-*.txt
 /data
 /outputs
 
