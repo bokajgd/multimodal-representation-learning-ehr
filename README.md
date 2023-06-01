@@ -46,7 +46,7 @@ Moving forward, focus should be put on further developing the methods and algori
 
 <!-- GRAPHICAL REPRESENTATION OF PIPELINE -->
 ## Graphical representation of pipeline
-The following graphical flowchart depicts the entire experimantal pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patientr embeddings:
+The following graphical flowchart depicts the entire experimental pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patient embeddings:
 ![](visuals/pipeline.png)
 
 
@@ -136,7 +136,7 @@ The full repository has the following structure:
 
 <!-- DATA STATEMENT -->
 ## Data statement
-The project relies on data from the MIMIC-III databas (Johnson et al., 2016). Despite the data being accessible for research, it is still sensitive, and access to the data requires authorisation. Therefore, I am unable to share the data publicly in the folder. 
+The project relies on data from the MIMIC-III database (Johnson et al., 2016). Despite the data being accessible for research, it is still sensitive, and access to the data requires authorisation. Therefore, I am unable to share the data publicly in this folder. 
 If one wishes to access the code, access can be requested from the PhysioNet: https://physionet.org/content/mimiciii/1.4/. Data was read in using a Google BigQuery API which will also have to be set up locally.
 
 ### Cloning repository and creating virtual environment
@@ -151,9 +151,9 @@ cd multimodal-representation-learning-ehr
 ### Setting up environment
 
 Unfortunately, the employed packages `pscycop-model-training` and `psycop-feature-generation` have since excecution of the code, been refactored into new packages and their GitHub repositories archived. 
-Hence, these dependencies are only accessible locally and will cause some of the code to not be excecutable, even if data access has been obatained.
+Hence, these dependencies are only accessible locally and will cause some of the code to not be excecutable, even if data access has been obtained.
 
-If one still wishes to explore some of the scripts, it is recommend to create and activate a new virtual environment your preferred way, and install the required packages in the requirements file.
+If one still wishes to explore some of the scripts, I recommend creating and activating a new virtual environment your preferred way, and install the required packages in the requirements file.
 Using pip, it is done by running
 
 ```bash
@@ -164,7 +164,7 @@ pip install -r requirements.txt
 
 ## Acknowledgements
 Some of the functions in the scripts for generating features and for training models were adapted from collaborative projects in the PSYCOP research team at Aarhus University which I am a part of. 
-I wish to thank Martin Bernstorff, Lasse Hansen1, Kenneth Enevoldsen, Frida Hæstrup and Erik Perfalk for their contributions to this and for allowing me to adapt collaboratively produced code for this project.
+I wish to thank Martin Bernstorff, Lasse Hansen, Kenneth Enevoldsen, Frida Hæstrup and Erik Perfalk for their contributions to this and for allowing me to adapt collaboratively produced code for this project.
 
 
 ## References
