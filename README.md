@@ -13,7 +13,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About the project</a></li>
-    <li><a href="#summary">summary</a></li>
+    <li><a href="#summary">Summary</a></li>
     <li><a href="#graphical-representation-of-pipeline>"Graphical representation of pipeline</a></li>
     <li><a href="#repository-structure">Repository structure</a></li>
     <li><a href="#data-statement">Data statement</a></li>
@@ -44,7 +44,7 @@ Moving forward, focus should be put on further developing the methods and algori
 ### Compact graphical representation of the conceptual pipeline
 ![](visuals/compact_concept.png)
 
-<!-- THESIS SUMMARY -->
+<!-- Graphical representation of pipeline -->
 ## Graphical representation of pipeline
 The following graphical flowchart depicts the entire experimantal pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patientr embeddings:
 ![](visuals/pipeline.png)
@@ -58,7 +58,7 @@ The source code is structured in distinct subfolders that each represent one maj
 
 | Column | Description|
 |--------|:-----------|
-```data```| A folder containing the raw data that can be passed as inputs to the Python script:<br> •	*True.csv*: This file contains all true news articles <br> •	*Fake.csv*: This file contains all fake news articles <br> <br> I have furthermore included two subsets of the data containing only 1000 articles each. 
+```cohort```| A folder containing the raw data that can be passed as inputs to the Python script:<br> •	*True.csv*: This file contains all true news articles <br> •	*Fake.csv*: This file contains all fake news articles <br> <br> I have furthermore included two subsets of the data containing only 1000 articles each. 
 ```src``` | A folder containing the source code (*lda_features_classification.py*) created to solve the assignment. 
 ```output``` | An output folder in which the generated confusion matrices are saved: <br> •	*BoW-Feature-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained directly on BoW feature vectors <br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
 ```viz``` | An output folder for and other visualisations for the README.md file <br> •	*lda.png*: A flowchart of how LDA works
@@ -163,11 +163,16 @@ source ehr/bin/activate
 pip install -r requirements.txt
 ```
 
-# References
-Blei, D. M., Ng, A. Y., & Jordan, M. I. (2003). Latent dirichlet allocation. the Journal of machine Learning research, 3, 993-1022.
+## Acknowledgements
+Some of the functions in the scripts for generating features and for training models were adapted from collaborative projects in the PSYCOP research team at Aarhus University which I am a part of. 
+I wish to thank Martin Bernstorff, Lasse Hansen1, Kenneth Enevoldsen, Frida Hæstrup and Erik Perfalk for their contributions to this and for allowing me to adapt collaboratively produced code for this project.
+
+
+## References
+Johnson, A. E. W., Pollard, T. J., Shen, L., Lehman, L. H., Feng, M., Ghassemi, M., Moody, B., Szolovits, P., Anthony Celi, L., & Mark, R. G. (2016). MIMIC-III, a freely accessible critical care database. Scientific Data, 3. https://doi.org/10.1038/sdata.2016.35
 <br>
 <br>
-Miotto, R., Li, L., Kidd, B. A., & Dudley, J. T. (2016). Deep patient: an unsupervised representation to predict the future of patients from the electronic health records. Scientific reports, 6(1), 1-10.
+Purushotham, S., Meng, C., Che, Z., & Liu, Y. (2018). Benchmarking deep learning models on large healthcare datasets. Journal of Biomedical Informatics, 83, 112–134. https://doi.org/10.1016/j.jbi.2018.04.007
 <br>
 <br>
 
