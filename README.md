@@ -44,7 +44,7 @@ Moving forward, focus should be put on further developing the methods and algori
 ### Compact graphical representation of the conceptual pipeline
 ![](visuals/compact_concept.png)
 
-<!-- Graphical representation of pipeline -->
+<!-- GRAPHICAL REPRESENTATION OF PIPELINE -->
 ## Graphical representation of pipeline
 The following graphical flowchart depicts the entire experimantal pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patientr embeddings:
 ![](visuals/pipeline.png)
