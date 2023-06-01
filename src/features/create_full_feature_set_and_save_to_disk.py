@@ -1,4 +1,4 @@
-"""Full implementation of the pipeline"""
+"""Full implementation of the pipeline."""
 
 from datetime import datetime
 
@@ -27,7 +27,8 @@ def main(
     saps_ii: bool = True,
     get_text_features: bool = True,
 ) -> None:
-    """Main function for generating a flattened feature dataset, binary features, co-occurence vectors, and patient embeddings."""
+    """Main function for generating a flattened feature dataset, binary
+    features, co-occurence vectors, and patient embeddings."""
 
     print("Loading project info...", curr_timestamp)
     project_info = get_project_info()
