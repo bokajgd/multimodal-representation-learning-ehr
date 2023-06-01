@@ -16,11 +16,13 @@
     <li><a href="#summary">summary</a></li>
     <li><a href="#graphical-representation-of-pipeline>"Graphical representation of pipeline</a></li>
     <li><a href="#repository-structure">Repository structure</a></li>
+    <li><a href="#data-statement">Data statement</a></li>
   </ol>
 </details>
 
 <!-- ABOUT THE PROJECT -->
 ## About the project
+The repository contains the source code used for my Master's Thesis in Cognitive Sceince @ Aarhus University 2023. A summary of the project is presented below. 
 
 <!-- THESIS SUMMARY -->
 ## Summary
@@ -40,18 +42,18 @@ This paper constitutes a preliminary investigation of the proposed framework usi
 Moving forward, focus should be put on further developing the methods and algorithms for embedding the elementary multimodal clinical feature vectors and generating patient embeddings. Such advances would enable the framework to represent the features and, ultimately, the state of a patient in more detail and, thus, provide better performance. Given the range of concrete methods to pursue in these regards and the promising results of this preliminary study, there are reasons to believe that the proposed framework may have broad applications in clinical machine learning tasks in a future form.
 
 ### Compact graphical representation of the conceptual pipeline
-![](visuals/pipeline.pngpng)
+![](visuals/compact_concept.png)
 
 <!-- THESIS SUMMARY -->
 ## Graphical representation of pipeline
 The following graphical flowchart depicts the entire experimantal pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patientr embeddings:
-![](visuals/compact_concept.png)
+![](visuals/pipeline.png)
 
 
 <!-- REPOSITORY STRUCTURE -->
 ## Repository structure
 
-The source code is structuRed in distinct subfolders that each represent one major aspect of the implementational pipeline. The content of these subfolders are summarised in the table below:
+The source code is structured in distinct subfolders that each represent one major aspect of the implementational pipeline. The content of these subfolders are summarised in the table below:
 <br>
 
 | Column | Description|
@@ -132,6 +134,12 @@ Given data had been publishable, the full repository would have the following st
 └── text_models
 ```
 
+
+<!-- DATA STATEMENT -->
+## Data statement
+The project relies on data from the MIMIC-III databas (Johnson et al., 2016). Despite the data being accessible for research, it is still sensitive, and access to the data requires authorisation. Therefore, I am unable to share the data publicly in the folder. 
+If one wishes to access the code, access can be requested from the PhysioNet: https://physionet.org/content/mimiciii/1.4/. Data was read in using a Google BigQuery API and this will also have to be set up.
+
 ### Cloning repository and creating virtual environment
 
 To obtain the the code, clone the following repository.
@@ -141,9 +149,12 @@ git clone https://github.com/bokajgd/multimodal-representation-learning-ehr.git
 cd multimodal-representation-learning-ehr
 ```
 
-### Virtual environment
+### Setting up environment
 
-Create and activate a new virtual environment your preferred way, and install the required packages in the requirements file.
+Unfortunately, the employed packages `pscycop-model-training` and `psycop-feature-generation` have since excecution of the code, been refactored into new packages and their GitHub repositories archived. 
+Hence, these dependencies are only accessible locally and will cause some of the code to not be excecutable, even if data access has been obatained.
+
+If one still wishes to explore some of the scripts, it is recommend to create and activate a new virtual environment your preferred way, and install the required packages in the requirements file.
 Using pip, it is done by running
 
 ```bash
@@ -152,8 +163,13 @@ source ehr/bin/activate
 pip install -r requirements.txt
 ```
 
-Unfortunately, the employed packages `pscycop-model-training` and `psycop-feature-generation` have since excecution of the code, been refactored into new packages and their GitHub repositories archived. 
-Hence, these dependencies are only accessible locally and will cause some of the code to not be excecutable, even given data 
+# References
+Blei, D. M., Ng, A. Y., & Jordan, M. I. (2003). Latent dirichlet allocation. the Journal of machine Learning research, 3, 993-1022.
+<br>
+<br>
+Miotto, R., Li, L., Kidd, B. A., & Dudley, J. T. (2016). Deep patient: an unsupervised representation to predict the future of patients from the electronic health records. Scientific reports, 6(1), 1-10.
+<br>
+<br>
 
 
 ## Contact
