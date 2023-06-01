@@ -39,15 +39,27 @@ This paper constitutes a preliminary investigation of the proposed framework usi
 
 Moving forward, focus should be put on further developing the methods and algorithms for embedding the elementary multimodal clinical feature vectors and generating patient embeddings. Such advances would enable the framework to represent the features and, ultimately, the state of a patient in more detail and, thus, provide better performance. Given the range of concrete methods to pursue in these regards and the promising results of this preliminary study, there are reasons to believe that the proposed framework may have broad applications in clinical machine learning tasks in a future form.
 
+### Compact graphical representation of the conceptual pipeline
+![](visuals/pipeline.pngpng)
+
 <!-- THESIS SUMMARY -->
 ## Graphical representation of pipeline
-The 
+The following graphical flowchart depicts the entire experimantal pipeline from extracting raw data from the MIMIC-III database to evaluating the utility of the final latent elementary feature vectors and patientr embeddings:
+![](visuals/compact_concept.png)
 
 
 <!-- REPOSITORY STRUCTURE -->
 ## Repository structure
 
-The source code is structuted in distinct subfolders that each represent one major aspect of the implementational pipeline. The content of these subfolders are summarised in the table below:
+The source code is structuRed in distinct subfolders that each represent one major aspect of the implementational pipeline. The content of these subfolders are summarised in the table below:
+<br>
+
+| Column | Description|
+|--------|:-----------|
+```data```| A folder containing the raw data that can be passed as inputs to the Python script:<br> •	*True.csv*: This file contains all true news articles <br> •	*Fake.csv*: This file contains all fake news articles <br> <br> I have furthermore included two subsets of the data containing only 1000 articles each. 
+```src``` | A folder containing the source code (*lda_features_classification.py*) created to solve the assignment. 
+```output``` | An output folder in which the generated confusion matrices are saved: <br> •	*BoW-Feature-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained directly on BoW feature vectors <br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
+```viz``` | An output folder for and other visualisations for the README.md file <br> •	*lda.png*: A flowchart of how LDA works
 
 
 
