@@ -58,7 +58,8 @@ The source code is structured in distinct subfolders that each represent one maj
 
 | Column | Description|
 |--------|:-----------|
-```cohort```| A folder containing the raw data that can be passed as inputs to the Python script:<br> •	*True.csv*: This file contains all true news articles <br> •	*Fake.csv*: This file contains all fake news articles <br> <br> I have furthermore included two subsets of the data containing only 1000 articles each. 
+```features```| This subfolder contains the majority of the code and the backbone of the pipeline. It contains the following components:<br> •	Loader functions that extract data from the MIMIC data base and prepares it for timeseriesflattener
+<br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
 ```src``` | A folder containing the source code (*lda_features_classification.py*) created to solve the assignment. 
 ```output``` | An output folder in which the generated confusion matrices are saved: <br> •	*BoW-Feature-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained directly on BoW feature vectors <br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
 ```viz``` | An output folder for and other visualisations for the README.md file <br> •	*lda.png*: A flowchart of how LDA works
