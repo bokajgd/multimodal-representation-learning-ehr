@@ -58,15 +58,14 @@ The source code is structured in distinct subfolders that each represent one maj
 
 | Column | Description|
 |--------|:-----------|
-```features```| This subfolder contains the majority of the code and the backbone of the pipeline. It contains the following components:<br> •	Loader functions that extract data from the MIMIC data base and prepares it for timeseriesflattener
-<br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
-```src``` | A folder containing the source code (*lda_features_classification.py*) created to solve the assignment. 
-```output``` | An output folder in which the generated confusion matrices are saved: <br> •	*BoW-Feature-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained directly on BoW feature vectors <br> •	*LDA-Topic-Vectors_confusion_matrix.png*: Confusion matrix for logistic regression trained on topic vectors generated using LDA
-```viz``` | An output folder for and other visualisations for the README.md file <br> •	*lda.png*: A flowchart of how LDA works
+```features```| This subfolder contains the majority of the code and the backbone of the pipeline. In short, it contains the following components:<br> •	Loader functions that extract data from the MIMIC data base and prepares it for timeseriesflattener <br> •	Feature specification scripts that specify all the features for the raw feature sets  <br> •	All the code for generating the raw features sets, binarising the features, calculating co-occurrence vectors and obtaining patient embeddings
+```model_training``` | This folder contains all scripts for excecuting and evaluating prediction models.
+```cohort``` | This contains the scripts used for creating the overall study dataset with prediction times.
+```evaluation``` | Contains all the code for producing, e.g. descriptive statistics table, t-sne visualisations, othr misc. plots 
 
 
 
-Given data had been publishable, the full repository would have the following structure:
+The full repository has the following structure:
 
 ```
 .
@@ -131,7 +130,6 @@ Given data had been publishable, the full repository would have the following st
 │       ├── train_multiple_models.py
 │       ├── trainer_spawner.py
 │       └── utils.py
-├── tests
 └── text_models
 ```
 
@@ -139,7 +137,7 @@ Given data had been publishable, the full repository would have the following st
 <!-- DATA STATEMENT -->
 ## Data statement
 The project relies on data from the MIMIC-III databas (Johnson et al., 2016). Despite the data being accessible for research, it is still sensitive, and access to the data requires authorisation. Therefore, I am unable to share the data publicly in the folder. 
-If one wishes to access the code, access can be requested from the PhysioNet: https://physionet.org/content/mimiciii/1.4/. Data was read in using a Google BigQuery API and this will also have to be set up.
+If one wishes to access the code, access can be requested from the PhysioNet: https://physionet.org/content/mimiciii/1.4/. Data was read in using a Google BigQuery API which will also have to be set up locally.
 
 ### Cloning repository and creating virtual environment
 
