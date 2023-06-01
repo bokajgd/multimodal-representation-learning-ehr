@@ -14,7 +14,7 @@
   <ol>
     <li><a href="#about-the-project">About the project</a></li>
     <li><a href="#summary">Summary</a></li>
-    <li><a href="#graphical-representation-of-pipeline>"Graphical representation of pipeline</a></li>
+    <li><a href="#graphical-representation-of-pipeline">Graphical representation of pipeline</a></li>
     <li><a href="#repository-structure">Repository structure</a></li>
     <li><a href="#data-statement">Data statement</a></li>
   </ol>
