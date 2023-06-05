@@ -192,4 +192,4 @@ websocket-client==1.5.1
 widgetsnbextension==3.6.4
 wsproto==1.2.0
 xgboost==1.7.4
-zipp==3.14.0
+zipp==3.15.0
