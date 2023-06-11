@@ -111,7 +111,7 @@ Pillow==9.4.0
 platformdirs==3.5.1
 plotly==5.13.0
 pluggy==1.0.0
-prettytable==3.6.0
+prettytable==3.8.0
 prometheus-client==0.16.0
 promise==2.3
 prompt-toolkit==3.0.38
