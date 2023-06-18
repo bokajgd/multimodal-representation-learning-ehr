@@ -1,4 +1,4 @@
-alembic==1.9.4
+alembic==1.11.1
 antlr4-python3-runtime==4.9.3
 anyio==3.6.2
 appnope==0.1.3
