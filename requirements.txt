@@ -112,7 +112,7 @@ platformdirs==3.9.1
 plotly==5.13.0
 pluggy==1.0.0
 prettytable==3.8.0
-prometheus-client==0.16.0
+prometheus-client==0.17.1
 promise==2.3
 prompt-toolkit==3.0.38
 proto-plus==1.22.2
