@@ -60,7 +60,7 @@ hydra-joblib-launcher==1.2.0
 hydra-optuna-sweeper==1.2.0
 idna==3.4
 importlib-metadata==6.7.0
-importlib-resources==6.0.0
+importlib-resources==6.0.1
 iniconfig==2.0.0
 ipykernel==6.22.0
 ipython==7.34.0
