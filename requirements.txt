@@ -177,7 +177,7 @@ toolz==0.12.0
 torch==2.0.0
 torchvision==0.15.2
 tornado==6.3.1
-tqdm==4.64.1
+tqdm==4.66.1
 traitlets==5.9.0
 transformers==4.25.1
 trio==0.22.1
