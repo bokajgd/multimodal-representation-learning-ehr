@@ -182,7 +182,7 @@ traitlets==5.9.0
 transformers==4.25.1
 trio==0.22.1
 trio-websocket==0.10.3
-typing_extensions==4.5.0
+typing_extensions==4.8.0
 urllib3==1.26.14
 wandb==0.13.7
 wasabi==1.1.1
