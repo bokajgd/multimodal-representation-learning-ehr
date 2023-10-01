@@ -15,7 +15,7 @@ catalogue==2.0.8
 category-encoders==2.6.2
 certifi==2023.7.22
 cffi==1.15.1
-charset-normalizer==3.0.1
+charset-normalizer==3.3.0
 click==8.1.7
 cliff==4.2.0
 cloudpickle==2.2.1
