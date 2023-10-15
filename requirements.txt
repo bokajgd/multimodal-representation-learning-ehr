@@ -75,7 +75,7 @@ jupyter-server==2.7.0
 jupyter_client==8.3.0
 jupyter_core==5.3.1
 jupyterlab-pygments==0.2.2
-jupyterlab-widgets==3.0.8
+jupyterlab-widgets==3.0.9
 kiwisolver==1.4.4
 Levenshtein==0.21.1
 locket==1.0.0
