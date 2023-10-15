@@ -19,7 +19,7 @@ charset-normalizer==3.3.0
 click==8.1.7
 cliff==4.3.0
 cloudpickle==2.2.1
-cmaes==0.9.1
+cmaes==0.10.0
 cmd2==2.4.3
 coloredlogs==15.0.1
 colorlog==6.7.0
